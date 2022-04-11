@@ -59,7 +59,8 @@
     "validateforms": "ValidateForms",
     "wrap": "Table/TablesWrap",
     "virtualization": "Table/TablesVirtualization",
-    "speechwaves": "SpeechWaves"
+    "speechwaves": "SpeechWaves",
+    "onscreenkeyboards": "OnScreenKeyboards"
   },
   "video": {
     "autorefresh": "BV1ap4y1x7Qn?p=8",

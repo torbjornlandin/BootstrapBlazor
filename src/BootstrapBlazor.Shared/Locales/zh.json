@@ -424,7 +424,8 @@
     "ChartBubbleText": "气泡图",
     "DispatchText": "消息分发 Dispatch",
     "GeolocationText": "地理定位组件 Geolocation",
-    "NotificationsText": "浏览器通知 Notification"
+    "NotificationsText": "浏览器通知 Notification",
+    "OnScreenKeyboardText": "屏幕键盘 OnScreenKeyboard"
   },
   "BootstrapBlazor.Shared.Samples.GlobalException": {
     "Title": "全局异常",
@@ -2760,8 +2761,8 @@
     "SpeechIntro": "简介",
     "Recognizer": "语音识别 Recognizer",
     "Synthesizer": "语音合成 Synthesizer",
-    "SpeechWave": "语音波形图 SpeechWave"
-
+    "SpeechWave": "语音波形图 SpeechWave",
+    "OnScreenKeyboard": "屏幕键盘 OnScreenKeyboard"
   },
   "BootstrapBlazor.Shared.Samples.Table.TablesFooter": {
     "Left": "左对齐",
@@ -2887,5 +2888,12 @@
     "SwitchButtonText": "",
     "SwitchButtonTextOff": "点击拷贝",
     "SwitchButtonTextOn": "显示高级拷贝"
+  },
+  "BootstrapBlazor.Shared.Samples.OnScreenKeyboards": {
+    "Title": "AutoComplete",
+    "H1": "The input box autocompletes the function",
+    "Block1Title": "Basic usage",
+    "Block1Intro": "By setting <code>Items</code> data collection when the user types information that is automatically displayed",
+    "P1": "In this example, type 123 strings to display the viewing effect, automatically give the component initialization to the auto-prompt dataset, and the dataset does not change"
   }
 }
