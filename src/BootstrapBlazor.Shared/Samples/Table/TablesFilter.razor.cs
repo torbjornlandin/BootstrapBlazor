@@ -104,21 +104,17 @@ public partial class TablesFilter
     private Task SetFilterInCode()
     {
         //Find Column
-        var column = TableSetFilter.Columns.FirstOrDefault(x => x.GetFieldName() == nameof(Foo.Count));
+        var column = TableSetFilter.Columns.First(x => x.GetFieldName() == nameof(Foo.Count));
 
         //Build Filter
-        List<FilterKeyValueAction> filters = new List<FilterKeyValueAction>() { new FilterKeyValueAction { FieldValue = 50, FilterAction = FilterAction.LessThan } };
+        var filters = new List<FilterKeyValueAction>()
+        {
+            new FilterKeyValueAction { FieldValue = 50, FilterAction = FilterAction.LessThan }
+        };
 
         //Set Filter
-        column?.Filter?.FilterAction?.SetFilterConditions(filters);
-
-        return Task.CompletedTask;
+        column.Filter?.FilterAction?.SetFilterConditionsAsync(filters);
     }
 
-    private Task ResetAllFilters()
-    {
-        TableSetFilter.ResetAllColumnsFilter();
-
-        return Task.CompletedTask;
-    }
+    private Task ResetAllFilters() => TableSetFilter.ResetFilters();
 }
