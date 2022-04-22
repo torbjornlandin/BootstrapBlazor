@@ -2728,6 +2728,7 @@
     "Title": "网站标题 Title",
     "Download": "文件下载 Download",
     "Tooltip": "工具条 Tooltip",
+    "ComponentReconnectModal": "ComponentReconnectModal",
     "Tree": "树形组件 Tree",
     "Table": "表格组件",
     "TableBase": "基本功能",
@@ -2925,5 +2926,15 @@
     "P3": "Nuget 包安装",
     "P4": "使用 <a href='https://www.nuget.org/packages?q=BootstrapBlazor.SignaturePad' target='_blank'>nuget.org</a> 进行 <code>BootstrapBlazor.SignaturePad</code> 组件的安装"
 
+  },
+  "BootstrapBlazor.Shared.Samples.ComponentReconnectModals": {
+    "Title": "自定义连接失败显示内容",
+    "H1": "用于自定义连接失败时各种状态的UI。推荐将组件放在App.razor的末尾。因为App.razor是根组件，能保证任何时候自定义错误组件都会显示。",
+    "Event1": "模态对话框的背景色",
+    "Event2": "连接显示状态对话框的背景色",
+    "Event3": "连接状态对话框的padding",
+    "Event4": "正在尝试重试连接对话框的模板",
+    "Event5": "连接失败对话框的模板",
+    "Event6": "连接被拒绝对话框的模板"
   }
 }

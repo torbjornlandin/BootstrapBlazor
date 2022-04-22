@@ -871,6 +871,11 @@ public sealed partial class NavMenu
             {
                 Text = Localizer["Tooltip"],
                 Url = "tooltips"
+            },
+            new()
+            {
+                Text = Localizer["ComponentReconnectModal"],
+                Url = "componentreconnectmodals"
             }
         };
         AddBadge(item);
