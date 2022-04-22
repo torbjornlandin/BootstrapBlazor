@@ -15,3 +15,21 @@
         </NotFound>
     </Router>
 </BootstrapBlazorRoot>
+
+<Reconnector>
+    <ReconnectingTemplate>
+        <p>连接出现了一点小问题，需要重新连接。</p>
+        <p>重新连接中，请稍后... 也可以立即 <a href="javascript:location.reload()">重新加载</a></p>
+    </ReconnectingTemplate>
+    <ReconnectFailedTemplate>
+        <p>连接失败了，请确认网络是否正常。</p>
+        <p>
+            如果网络正常，你可以<a href="javascript:window.Blazor.reconnect()">重新连接</a>
+            或者立即 <a href="javascript:location.reload()">重新加载</a>
+        </p>
+    </ReconnectFailedTemplate>
+    <ReconnectRejectedTemplate>
+        <p>所有的连接尝试都被拒绝了，这很有可能是由于网络问题或者服务器问题引起的。</p>
+        <p>您可以尝试<a href="javascript:location.reload()">重新加载</a>服务器。如果是由于服务器问题引起的失败，重新连接可能不成功</p>
+    </ReconnectRejectedTemplate>
+</Reconnector>
