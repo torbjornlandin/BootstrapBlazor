@@ -6,34 +6,10 @@ using BootstrapBlazor.Shared.Common;
 
 namespace BootstrapBlazor.Shared.Samples;
 
-public partial class ComponentReconnectModals
+public partial class Reconnectors
 {
     private IEnumerable<AttributeItem> GetAttributes() => new AttributeItem[]
     {
-        new AttributeItem()
-        {
-            Name = "BackdropBackgroundColor",
-            Description = Localizer["Event1"],
-            Type = "string",
-            ValueList = "",
-            DefaultValue = "rgba(0, 0, 0, .75)"
-        },
-        new AttributeItem()
-        {
-            Name = "ConnectionStateBackgroundColor",
-            Description = Localizer["Event2"],
-            Type = "string",
-            ValueList = "",
-            DefaultValue = "rgba(255, 255, 255, .8)"
-        },
-        new AttributeItem()
-        {
-            Name = "ConnectionStatePadding",
-            Description = Localizer["Event3"],
-            Type = "string",
-            ValueList = "",
-            DefaultValue = "64px"
-        },
         new AttributeItem()
         {
             Name = "ReconnectingTemplate",
