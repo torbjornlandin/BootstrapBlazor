@@ -3,7 +3,80 @@
 
 <h3>@Localizer["Title"]</h3>
 
-<h4>@Localizer["H1"]</h4>
+<h4>@Localizer["SubTitle"]</h4>
 
+<p><b>@Localizer["Usage"]</b></p>
+
+<p>@((MarkupString)Localizer["Step1"].Value)</p>
+
+<Pre>@@RenderBody()
+
+&lt;div id="blazor-error-ui"&gt;
+&lt/div&gt;
+
+// add ReconnectorOutlet component
+<b><i>&lt;component type="typeof(ReconnectorOutlet)" render-mode="ServerPrerendered" /&gt;</i></b></Pre>
+
+<p>@((MarkupString)Localizer["Step2"].Value)</p>
+
+<Pre>&lt;Reconnector&gt;
+    &lt;ReconnectingTemplate&gt;
+        &lt;p&gt;连接出现了一点小问题，需要重新连接。&lt;/p&gt;
+        &lt;p&gt;重新连接中，请稍后... 也可以立即 &lt;a href="javascript:location.reload()"&gt;重新加载&lt;/a&gt;&lt;/p&gt;
+    &lt;/ReconnectingTemplate&gt;
+    &lt;ReconnectFailedTemplate&gt;
+        &lt;p&gt;连接失败了，请确认网络是否正常。&lt;/p&gt;
+        &lt;p&gt;
+            如果网络正常，你可以&lt;a href="javascript:window.Blazor.reconnect()"&gt;重新连接&lt;/a&gt;
+            或者立即 &lt;a href="javascript:location.reload()"&gt;重新加载&lt;/a&gt;
+        &lt;/p&gt;
+    &lt;/ReconnectFailedTemplate&gt;
+    &lt;ReconnectRejectedTemplate&gt;
+        &lt;p&gt;所有的连接尝试都被拒绝了，这很有可能是由于网络问题或者服务器问题引起的。&lt;/p&gt;
+        &lt;p&gt;您可以尝试&lt;a href="javascript:location.reload()"&gt;重新加载&lt;/a&gt;服务器。如果是由于服务器问题引起的失败，重新连接可能不成功&lt;/p&gt;
+    &lt;/ReconnectRejectedTemplate&gt;
+&lt;/Reconnector&gt;</Pre>
+
+<p>@Localizer["IntroTitle"]</p>
+
+<ul class="ul-demo">
+    <li><code>ReconnectingTemplate</code> @Localizer["ReconnectingTemplateText"]</li>
+    <li><code>ReconnectFailedTemplate</code> @Localizer["ReconnectFailedTemplateText"]</li>
+    <li><code>ReconnectRejectedTemplate</code> @Localizer["ReconnectRejectedTemplateText"]</li>
+</ul>
+
+<p class="mt-2">@((MarkupString)Localizer["Intro"].Value)</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>@Localizer["TableHeader1"]</td>
+            <td>@Localizer["TableHeader2"]</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>components-reconnect-show</code></td>
+            <td>@Localizer["TableRow1"]</td>
+        </tr>
+        <tr>
+            <td><code>components-reconnect-hide</code></td>
+            <td>@Localizer["TableRow2"]</td>
+        </tr>
+        <tr>
+            <td><code>components-reconnect-failed</code></td>
+            <td>@((MarkupString)Localizer["TableRow3"].Value)</td>
+        </tr>
+        <tr>
+            <td><code>components-reconnect-rejected</code></td>
+            <td>
+                <div>@((MarkupString)Localizer["TableRow4"].Value)</div>
+                <ul class="ul-demo mt-2">
+                    @((MarkupString)Localizer["TableRow5"].Value)
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 <AttributeTable Items="@GetAttributes()" />
