@@ -839,6 +839,12 @@ public sealed partial class NavMenu
             new()
             {
                 IsNew = true,
+                Text = Localizer["Reconnector"],
+                Url = "reconnectors"
+            },
+            new()
+            {
+                IsNew = true,
                 Text = Localizer["Responsive"],
                 Url = "responsives"
             },
@@ -871,11 +877,6 @@ public sealed partial class NavMenu
             {
                 Text = Localizer["Tooltip"],
                 Url = "tooltips"
-            },
-            new()
-            {
-                Text = Localizer["ComponentReconnectModal"],
-                Url = "componentreconnectmodals"
             }
         };
         AddBadge(item);
