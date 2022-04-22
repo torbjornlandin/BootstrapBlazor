@@ -1032,10 +1032,6 @@ section {
     color: #fff;
 }
 
-#components-reconnect-modal {
-    z-index: 1090 !important;
-}
-
 .scroll-demo {
     border: solid 1px #f1f1f1;
     padding: 1rem;
