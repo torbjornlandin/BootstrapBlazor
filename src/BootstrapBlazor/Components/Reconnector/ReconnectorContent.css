@@ -1,0 +1,27 @@
+﻿#components-reconnect-modal,
+#components-reconnect-modal.components-reconnect-hide,
+#components-reconnect-modal .reconnect-state {
+    display: none;
+}
+
+    #components-reconnect-modal.components-reconnect-show,
+    #components-reconnect-modal.components-reconnect-failed,
+    #components-reconnect-modal.components-reconnect-rejected,
+    #components-reconnect-modal.components-reconnect-show .reconnect-state.show,
+    #components-reconnect-modal.components-reconnect-failed .reconnect-state.failed,
+    #components-reconnect-modal.components-reconnect-rejected .reconnect-state.rejected {
+        display: block;
+    }
+
+#components-reconnect-modal {
+}
+
+    #components-reconnect-modal .reconnect-state {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        background-color: #fff4ce;
+        padding: 1rem;
+        border: 1px solid #ddd;
+    }
