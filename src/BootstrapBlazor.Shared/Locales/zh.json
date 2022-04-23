@@ -409,6 +409,7 @@
     "LightText": "指示灯 Light",
     "PopconfirmText": "确认框 Popconfirm",
     "ProgressText": "进度条 Progress",
+    "ReconnectorText": "重连组件 Reconnector",
     "ResponsiveText": "断点通知 Responsive",
     "SpinnerText": "旋转图标 Spinner",
     "SweetAlertText": "模态弹窗 SweetAlert",
