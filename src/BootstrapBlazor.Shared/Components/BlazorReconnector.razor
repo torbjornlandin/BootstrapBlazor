@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-12 col-sm-2">
                     <div class="d-flex align-items-center justify-content-center h-100">
-                        <a href="javascript:location.reload()" class="btn btn-primary">重新连接</a>
+                        <a href="javascript:window.Blazor.reconnect()" class="btn btn-primary">重新连接</a>
                     </div>
                 </div>
             </div>
@@ -29,8 +29,8 @@
                 </div>
                 <div class="col-12 col-sm-2">
                     <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                        <a href="javascript:location.reload()" class="btn btn-primary mb-2">重新连接</a>
-                        <a href="javascript:location.reload()" class="btn btn-primary">重新加载</a>
+                        <a href="javascript:window.Blazor.reconnect()" class="btn btn-primary mb-2">重新连接</a>
+                        <a href="javascript:location.reload()" class="btn btn-info">重新加载</a>
                     </div>
                 </div>
             </div>
@@ -39,8 +39,19 @@
     <ReconnectRejectedTemplate>
         <div class="connection-mask"></div>
         <div class="connection-body">
-            <p>所有的连接尝试都被拒绝了，这很有可能是由于网络问题或者服务器问题引起的。</p>
-            <p>您可以尝试<a href="javascript:location.reload()">重新加载</a>服务器。如果是由于服务器问题引起的失败，重新连接可能不成功</p>
+            <div class="row g-3">
+                @RenderBootstrapBlazor
+                <div class="col-12 col-sm-5">
+                    <h5>Reconnector 组件</h5>
+                    <div class="mb-2"><b>服务器拒绝连接</b></div>
+                    <div class="mb-2">所有的连接尝试都被拒绝了，这很有可能是由于网络问题或者服务器问题引起的，请加群与管理员联系</div>
+                </div>
+                <div class="col-12 col-sm-2">
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                        <a href="javascript:location.reload()" class="btn btn-info">重新加载</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </ReconnectRejectedTemplate>
 </Reconnector>
