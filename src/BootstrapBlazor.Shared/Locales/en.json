@@ -2933,6 +2933,7 @@
     "TableRow2": "An active connection is re-established to the server. Hide the modal.",
     "TableRow3": "Reconnection failed, probably due to a network failure. To attempt reconnection, call <code>window.Blazor.reconnect()</code> in JavaScript.",
     "TableRow4": "Reconnection rejected. The server was reached but refused the connection, and the user's state on the server is lost. To reload the app, call <code>location.reload()</code> in JavaScript. This connection state may result when:",
-    "TableRow5": "<li>A crash in the server-side circuit occurs.</li><li>The client is disconnected long enough for the server to drop the user's state. Instances of the user's components are disposed.</li><li>The server is restarted, or the app's worker process is recycled.</li>"
+    "TableRow5": "<li>A crash in the server-side circuit occurs.</li><li>The client is disconnected long enough for the server to drop the user's state. Instances of the user's components are disposed.</li><li>The server is restarted, or the app's worker process is recycled.</li>",
+    "Application": "Application"
   }
 }
