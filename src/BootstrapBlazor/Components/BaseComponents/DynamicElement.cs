@@ -77,11 +77,10 @@ public class DynamicElement : BootstrapComponentBase
         if (GenerateElement || IsTriggerClick() || IsTriggerDoubleClick())
         {
             builder.OpenElement(0, TagName);
-        }
-
-        if (AdditionalAttributes != null)
-        {
-            builder.AddMultipleAttributes(1, AdditionalAttributes);
+            if (AdditionalAttributes != null)
+            {
+                builder.AddMultipleAttributes(1, AdditionalAttributes);
+            }
         }
 
         if (IsTriggerClick())
