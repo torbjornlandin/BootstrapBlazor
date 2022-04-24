@@ -287,6 +287,7 @@ internal class InternalTableColumn : ITableColumn
         if (source.Readonly) dest.Readonly = source.Readonly;
         if (source.Rows > 0) dest.Rows = source.Rows;
         if (source.Searchable) dest.Searchable = source.Searchable;
+        if (source.IsMultiSearch) dest.IsMultiSearch = source.IsMultiSearch;
         if (source.SearchTemplate != null) dest.SearchTemplate = source.SearchTemplate;
         if (source.ShownWithBreakPoint != BreakPoint.None) dest.ShownWithBreakPoint = source.ShownWithBreakPoint;
         if (source.ShowTips) dest.ShowTips = source.ShowTips;
