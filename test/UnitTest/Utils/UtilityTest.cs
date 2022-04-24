@@ -121,4 +121,44 @@ public class UtilityTest : BootstrapBlazorTestBase
         Utility.Copy(d1, d2);
         Assert.Equal("Test", d2.Name);
     }
+
+    [Fact]
+    public void CascadingTree_Ok()
+    {
+        List<TreeItem> items = new List<TreeItem>
+        {
+            new TreeItem() { Text = "001_系统管理", Id = "001" },
+            new TreeItem() { Text = "001_01_基础数据管理", Id = "001_01", ParentId = "001" },
+            new TreeItem() { Text = "001_01_01_教师", Id = "001_01_01", ParentId = "001_01" },
+            new TreeItem() { Text = "001_01_02_职工", Id = "001_01_02", ParentId = "001_01" },
+
+            new TreeItem() { Text = "001_02_餐厅数据管理", Id = "001_02", ParentId = "001" },
+            new TreeItem() { Text = "001_02_01_厨师", Id = "001_02_01", ParentId = "001_02" },
+            new TreeItem() { Text = "001_02_02_服务员", Id = "001_02_02", ParentId = "001_02" },
+
+        };
+        var GetTreeItems= items.CascadingTree();
+        Assert.Equal(GetTreeItems.Count(), 2);
+    }
+
+
+    [Fact]
+    public void CascadingMenu_Ok()
+    {
+        List<MenuItem> items2 = new List<MenuItem>
+        {
+            new MenuItem() { Text = "001_系统管理", Id = "001" },
+            new MenuItem() { Text = "001_01_基础数据管理", Id = "001_01", ParentId = "001" },
+            new MenuItem() { Text = "001_01_01_教师", Id = "001_01_01", ParentId = "001_01" },
+            new MenuItem() { Text = "001_01_02_职工", Id = "001_01_02", ParentId = "001_01" },
+
+            new MenuItem() { Text = "001_02_餐厅数据管理", Id = "001_02", ParentId = "001" },
+            new MenuItem() { Text = "001_02_01_厨师", Id = "001_02_01", ParentId = "001_02" },
+            new MenuItem() { Text = "001_02_02_服务员", Id = "001_02_02", ParentId = "001_02" },
+
+        };
+        var GetTreeItems = items2.CascadingMenu();
+        Assert.Equal(GetTreeItems.Count(), 2);
+    }
+
 }
