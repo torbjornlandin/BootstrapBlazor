@@ -14,4 +14,11 @@ public class ReconnectorTest : BootstrapBlazorTestBase
         var cut = Context.RenderComponent<ReconnectorOutlet>();
         cut.Contains("components-reconnect-modal");
     }
+
+    [Fact]
+    public void ReconnectorContent_Ok()
+    {
+        var cut = Context.RenderComponent<ReconnectorContent>();
+        cut.Contains("components-reconnect-modal");
+    }
 }
