@@ -294,7 +294,7 @@ public static class Utility
         var fieldValueChanged = GenerateValueChanged(component, model, fieldName, fieldType);
         var valueExpression = GenerateValueExpression(model, fieldName, fieldType);
         var lookup = item.Lookup ?? lookUpService?.GetItemsByKey(item.LookUpServiceKey);
-        var componentType = item.ComponentType ?? GenerateComponentType(fieldType, item.Rows != 0, lookup);
+        var componentType = item.ComponentType ?? GenerateComponentType(fieldType, item, lookup, isSearch);
         builder.OpenComponent(0, componentType);
         if (componentType.IsSubclassOf(typeof(ValidateBase<>).MakeGenericType(fieldType)))
         {
@@ -414,16 +414,24 @@ public static class Utility
     /// 通过指定类型生成组件类型
     /// </summary>
     /// <param name="fieldType"></param>
-    /// <param name="hasRows">是否为 Textarea 组件</param>
+    /// <param name="item">IEditorItem 实例</param>
     /// <param name="lookup"></param>
+    /// <param name="isSearch">是否为 Search 弹窗内组件</param>
     /// <returns></returns>
-    private static Type GenerateComponentType(Type fieldType, bool hasRows, IEnumerable<SelectedItem>? lookup)
+    private static Type GenerateComponentType(Type fieldType, IEditorItem item, IEnumerable<SelectedItem>? lookup, bool isSearch)
     {
         Type? ret = null;
         var type = (Nullable.GetUnderlyingType(fieldType) ?? fieldType);
         if (type.IsEnum || lookup != null)
         {
-            ret = typeof(Select<>).MakeGenericType(fieldType);
+            if (isSearch && item is ITableColumn col && col.IsMultiSearch)
+            {
+                ret = typeof(MultiSelect<>).MakeGenericType(fieldType);
+            }
+            else
+            {
+                ret = typeof(Select<>).MakeGenericType(fieldType);
+            }
         }
         else if (IsCheckboxList(type))
         {
@@ -448,7 +456,7 @@ public static class Utility
                     ret = typeof(BootstrapInputNumber<>).MakeGenericType(fieldType);
                     break;
                 case nameof(String):
-                    if (hasRows)
+                    if (item.Rows > 0)
                     {
                         ret = typeof(Textarea);
                     }
