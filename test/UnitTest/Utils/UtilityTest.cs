@@ -125,7 +125,7 @@ public class UtilityTest : BootstrapBlazorTestBase
     [Fact]
     public void CascadingTree_Ok()
     {
-        List<TreeItem> items = new List<TreeItem>
+        var items = new List<TreeItem>
         {
             new TreeItem() { Text = "001_系统管理", Id = "001" },
             new TreeItem() { Text = "001_01_基础数据管理", Id = "001_01", ParentId = "001" },
@@ -138,14 +138,15 @@ public class UtilityTest : BootstrapBlazorTestBase
 
         };
         var GetTreeItems= items.CascadingTree();
-        Assert.Equal(GetTreeItems.Count(), 2);
+        Assert.NotNull(GetTreeItems);
+        Assert.Equal(GetTreeItems.First().Items.Count(), 2);
     }
 
 
     [Fact]
     public void CascadingMenu_Ok()
     {
-        List<MenuItem> items2 = new List<MenuItem>
+        var items2 = new List<MenuItem>
         {
             new MenuItem() { Text = "001_系统管理", Id = "001" },
             new MenuItem() { Text = "001_01_基础数据管理", Id = "001_01", ParentId = "001" },
@@ -157,8 +158,9 @@ public class UtilityTest : BootstrapBlazorTestBase
             new MenuItem() { Text = "001_02_02_服务员", Id = "001_02_02", ParentId = "001_02" },
 
         };
-        var GetTreeItems = items2.CascadingMenu();
-        Assert.Equal(GetTreeItems.Count(), 2);
+        var GetMenuItems = items2.CascadingMenu();
+        Assert.NotNull(GetMenuItems);
+        Assert.Equal(GetMenuItems.First().Items.Count(), 2);
     }
 
 }
