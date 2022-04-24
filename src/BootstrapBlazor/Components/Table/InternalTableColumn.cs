@@ -21,6 +21,8 @@ internal class InternalTableColumn : ITableColumn
 
     public bool Searchable { get; set; }
 
+    public bool IsMultiSearch { get; set; }
+
     public int? Width { get; set; }
 
     public bool Fixed { get; set; }
@@ -246,6 +248,7 @@ internal class InternalTableColumn : ITableColumn
         if (source.Filterable) dest.Filterable = source.Filterable;
         if (source.Readonly) dest.Readonly = source.Readonly;
         if (source.Searchable) dest.Searchable = source.Searchable;
+        if (source.IsMultiSearch) dest.IsMultiSearch = source.IsMultiSearch;
         if (source.ShowTips) dest.ShowTips = source.ShowTips;
         if (source.Sortable) dest.Sortable = source.Sortable;
         if (source.TextEllipsis) dest.TextEllipsis = source.TextEllipsis;

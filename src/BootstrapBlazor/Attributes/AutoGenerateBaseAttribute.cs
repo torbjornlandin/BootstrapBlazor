@@ -5,7 +5,7 @@
 namespace BootstrapBlazor.Components;
 
 /// <summary>
-/// 
+/// AutoGenerateBaseAttribute 基类
 /// </summary>
 public abstract class AutoGenerateBaseAttribute : Attribute
 {
@@ -35,6 +35,11 @@ public abstract class AutoGenerateBaseAttribute : Attribute
     public bool Searchable { get; set; }
 
     /// <summary>
+    /// 获得/设置 搜索条件是否为多选 默认 false 单选
+    /// </summary>
+    public bool IsMultiSearch { get; set; }
+
+    /// <summary>
     /// 获得/设置 本列是否允许换行 默认为 false
     /// </summary>
     public bool TextWrap { get; set; }
@@ -50,7 +55,7 @@ public abstract class AutoGenerateBaseAttribute : Attribute
     public Alignment Align { get; set; }
 
     /// <summary>
-    /// 获得/设置 字段鼠标悬停提示
+    /// 获得/设置 字段鼠标悬停提示 默认 false 不显示
     /// </summary>
     public bool ShowTips { get; set; }
 }

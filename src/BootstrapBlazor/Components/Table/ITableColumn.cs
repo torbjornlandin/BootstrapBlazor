@@ -37,6 +37,11 @@ public interface ITableColumn : IEditorItem
     bool Searchable { get; set; }
 
     /// <summary>
+    /// 获得/设置 搜索条件是否为多选 默认 false 单选
+    /// </summary>
+    bool IsMultiSearch { get; set; }
+
+    /// <summary>
     /// 获得/设置 列宽
     /// </summary>
     int? Width { get; set; }

@@ -50,6 +50,8 @@ internal class MockTableColumn : ITableColumn
 
     public bool Searchable { get; set; }
 
+    public bool IsMultiSearch { get; set; }
+
     public int? Width { get; set; }
 
     public bool Fixed { get; set; }
