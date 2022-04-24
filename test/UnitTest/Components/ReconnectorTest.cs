@@ -21,4 +21,22 @@ public class ReconnectorTest : BootstrapBlazorTestBase
         var cut = Context.RenderComponent<ReconnectorContent>();
         cut.Contains("components-reconnect-modal");
     }
+
+    [Fact]
+    public void Reconnector_Ok()
+    {
+        var connector = Context.RenderComponent<Reconnector>();
+        Assert.Equal("", connector.Markup);
+
+        var cut = Context.RenderComponent<ReconnectorOutlet>();
+        connector.SetParametersAndRender(pb =>
+        {
+            pb.Add(a => a.ReconnectingTemplate, builder => builder.AddContent(0, "Test-ReconnectingTemplate"));
+            pb.Add(a => a.ReconnectFailedTemplate, builder => builder.AddContent(0, "Test-ReconnectFailedTemplate"));
+            pb.Add(a => a.ReconnectRejectedTemplate, builder => builder.AddContent(0, "Test-ReconnectRejectedTemplate"));
+        });
+        cut.Contains("Test-ReconnectingTemplate");
+        cut.Contains("Test-ReconnectFailedTemplate");
+        cut.Contains("Test-ReconnectRejectedTemplate");
+    }
 }
