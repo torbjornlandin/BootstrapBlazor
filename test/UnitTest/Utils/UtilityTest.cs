@@ -137,9 +137,9 @@ public class UtilityTest : BootstrapBlazorTestBase
             new TreeItem() { Text = "001_02_02_服务员", Id = "001_02_02", ParentId = "001_02" },
 
         };
-        var GetTreeItems= items.CascadingTree();
+        var GetTreeItems = items.CascadingTree();
         Assert.NotNull(GetTreeItems);
-        Assert.Equal(GetTreeItems.First().Items.Count(), 2);
+        Assert.Equal(2, GetTreeItems.First().Items.Count());
     }
 
 
@@ -160,7 +160,6 @@ public class UtilityTest : BootstrapBlazorTestBase
         };
         var GetMenuItems = items2.CascadingMenu();
         Assert.NotNull(GetMenuItems);
-        Assert.Equal(GetMenuItems.First().Items.Count(), 2);
+        Assert.Equal(2, GetMenuItems.First().Items.Count());
     }
-
 }
