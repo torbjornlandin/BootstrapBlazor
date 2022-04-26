@@ -1,26 +1,13 @@
-﻿using b03sqlite.Data;
-using Blazor100.Service;
+﻿// Copyright (c) Argo Zhang (argo@163.com). All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Website: https://www.blazor.zone or https://argozhang.github.io/
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddFreeSql(option =>
-{
-    option.UseConnectionString(FreeSql.DataType.Sqlite, "Data Source=test.db;")  //也可以写到配置文件中
-#if DEBUG
-         //开发环境:自动同步实体
-         .UseAutoSyncStructure(true)
-         .UseNoneCommandParameter(true)
-         //调试sql语句输出
-         .UseMonitorCommand(cmd => System.Console.WriteLine(cmd.CommandText))
-#endif
-    ;
-});
-builder.Services.AddTransient<ImportExportsService>();
-builder.Services.AddDensenExtensions();
+builder.Services.AddBootstrapBlazor();
 
 var app = builder.Build();
 
