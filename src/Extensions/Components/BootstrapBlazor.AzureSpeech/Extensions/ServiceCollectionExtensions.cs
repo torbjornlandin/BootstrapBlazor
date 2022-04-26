@@ -26,11 +26,11 @@ public static class ServiceCollectionExtensions
         services.AddMemoryCache();
 
         services.TryAddScoped<RecognizerService>();
-        services.TryAddScoped<IRecognizerProvider, AzureRecognizerProvider>();
-        services.TryAddSingleton<IConfigureOptions<AzureSpeechOption>, ConfigureOptions<AzureSpeechOption>>();
+        services.AddScoped<IRecognizerProvider, AzureRecognizerProvider>();
 
         services.TryAddScoped<SynthesizerService>();
-        services.TryAddScoped<ISynthesizerProvider, AzureSynthesizerProvider>();
+        services.AddScoped<ISynthesizerProvider, AzureSynthesizerProvider>();
+
         services.TryAddSingleton<IConfigureOptions<AzureSpeechOption>, ConfigureOptions<AzureSpeechOption>>();
 
         services.Configure<AzureSpeechOption>(option =>

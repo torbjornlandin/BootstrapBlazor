@@ -46,7 +46,7 @@ public sealed partial class NavMenu
     private List<MenuItem> Menus { get; set; } = new List<MenuItem>(100);
 
     /// <summary>
-    ///
+    /// OnInitialized 方法
     /// </summary>
     protected override void OnInitialized()
     {
@@ -169,9 +169,9 @@ public sealed partial class NavMenu
             {
                 Text = Localizer["SpeechWave"],
                 Url = "speechwaves"
-            },
+            }
         };
-        AddBadge(item, count: 3);
+        AddBadge(item);
     }
 
     private void AddQuickStar(DemoMenuItem item)
@@ -551,6 +551,11 @@ public sealed partial class NavMenu
             },
             new()
             {
+                Text = Localizer["SignaturePad"],
+                Url = "signaturepads",
+            },
+            new()
+            {
                 Text = Localizer["SpeechWave"],
                 Url = "speechwaves"
             },
@@ -835,6 +840,18 @@ public sealed partial class NavMenu
             {
                 Text = Localizer["Progress"],
                 Url = "progresss"
+            },
+            new()
+            {
+                IsNew = true,
+                Text = Localizer["Reconnector"],
+                Url = "reconnectors"
+            },
+            new()
+            {
+                IsNew = true,
+                Text = Localizer["Responsive"],
+                Url = "responsives"
             },
             new()
             {

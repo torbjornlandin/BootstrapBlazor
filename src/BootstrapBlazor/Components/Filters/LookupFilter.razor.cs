@@ -12,7 +12,7 @@ namespace BootstrapBlazor.Components;
 /// </summary>
 public partial class LookupFilter
 {
-    private string Value { get; set; } = "";
+    private string? Value { get; set; }
 
     private List<SelectedItem> Items { get; } = new List<SelectedItem>();
 
@@ -24,8 +24,13 @@ public partial class LookupFilter
 #endif
     [Parameter]
     [NotNull]
-
     public IEnumerable<SelectedItem>? Lookup { get; set; }
+
+    /// <summary>
+    /// 获得/设置 字典数据源字符串比较规则 默认 StringComparison.OrdinalIgnoreCase 大小写不敏感 
+    /// </summary>
+    [Parameter]
+    public StringComparison LookupStringComparison { get; set; } = StringComparison.OrdinalIgnoreCase;
 
     /// <summary>
     /// 获得/设置 相关枚举类型
@@ -48,9 +53,15 @@ public partial class LookupFilter
     {
         base.OnInitialized();
 
-        if (Lookup == null) throw new InvalidOperationException("the Parameter Lookup must be set.");
+        if (Lookup == null)
+        {
+            throw new InvalidOperationException("the Parameter Lookup must be set.");
+        }
 
-        if (Type == null) throw new InvalidOperationException("the Parameter Type must be set.");
+        if (Type == null)
+        {
+            throw new InvalidOperationException("the Parameter Type must be set.");
+        }
 
         if (TableFilter != null)
         {
@@ -88,5 +99,26 @@ public partial class LookupFilter
             });
         }
         return filters;
+    }
+
+    /// <summary>
+    /// Override existing filter conditions
+    /// </summary>
+    public override async Task SetFilterConditionsAsync(IEnumerable<FilterKeyValueAction> conditions)
+    {
+        if (conditions.Any())
+        {
+            var type = Nullable.GetUnderlyingType(Type) ?? Type;
+            FilterKeyValueAction first = conditions.First();
+            if (first.FieldValue != null && first.FieldValue.GetType() == type)
+            {
+                Value = first.FieldValue.ToString();
+            }
+            else
+            {
+                Value = "";
+            }
+        }
+        await base.SetFilterConditionsAsync(conditions);
     }
 }

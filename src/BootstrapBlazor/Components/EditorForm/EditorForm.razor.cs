@@ -112,6 +112,12 @@ public sealed partial class EditorForm<TModel> : IShowLabel
     public IEnumerable<IEditorItem>? Items { get; set; }
 
     /// <summary>
+    /// 获得/设置 未设置 GroupName 编辑项是否放置在顶部 默认 false
+    /// </summary>
+    [Parameter]
+    public bool ShowUnsetGroupItemsOnTop { get; set; }
+
+    /// <summary>
     /// 获得/设置 级联上下文 EditContext 实例 内置于 EditForm 或者 ValidateForm 时有值
     /// </summary>
     [CascadingParameter]
@@ -134,12 +140,19 @@ public sealed partial class EditorForm<TModel> : IShowLabel
     /// <summary>
     /// 获得/设置 配置编辑项目集合
     /// </summary>
-    private List<IEditorItem> EditorItems { get; } = new List<IEditorItem>();
+    private List<IEditorItem> EditorItems { get; } = new();
 
     /// <summary>
     /// 获得/设置 渲染的编辑项集合
     /// </summary>
-    private List<IEditorItem> FormItems { get; } = new List<IEditorItem>();
+    private List<IEditorItem> FormItems { get; } = new();
+
+    private IEnumerable<IEditorItem> UnsetGroupItems => FormItems.Where(i => string.IsNullOrEmpty(i.GroupName)).OrderBy(i => i.Order);
+
+    private IEnumerable<KeyValuePair<string, IOrderedEnumerable<IEditorItem>>> GroupItems => FormItems
+        .Where(i => !string.IsNullOrEmpty(i.GroupName))
+        .GroupBy(i => i.GroupOrder).OrderBy(i => i.Key)
+        .Select(i => new KeyValuePair<string, IOrderedEnumerable<IEditorItem>>(i.First().GroupName!, i.OrderBy(x => x.Order)));
 
     [NotNull]
     private string? PlaceHolderText { get; set; }
@@ -235,6 +248,7 @@ public sealed partial class EditorForm<TModel> : IShowLabel
                                 item.Text = el.Text;
                                 item.Items = el.Items;
                                 item.Lookup = el.Lookup;
+                                item.LookupStringComparison = el.LookupStringComparison;
                                 item.LookUpServiceKey = el.LookUpServiceKey;
                                 item.ComponentType = el.ComponentType;
                                 item.ComponentParameters = el.ComponentParameters;

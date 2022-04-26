@@ -28,11 +28,6 @@ public enum SynthesizerStatus
     Cancel,
 
     /// <summary>
-    /// 关闭
-    /// </summary>
-    Close,
-
-    /// <summary>
     /// 出错
     /// </summary>
     Error

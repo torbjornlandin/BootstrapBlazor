@@ -81,27 +81,32 @@ internal static class JSRuntimeExtensions
     }
 
     /// <summary>
-    /// 
+    /// IJSRuntime 扩展方法 动态加载脚本 脚本目录为 modules
     /// </summary>
     /// <param name="jsRuntime"></param>
     /// <param name="path"></param>
+    /// <param name="relative">是否为相对路径 默认 true</param>
     /// <returns></returns>
-    public static async Task<JSModule> LoadModule(this IJSRuntime jsRuntime, string path)
+    public static async Task<JSModule> LoadModule(this IJSRuntime jsRuntime, string path, bool relative = true)
     {
-        var jSObjectReference = await jsRuntime.InvokeAsync<IJSObjectReference>("import", $"./_content/BootstrapBlazor/js/{path}");
+        var fileName = relative ? $"./_content/BootstrapBlazor/modules/{path}" : path;
+        var jSObjectReference = await jsRuntime.InvokeAsync<IJSObjectReference>(identifier: "import", fileName);
         return new JSModule(jSObjectReference);
     }
 
     /// <summary>
-    /// 
+    /// IJSRuntime 扩展方法 动态加载脚本 脚本目录为 modules
     /// </summary>
+    /// <typeparam name="TValue"></typeparam>
     /// <param name="jsRuntime"></param>
-    /// <param name="component"></param>
+    /// <param name="path"></param>
+    /// <param name="value"></param>
+    /// <param name="relative">是否为相对路径 默认 true</param>
     /// <returns></returns>
-    public static async Task<JSModule> LoadModule<TComponent>(this IJSRuntime jsRuntime, TComponent component) where TComponent : ComponentBase
+    public static async Task<JSModule<TValue>> LoadModule<TValue>(this IJSRuntime jsRuntime, string path, TValue value, bool relative = true) where TValue : class
     {
-        var fileName = $"{component.GetType().Name}.js";
-        var jSObjectReference = await jsRuntime.InvokeAsync<IJSObjectReference>("import", $"./_content/BootstrapBlazor/js/{fileName}");
-        return new JSModule(jSObjectReference);
+        var fileName = relative ? $"./_content/BootstrapBlazor/modules/{path}" : path;
+        var jSObjectReference = await jsRuntime.InvokeAsync<IJSObjectReference>(identifier: "import", fileName);
+        return new JSModule<TValue>(jSObjectReference, value);
     }
 }

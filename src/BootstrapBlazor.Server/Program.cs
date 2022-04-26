@@ -18,21 +18,20 @@ builder.Services.AddResponseCompression();
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddBootstrapBlazorServices();
 
 // 获得当前主题配置
 var themes = builder.Configuration.GetSection("Themes")
     .GetChildren()
     .Select(c => new KeyValuePair<string, string>(c.Key, c.Value));
 
-builder.Services.ConfigureBootstrapBlazorOption(options =>
+// 增加 BootstrapBlazor 服务
+builder.Services.AddBootstrapBlazorServices(options =>
 {
     // 统一设置 Toast 组件自动消失时间
-    options.ToastDelay = 4000;
     options.Themes.AddRange(themes);
 });
 
-builder.Services.Configure<HubOptions>(option => option.MaximumReceiveMessageSize = int.MaxValue);
+builder.Services.Configure<HubOptions>(option => option.MaximumReceiveMessageSize = null);
 
 var app = builder.Build();
 

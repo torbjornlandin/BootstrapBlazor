@@ -13,11 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup .NET Core 2.1
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 2.1.x
-
     - name: Setup .NET Core 6
       uses: actions/setup-dotnet@v1
       with:
@@ -29,5 +24,6 @@ jobs:
         Bundle: True
 
       run: |
+        dotnet build src/BootstrapBlazor
         dotnet pack src/BootstrapBlazor -c Release -o publish
         dotnet nuget push publish/BootstrapBlazor.*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate

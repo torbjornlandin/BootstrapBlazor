@@ -97,4 +97,28 @@ public partial class TablesFilter
         }
         return sortString;
     }
+
+    [NotNull]
+    private Table<Foo>? TableSetFilter { get; set; }
+
+    private async Task SetFilterInCode()
+    {
+        //Find Column
+        var column = TableSetFilter.Columns.First(x => x.GetFieldName() == nameof(Foo.Name));
+
+        //Build Filter
+        var filters = new List<FilterKeyValueAction>()
+        {
+            new FilterKeyValueAction { FieldValue = "01", FilterAction = FilterAction.Contains }
+        };
+
+        //Set Filter
+        var filterAction = column.Filter?.FilterAction;
+        if (filterAction != null)
+        {
+            await filterAction.SetFilterConditionsAsync(filters);
+        }
+    }
+
+    private Task ResetAllFilters() => TableSetFilter.ResetFilters();
 }

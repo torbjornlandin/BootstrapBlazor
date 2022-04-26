@@ -122,6 +122,11 @@ internal class InternalTableColumn : ITableColumn
     public IEnumerable<SelectedItem>? Lookup { get; set; }
 
     /// <summary>
+    /// 获得/设置 字典数据源字符串比较规则 默认 StringComparison.OrdinalIgnoreCase 大小写不敏感 
+    /// </summary>
+    public StringComparison LookupStringComparison { get; set; } = StringComparison.OrdinalIgnoreCase;
+
+    /// <summary>
     /// 获得/设置 LookupService 服务获取 Lookup 数据集合键值 常用于外键自动转换为名称操作
     /// </summary>
     public string? LookUpServiceKey { get; set; }
@@ -135,6 +140,16 @@ internal class InternalTableColumn : ITableColumn
     /// 获得/设置 自定义验证集合
     /// </summary>
     public List<IValidator>? ValidateRules { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组
+    /// </summary>
+    public string? GroupName { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组排序 默认 0
+    /// </summary>
+    public int GroupOrder { get; set; }
 
     /// <summary>
     /// 构造函数
@@ -261,6 +276,7 @@ internal class InternalTableColumn : ITableColumn
         if (source.HeaderTemplate != null) dest.HeaderTemplate = source.HeaderTemplate;
         if (source.Items != null) dest.Items = source.Items;
         if (source.Lookup != null) dest.Lookup = source.Lookup;
+        dest.LookupStringComparison = source.LookupStringComparison;
         if (source.LookUpServiceKey != null) dest.LookUpServiceKey = source.LookUpServiceKey;
         if (source.IsReadonlyWhenAdd) dest.IsReadonlyWhenAdd = source.IsReadonlyWhenAdd;
         if (source.IsReadonlyWhenEdit) dest.IsReadonlyWhenEdit = source.IsReadonlyWhenEdit;
@@ -280,5 +296,7 @@ internal class InternalTableColumn : ITableColumn
         if (source.Width != null) dest.Width = source.Width;
         if (source.ValidateRules != null) dest.ValidateRules = source.ValidateRules;
         if (source.ShowLabelTooltip != null) dest.ShowLabelTooltip = source.ShowLabelTooltip;
+        if (!string.IsNullOrEmpty(source.GroupName)) dest.GroupName = source.GroupName;
+        if (source.GroupOrder != 0) dest.GroupOrder = source.GroupOrder;
     }
 }

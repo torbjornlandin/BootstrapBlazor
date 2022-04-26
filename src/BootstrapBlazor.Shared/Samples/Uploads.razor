@@ -16,7 +16,7 @@
         </div>
         <div class="col-12">
             <label for="text3" class="form-label">@Localizer["BasicUsageLabelPhoto"]</label>
-            <InputUpload TValue="string" Id="text3" ShowDeleteButton="true" OnChange="@OnFileChange" OnDelete="@OnFileDelete"></InputUpload>
+            <InputUpload TValue="string" ShowDeleteButton="true" OnChange="@OnFileChange" OnDelete="@OnFileDelete"></InputUpload>
         </div>
     </div>
     <BlockLogger @ref="Trace" class="mt-3" />
@@ -118,7 +118,7 @@
 
         <div>@((MarkupString)Localizer["PreCardStyleWasm"].Value)</div>
         <div>@((MarkupString)Localizer["PreCardStyleWasmSide"].Value)</div>
-        <div>@((MarkupString)Localizer["PreCardStyleLink", SiteOptions.Value.VideoLibUrl].Value)</div>
+        <div>@((MarkupString)Localizer["PreCardStyleLink", SiteOptions.CurrentValue.VideoLibUrl].Value)</div>
         <div>@((MarkupString)Localizer["PreCardStyleValidation"].Value)</div>
     </p>
     <div class="row g-3">

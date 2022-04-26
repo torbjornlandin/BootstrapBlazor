@@ -15,14 +15,30 @@ public static class RecognizerServiceExtensions
     /// <param name="service"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    public static async Task RecognizeOnceAsync(this RecognizerService service, Func<string, Task> callback)
+    public static async Task AzureRecognizeOnceAsync(this RecognizerService service, Func<string, Task> callback)
     {
         var option = new RecognizerOption()
         {
-            MethodName = "bb_speech_recognizeOnce",
+            MethodName = "bb_azure_speech_recognizeOnce",
             Callback = callback
         };
         await service.InvokeAsync(option);
+    }
+
+    /// <summary>
+    /// 语音识别方法
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <param name="callback"></param>
+    /// <returns></returns>
+    public static async Task AzureRecognizeOnceAsync(this IRecognizerProvider provider, Func<string, Task> callback)
+    {
+        var option = new RecognizerOption()
+        {
+            MethodName = "bb_azure_speech_recognizeOnce",
+            Callback = callback
+        };
+        await provider.InvokeAsync(option);
     }
 
     /// <summary>
@@ -31,13 +47,29 @@ public static class RecognizerServiceExtensions
     /// <param name="service"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    public static async Task CloseAsync(this RecognizerService service, Func<string, Task> callback)
+    public static async Task AzureCloseAsync(this RecognizerService service, Func<string, Task> callback)
     {
         var option = new RecognizerOption()
         {
-            MethodName = "bb_close",
+            MethodName = "bb_azure_close_recognizer",
             Callback = callback
         };
         await service.InvokeAsync(option);
+    }
+
+    /// <summary>
+    /// 关闭语音识别方法
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <param name="callback"></param>
+    /// <returns></returns>
+    public static async Task AzureCloseAsync(this IRecognizerProvider provider, Func<string, Task> callback)
+    {
+        var option = new RecognizerOption()
+        {
+            MethodName = "bb_azure_close_recognizer",
+            Callback = callback
+        };
+        await provider.InvokeAsync(option);
     }
 }

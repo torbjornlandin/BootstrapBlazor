@@ -136,3 +136,24 @@
         </TableColumns>
     </Table>
 </DemoBlock>
+
+<DemoBlock Title="Set filter in code" Introduction="Example how to set filter in code" Name="SetFilterInCode">
+    <div class="mb-2">
+        <Button Text="Name Contains 01" OnClickWithoutRender="SetFilterInCode" />
+        <Button Text="Reset all filters" OnClickWithoutRender="ResetAllFilters" />
+    </div>
+    <Table TItem="Foo" @ref="TableSetFilter"
+           IsPagination="true" PageItemsSource="@PageItemsSource"
+           IsStriped="true" IsBordered="true" IsMultipleSelect="true"
+           ShowSkeleton="true" ShowFilterHeader="true"
+           OnQueryAsync="@OnQueryAsync">
+        <TableColumns>
+            <TableColumn @bind-Field="@context.DateTime" Width="180" Sortable="true" />
+            <TableColumn @bind-Field="@context.Name" Width="100" Sortable="true" Filterable="true" />
+            <TableColumn @bind-Field="@context.Address" Sortable="true" />
+            <TableColumn @bind-Field="@context.Complete" Width="100" Sortable="true" Filterable="true" />
+            <TableColumn @bind-Field="@context.Education" Width="100" Sortable="true" Filterable="true" />
+            <TableColumn @bind-Field="@context.Count" Width="150" Sortable="true" />
+        </TableColumns>
+    </Table>
+</DemoBlock>

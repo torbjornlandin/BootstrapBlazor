@@ -341,6 +341,12 @@ public class TableColumn<TItem, TType> : BootstrapComponentBase, ITableColumn
     public IEnumerable<SelectedItem>? Lookup { get; set; }
 
     /// <summary>
+    /// 获得/设置 字典数据源字符串比较规则 默认 StringComparison.OrdinalIgnoreCase 大小写不敏感 
+    /// </summary>
+    [Parameter]
+    public StringComparison LookupStringComparison { get; set; } = StringComparison.OrdinalIgnoreCase;
+
+    /// <summary>
     /// 获得/设置 字典数据源服务的类别 常用于外键自动转换为名称操作
     /// </summary>
     [Parameter]
@@ -390,6 +396,18 @@ public class TableColumn<TItem, TType> : BootstrapComponentBase, ITableColumn
     /// </summary>
     [Parameter]
     public string? FieldName { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组 默认 null
+    /// </summary>
+    [Parameter]
+    public string? GroupName { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组排序 默认 0
+    /// </summary>
+    [Parameter]
+    public int GroupOrder { get; set; }
 
     /// <summary>
     /// 获取绑定字段信息方法

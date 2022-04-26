@@ -83,6 +83,18 @@ public partial class Table<TItem>
     public int ExtendButtonColumnWidth { get; set; } = 130;
 
     /// <summary>
+    /// 获得/设置 是否显示行内扩展编辑按钮 默认 true 显示
+    /// </summary>
+    [Parameter]
+    public bool ShowExtendEditButton { get; set; } = true;
+
+    /// <summary>
+    /// 获得/设置 是否显示行内扩展编辑按钮 默认 true 显示
+    /// </summary>
+    [Parameter]
+    public bool ShowExtendDeleteButton { get; set; } = true;
+
+    /// <summary>
     /// 获得/设置 是否固定扩展按钮列 默认为 false 不固定
     /// </summary>
     [Parameter]
@@ -484,6 +496,12 @@ public partial class Table<TItem>
     public bool EditDialogShowMaximizeButton { get; set; } = true;
 
     /// <summary>
+    /// 获得/设置 未分组编辑项布局位置 默认 false 在尾部
+    /// </summary>
+    [Parameter]
+    public bool ShowUnsetGroupItemsOnTop { get; set; }
+
+    /// <summary>
     /// 弹出编辑对话框方法
     /// </summary>
     protected async Task ShowEditDialog(ItemChangedType changedType)
@@ -508,6 +526,7 @@ public partial class Table<TItem>
             Size = EditDialogSize,
             IsDraggable = EditDialogIsDraggable,
             ShowMaximizeButton = EditDialogShowMaximizeButton,
+            ShowUnsetGroupItemsOnTop = ShowUnsetGroupItemsOnTop,
             OnCloseAsync = async () =>
             {
                 var d = DataService ?? InjectDataService;
@@ -744,11 +763,11 @@ public partial class Table<TItem>
     /// 是否显示行内编辑按钮
     /// </summary>
     /// <returns></returns>
-    protected bool GetShowEditButton(TItem item) => ShowEditButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowEditButton);
+    protected bool GetShowEditButton(TItem item) => ShowExtendEditButton && (ShowEditButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowEditButton));
 
     /// <summary>
     /// 是否显示行内删除按钮
     /// </summary>
     /// <returns></returns>
-    protected bool GetShowDeleteButton(TItem item) => ShowDeleteButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowDeleteButton);
+    protected bool GetShowDeleteButton(TItem item) => ShowExtendDeleteButton && (ShowDeleteButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowDeleteButton));
 }
