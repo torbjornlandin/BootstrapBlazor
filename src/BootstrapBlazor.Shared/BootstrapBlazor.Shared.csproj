@@ -20,7 +20,7 @@
     <PackageReference Include="BootstrapBlazor.Markdown" Version="6.*" />
     <PackageReference Include="BootstrapBlazor.TableExport" Version="6.*" />
     <PackageReference Include="BootstrapBlazor.OnScreenKeyboard" Version="6.*" />
-    <PackageReference Include="BootstrapBlazor.SignaturePad" Version="6.*" />
+    <PackageReference Include="BootstrapBlazor.SignaturePad" Version="6.*" >
       <ExcludeAssets>contentFiles</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="System.Text.Json" Version="6.*" />
