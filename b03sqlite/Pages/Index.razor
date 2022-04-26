@@ -4,17 +4,19 @@
 
 <PageTitle>Index</PageTitle>
 
-<Tab>
-    <TabItem Text="数据维护">
-        <Table TItem="Foo" Items="@Items">
-            <TableColumns>
-                <TableColumn @bind-Field="@context.DateTime" Width="180" />
-                <TableColumn @bind-Field="@context.Name" />
-                <TableColumn @bind-Field="@context.Address" />
-            </TableColumns>
-        </Table>
-    </TabItem>
-</Tab>
+    <Table TItem="Foo"
+           IsStriped="true" IsBordered="true" IsMultipleSelect="true"
+           ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true"
+           OnQueryAsync="@OnQueryAsync">
+        <TableColumns>
+            <TableColumn @bind-Field="@context.DateTime" Width="180" />
+            <TableColumn @bind-Field="@context.Name" />
+            <TableColumn @bind-Field="@context.Address" />
+            <TableColumn @bind-Field="@context.Education" />
+            <TableColumn @bind-Field="@context.Count" Align="Alignment.Right" />
+            <TableColumn @bind-Field="@context.Complete" Align="Alignment.Center" />
+        </TableColumns>
+    </Table>
 
 @code {
     [NotNull]
@@ -33,5 +35,42 @@
             Complete = random.Next(1, 100) > 50,
             Education = random.Next(1, 100) > 50 ? EnumEducation.Primary : EnumEducation.Middel
         }).ToList();
+    }
+
+    private Task<QueryData<Foo>> OnQueryAsync(QueryPageOptions options)
+    {
+        IEnumerable<Foo> items = Items;
+
+    // 过滤
+        var isFiltered = false;
+        if (options.Filters.Any())
+        {
+            items = items.Where(options.Filters.GetFilterFunc<Foo>());
+            isFiltered = true;
+        }
+
+    // 排序
+        var isSorted = false;
+        if (!string.IsNullOrEmpty(options.SortName))
+        {
+            var invoker = Foo.GetNameSortFunc();
+            items = invoker(items, options.SortName, options.SortOrder);
+            isSorted = true;
+        }
+
+    // 设置记录总数
+        var total = items.Count();
+
+    // 内存分页
+        items = items.Skip((options.PageIndex - 1) * options.PageItems).Take(options.PageItems).ToList();
+
+        return Task.FromResult(new QueryData<Foo>()
+        {
+            Items = items,
+            TotalCount = total,
+            IsSorted = isSorted,
+            IsFiltered = isFiltered,
+            IsSearch = true
+        });
     }
 }
