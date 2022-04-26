@@ -543,7 +543,7 @@ public static class ICacheManagerExtensions
             var v = sections
                 .FirstOrDefault(kv => typeName.Equals(kv.Key, StringComparison.OrdinalIgnoreCase))?
                 .GetChildren()
-                .SelectMany(c => new KeyValuePair<string, string>[] { new KeyValuePair<string, string>(c.Key, c.Value) });
+                .SelectMany(c => new[] { new KeyValuePair<string, string>(c.Key, c.Value) });
 
             return v ?? Enumerable.Empty<KeyValuePair<string, string>>();
         });
