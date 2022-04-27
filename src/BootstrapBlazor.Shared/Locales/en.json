@@ -2894,7 +2894,7 @@
     "SwitchButtonTextOff": "Click to copy",
     "SwitchButtonTextOn": "Show Copy Dialog"
   },
-    "BootstrapBlazor.Shared.Samples.SignaturePads": {
+  "BootstrapBlazor.Shared.Samples.SignaturePads": {
     "BackText": "Back",
     "BaseUsageText": "Basic usage",
     "BaseUsageIntro": "Signature with touch or mouse",
@@ -2940,10 +2940,23 @@
     "Application": "Application"
   },
   "BootstrapBlazor.Shared.Samples.OnScreenKeyboards": {
-    "Title": "AutoComplete",
-    "H1": "The input box autocompletes the function",
-    "Block1Title": "Basic usage",
-    "Block1Intro": "By setting <code>Items</code> data collection when the user types information that is automatically displayed",
-    "P1": "In this example, type 123 strings to display the viewing effect, automatically give the component initialization to the auto-prompt dataset, and the dataset does not change"
+    "Title": "On-screen keyboard",
+    "P1": "Precautions",
+    "P2": "This component relies on <a href='https://www.nuget.org/packages?q-BootstrapBlazor.OnScreenKeyboard' target'_blank'><code>BootstrapBlazor.OnScreenKeyboard</code></a>, which needs to reference its component package when using this component",
+    "P3": "Nuget package installation",
+    "P4": "Install the</code> components of <code>BootstrapBlazor.OnScreenKeyboard using <a href='https://www.nuget.org/packages?q-BootstrapBlazor.OnScreenKeyboard' target'_blank'>nuget.org</a>",
+    "BaseUsageText": "Basic usage",
+    "BlockKeyboardTypeAllTitle": "Full Keyboard",
+    "BlockKeyboardTypekeyboard": "Keyboard",
+    "BlockKeyboardTypeNumpadTitle": "Numpad",
+    "BlockKeyboardTypeSpanishTitle": "Spanish keyboard",
+    "BlockKeyboardThemeDarkTitle": "Theme dark",
+    "BlockSpecialcharactersTitle": "Special characters europe",
+    "BlockSpecialcharactersCustomerTitle": "Special characters in customer",
+    "BBUsageText": "BootstrapBlazor component",
+    "BBUsage2Text": "Bind",
+    "Tips": "If the performance is not normal, you can add this css to debug",
+    "P5": "<code> .kioskboard-body-padding { padding-top: unset !important;} </code>",
+    "P6": "Basic"
   }
 }

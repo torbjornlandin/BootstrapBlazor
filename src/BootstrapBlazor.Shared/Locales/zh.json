@@ -2965,12 +2965,12 @@
     "BlockKeyboardTypeNumpadTitle": "数字键盘",
     "BlockKeyboardTypeSpanishTitle": "西班牙语键盘",
     "BlockKeyboardThemeDarkTitle": "暗黑主题",
-    "BlockSpecialcharactersTitle": "特殊符号II",
+    "BlockSpecialcharactersTitle": "特殊符号-欧洲",
     "BlockSpecialcharactersCustomerTitle": "特殊符号自定义",
     "BBUsageText": "BootstrapBlazor 组件",
     "BBUsage2Text": "双绑",
     "Tips": "如果表现不正常,可以加上这句 css 调试看看",
-    "P5": "<code> .kioskboard-body-padding { padding-top: unset !important;} </code>"
-
+    "P5": "<code> .kioskboard-body-padding { padding-top: unset !important;} </code>",
+    "P6": "基础用法"
   }
 }

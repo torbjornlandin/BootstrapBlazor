@@ -18,6 +18,7 @@ public sealed partial class OnScreenKeyboards
     string ClassName1 = "virtualkeyboard1";
     string ClassName2 = "virtualkeyboard2";
     string ClassName3 = "virtualkeyboard3";
+    string ClassNameBB = "virtualkeyboardbb";
 
     static Dictionary<string, string> keys1 = new Dictionary<string, string>() { { "0", "L" }, { "1", "O" } };
     static Dictionary<string, string> keys2 = new Dictionary<string, string>() { { "0", "V" }, { "1", "E" } };
@@ -38,6 +39,10 @@ public sealed partial class OnScreenKeyboards
     {
         CustomerKeyboardSpecialcharacters = new string[] { "中", "国", "女", "足", "牛啊" }
     };
+    KeyboardOption OptionBB = new KeyboardOption()
+    {
+        autoScroll = true
+    };
 
 
     /// <summary>
@@ -49,11 +54,286 @@ public sealed partial class OnScreenKeyboards
         // TODO: 移动到数据库中
         new AttributeItem()
         {
-            Name = "OnResult",
-            Description = "签名结果回调方法",
-            Type = "Func<string, Task>?",
+            Name = "ClassName",
+            Description = "获得/设置 组件class名称",
+            Type = "string",
+            ValueList = " — ",
+            DefaultValue = "virtualkeyboard"
+        },
+        new AttributeItem()
+        {
+            Name = "ClassName",
+            Description = "获得/设置 键盘语言布局",
+            Type = "KeyboardKeysType?",
+            ValueList = "arabic|english|french|german|hungarian|persian|russian|spanish|turkish",
+            DefaultValue = "english"
+        },
+        new AttributeItem()
+        {
+            Name = "Keyboard",
+            Description = "获得/设置 键盘类型",
+            Type = "KeyboardType",
+            ValueList = "全键盘 all | 字母 keyboard || 小数字键盘 numpad",
+            DefaultValue = "all"
+        },
+        new AttributeItem()
+        {
+            Name = "Placement",
+            Description = "获得/设置 对齐",
+            Type = "KeyboardPlacement",
+            ValueList = "顶端 top | 底部 bottom",
+            DefaultValue = "bottom"
+        },
+        new AttributeItem()
+        {
+            Name = "Placeholder",
+            Description = "获得/设置 占位符",
+            Type = "string",
+            ValueList = " — ",
+            DefaultValue = " - "
+        },
+        new AttributeItem()
+        {
+            Name = "Specialcharacters",
+            Description = "获得/设置 显示特殊字符切换按钮",
+            Type = "bool",
+            ValueList = " - ",
+            DefaultValue = "true"
+        },
+        new AttributeItem()
+        {
+            Name = "Option",
+            Description = "获得/设置 键盘配置",
+            Type = "KeyboardOption?",
+            ValueList = " - ",
+            DefaultValue = " - "
+        }
+    };
+
+
+    /// <summary>
+    /// 获得KeyboardOption属性
+    /// </summary>
+    /// <returns></returns>
+    private static IEnumerable<AttributeItem> GetKeyboardOptionAttributes() => new AttributeItem[]
+    {
+        // TODO: 移动到数据库中
+        new AttributeItem()
+        {
+            Name = "keysArrayOfObjects",
+            Description = "键盘布局数组",
+            Type = "List<Dictionary<string, string>>? keysArrayOfObjects",
+            ValueList = " — ",
+            DefaultValue = "英文键盘布局数组"
+        },
+        new AttributeItem()
+        {
+            Name = "KeyboardKeysType",
+            Description = "键盘语言布局,仅当“keysArrayOfObjects”为“null”时才需要设置",
+            Type = "KeyboardKeysType",
+            ValueList = "arabic|english|french|german|hungarian|persian|russian|spanish|turkish",
+            DefaultValue = "english"
+        },
+        new AttributeItem()
+        {
+            Name = "keysJsonUrl",
+            Description = "“kioskboard-keys-${langugage}.json”文件的路径,仅当“keysArrayOfObjects”为“null”时才需要设置",
+            Type = "string",
+            ValueList = " - ",
+            DefaultValue = "./_content/BootstrapBlazor.OnScreenKeyboard/lib/kioskboard/kioskboard-keys-{KeyboardKeysType}.json"
+        },
+        new AttributeItem()
+        {
+            Name = "KeyboardSpecialcharacters",
+            Description = "特殊符号键盘类型, 默认 || 欧洲 || 自定义",
+            Type = "KeyboardSpecialcharacters",
+            ValueList = "all|europe|customer",
+            DefaultValue = "all"
+        },
+        new AttributeItem()
+        {
+            Name = "CustomerKeyboardSpecialcharacters",
+            Description = "自定义特殊符号键盘 , 字符串数组覆盖内置的特殊字符.",
+            Type = "string[]?",
             ValueList = " — ",
             DefaultValue = " — "
+        },
+        new AttributeItem()
+        {
+            Name = "可选：可以设置一个数字数组来覆盖内置的小键盘键。（从 0 到 9，顺序不限。）",
+            Description = "keysNumpadArrayOfNumbers",
+            Type = "string?",
+            ValueList = " — ",
+            DefaultValue = " — "
+        },
+        new AttributeItem()
+        {
+            Name = "language",
+            Description = "可选：自定义键的语言代码 (ISO 639-1)（用于语言支持）",
+            Type = "string",
+            ValueList = "例如 de || en || fr || hu || tr 等...",
+            DefaultValue = "en"
+        },
+        new AttributeItem()
+        {
+            Name = "Theme",
+            Description = "键盘主题, 浅色 || 暗黑 || 平板 || material ||oldschool",
+            Type = "KeyboardTheme",
+            ValueList = "light|dark|flat|material|oldschool",
+            DefaultValue = " — "
+        },
+        new AttributeItem()
+        {
+            Name = "allowRealKeyboard",
+            Description = "允许或阻止真实/物理键盘的使用。“false”时阻止. 此外，如果想要使用真实/物理键盘，“allowMobileKeyboard”选项也必须为“true”",
+            Type = "bool",
+            ValueList = "true|false",
+            DefaultValue = "true"
+        },
+        new AttributeItem()
+        {
+            Name = "allowMobileKeyboard",
+            Description = "允许或阻止使用移动键盘",
+            Type = "bool",
+            ValueList = "true|false",
+            DefaultValue = "true"
+        },
+        new AttributeItem()
+        {
+            Name = "cssAnimations",
+            Description = "打开或关闭键盘的 CSS 动画",
+            Type = "bool",
+            ValueList = "true|false",
+            DefaultValue = "true"
+        },
+        new AttributeItem()
+        {
+            Name = "cssAnimationsDuration",
+            Description = "CSS 动画持续时间(毫秒)",
+            Type = "int",
+            ValueList = " - ",
+            DefaultValue = "360"
+        },
+        new AttributeItem()
+        {
+            Name = "KeyboardCssAnimationsStyle",
+            Description = "打开或关闭键盘的 CSS 动画样式",
+            Type = "KeyboardCssAnimationsStyle",
+            ValueList = "slide|fade|flat|material|oldschool",
+            DefaultValue = "slide"
+        },
+        new AttributeItem()
+        {
+            Name = "keysAllowSpacebar",
+            Description = "启用或禁用键盘上的空格键功能",
+            Type = "bool",
+            ValueList = "true|false",
+            DefaultValue = "true"
+        },
+        new AttributeItem()
+        {
+            Name = "空格键（空格键）的文本。不设置显示为”Space”",
+            Description = "keysSpacebarText",
+            Type = "string",
+            ValueList = " - ",
+            DefaultValue = "Space"
+        },
+        new AttributeItem()
+        {
+            Name = "keysFontFamily",
+            Description = "按键字体名称",
+            Type = "string",
+            ValueList = " - ",
+            DefaultValue = "sans-serif"
+        },
+        new AttributeItem()
+        {
+            Name = "keysFontSize",
+            Description = "按键文字尺寸",
+            Type = "string",
+            ValueList = " - ",
+            DefaultValue = "22px"
+        },
+        new AttributeItem()
+        {
+            Name = "keysFontWeight",
+            Description = "按键文字粗细",
+            Type = "string",
+            ValueList = " - ",
+            DefaultValue = "normal"
+        },
+        new AttributeItem()
+        {
+            Name = "keysIconSize",
+            Description = "按键图标大小",
+            Type = "string",
+            ValueList = " - ",
+            DefaultValue = "25px"
+        },
+        new AttributeItem()
+        {
+            Name = "autoScroll",
+            Description = "将文档滚动到 input/textarea 元素的顶部或底部（通过放置选项）",
+            Type = "bool",
+            ValueList = "true|false",
+            DefaultValue = "true"
+        },
+    };
+
+    /// <summary>
+    /// 获得KeyboardEnum属性
+    /// </summary>
+    /// <returns></returns>
+    private static IEnumerable<AttributeItem> GetKeyboardEnumAttributes() => new AttributeItem[]
+    {
+        // TODO: 移动到数据库中
+        new AttributeItem()
+        {
+            Name = "KeyboardKeysType",
+            Description = "键盘语言布局",
+            Type = "enum",
+            ValueList = "arabic|english|french|german|hungarian|persian|russian|spanish|turkish",
+            DefaultValue = "english"
+        },
+        new AttributeItem()
+        {
+            Name = "KeyboardType",
+            Description = "键盘类型, 全键盘 || 字母 || 小数字键盘",
+            Type = "enum",
+            ValueList = "all|keyboard|numpad",
+            DefaultValue = "all"
+        },
+        new AttributeItem()
+        {
+            Name = "KeyboardPlacement",
+            Description = "对齐, 顶端 || 底部",
+            Type = "enum",
+            ValueList = "bottom|top",
+            DefaultValue = "bottom"
+        },
+        new AttributeItem()
+        {
+            Name = "KeyboardSpecialcharacters",
+            Description = "特殊符号键盘类型, 默认 || 欧洲 || 自定义",
+            Type = "enum",
+            ValueList = "all|europe|customer",
+            DefaultValue = "all"
+        },
+        new AttributeItem()
+        {
+            Name = "KeyboardTheme",
+            Description = "键盘主题, 浅色 || 暗黑 || 平板 || material ||oldschool",
+            Type = "enum",
+            ValueList = "light|dark|flat|material|oldschool",
+            DefaultValue = "light"
+        },
+        new AttributeItem()
+        {
+            Name = "KeyboardCssAnimationsStyle",
+            Description = "打开或关闭键盘的 CSS 动画样式",
+            Type = "enum",
+            ValueList = "slide|fade|flat|material|oldschool",
+            DefaultValue = "slide"
         },
     };
 }
