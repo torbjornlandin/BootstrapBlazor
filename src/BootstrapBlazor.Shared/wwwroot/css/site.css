@@ -1,8 +1,12 @@
 ﻿header {
-    background-color: #4a3275;
+    background-color: #7952b3;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
     font-size: 1rem;
     transition: transform .3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,.85);
 }
 
 @media (min-width: 768px) {
@@ -1248,7 +1252,7 @@ section {
 
     .culture-selector label {
         margin: 0;
-        color: rgba(255,255,255,.5);
+        color: rgba(255,255,255,.85);
     }
 
     .culture-selector .select {
@@ -1769,7 +1773,6 @@ section {
 
 header .bb-fs {
     margin-top: 2px;
-    color: #fff !important;
     cursor: pointer;
 }
 
@@ -1894,7 +1897,7 @@ header .bb-fs {
     left: 0;
     right: 0;
     bottom: 0;
-    color: #dee2e6;
-    background-color: #7239ea;
+    color: #ffffff;
+    background: linear-gradient(54.4deg,#771f89 -28.5%,#834cef 30.36%,#636cea 99.19%);
     padding: 1rem;
 }
