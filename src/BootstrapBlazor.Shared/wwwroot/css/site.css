@@ -1887,3 +1887,14 @@ header .bb-fs {
     height: 114px;
     margin-left: 1rem;
 }
+
+.blazor-intro {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: #dee2e6;
+    background-color: #7239ea;
+    padding: 1rem;
+}

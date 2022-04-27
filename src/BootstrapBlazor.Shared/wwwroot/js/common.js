@@ -195,8 +195,15 @@
                 }).trigger('click');
             }
         },
-        bb_tooltip_site: function (el) {
+        bb_site_load: function (el) {
             $(el).tooltip();
+            var handler = window.setTimeout(function () {
+                window.clearTimeout(handler);
+
+                var $intro = $('.blazor-intro');
+                $intro.slideToggle('fade');
+
+            }, 2000);
         },
         bb_block: function (el) {
             var $el = $(el);
@@ -275,18 +282,18 @@
         });
     });
 
-//    $(function () {
-//        new MutationObserver((mutations, observer) => {
-//            if (document.querySelector('#components-reconnect-modal h5 a')) {
-//                function attemptReload() {
-//                    fetch('').then(() => {
-//                        location.reload();
-//                    });
-//                }
-//                observer.disconnect();
-//                attemptReload();
-//                setInterval(attemptReload, 10000);
-//            }
-//        }).observe(document.body, { childList: true, subtree: true });
-//    });
+    //    $(function () {
+    //        new MutationObserver((mutations, observer) => {
+    //            if (document.querySelector('#components-reconnect-modal h5 a')) {
+    //                function attemptReload() {
+    //                    fetch('').then(() => {
+    //                        location.reload();
+    //                    });
+    //                }
+    //                observer.disconnect();
+    //                attemptReload();
+    //                setInterval(attemptReload, 10000);
+    //            }
+    //        }).observe(document.body, { childList: true, subtree: true });
+    //    });
 })(jQuery);
