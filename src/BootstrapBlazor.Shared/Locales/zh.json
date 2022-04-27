@@ -2954,10 +2954,23 @@
     "Application": "实战应用"
   },
   "BootstrapBlazor.Shared.Samples.OnScreenKeyboards": {
-    "Title": "AutoComplete",
-    "H1": "The input box autocompletes the function",
-    "Block1Title": "Basic usage",
-    "Block1Intro": "By setting <code>Items</code> data collection when the user types information that is automatically displayed",
-    "P1": "In this example, type 123 strings to display the viewing effect, automatically give the component initialization to the auto-prompt dataset, and the dataset does not change"
+    "Title": "On-screen keyboard 屏幕键盘",
+    "P1": "注意事项",
+    "P2": "本组件依赖于 <a href='https://www.nuget.org/packages?q=BootstrapBlazor.OnScreenKeyboard' target='_blank'><code>BootstrapBlazor.SignaturePad</code></a>，使用本组件时需要引用其组件包",
+    "P3": "Nuget 包安装",
+    "P4": "使用 <a href='https://www.nuget.org/packages?q=BootstrapBlazor.OnScreenKeyboard' target='_blank'>nuget.org</a> 进行 <code>BootstrapBlazor.OnScreenKeyboard</code> 组件的安装",
+    "BaseUsageText": "基础用法",
+    "BlockKeyboardTypeAllTitle": "全键盘",
+    "BlockKeyboardTypekeyboard": "字母键盘",
+    "BlockKeyboardTypeNumpadTitle": "数字键盘",
+    "BlockKeyboardTypeSpanishTitle": "西班牙语键盘",
+    "BlockKeyboardThemeDarkTitle": "暗黑主题",
+    "BlockSpecialcharactersTitle": "特殊符号II",
+    "BlockSpecialcharactersCustomerTitle": "特殊符号自定义",
+    "BBUsageText": "BootstrapBlazor 组件",
+    "BBUsage2Text": "双绑",
+    "Tips": "如果表现不正常,可以加上这句 css 调试看看",
+    "P5": "<code> .kioskboard-body-padding { padding-top: unset !important;} </code>"
+
   }
 }
