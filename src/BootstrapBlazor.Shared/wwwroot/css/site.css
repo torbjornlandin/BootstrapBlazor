@@ -36,7 +36,7 @@ header .nav-link img {
         width: 40px;
         height: auto;
         border-radius: var(--bs-border-radius);
-        border: solid 1px rgba(255, 255, 255, 0.5);
+        border: solid 1px #fff;
         margin-right: 1rem;
     }
 
@@ -1897,7 +1897,31 @@ header .bb-fs {
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 2000;
     color: #ffffff;
     background: linear-gradient(54.4deg,#771f89 -28.5%,#834cef 30.36%,#636cea 99.19%);
     padding: 1rem;
 }
+
+    .blazor-intro .blazor-intro-body {
+        flex: 1 1 auto;
+    }
+
+        .blazor-intro .blazor-intro-body a {
+            color: #fff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .blazor-intro .blazor-intro-body img {
+            width: 44px;
+        }
+
+    .blazor-intro .blazor-intro-barcode {
+        text-align: center;
+    }
+
+        .blazor-intro .blazor-intro-barcode img {
+            margin: 0 1rem 0 2rem;
+            width: 120px;
+        }
