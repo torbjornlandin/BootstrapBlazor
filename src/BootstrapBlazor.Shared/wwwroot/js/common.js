@@ -197,13 +197,23 @@
         },
         bb_site_load: function (el) {
             $(el).tooltip();
-            var handler = window.setTimeout(function () {
-                window.clearTimeout(handler);
 
-                var $intro = $('.blazor-intro');
+            // Intro 弹窗
+            var $intro = $('.blazor-intro');
+            $('.blazor-intro-close').on('click', function () {
+                if (handler != null) {
+                    window.clearInterval(handler);
+                    $intro.slideToggle('fade');
+                }
+            });
+            var count = 0;
+            var handler = window.setInterval(function () {
+                count++;
                 $intro.slideToggle('fade');
-
-            }, 2000);
+                if (count >= 2) {
+                    window.clearInterval(handler);
+                }
+            }, 5000);
         },
         bb_block: function (el) {
             var $el = $(el);
