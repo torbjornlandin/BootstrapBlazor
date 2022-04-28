@@ -13,13 +13,10 @@
 <p>@((MarkupString)Localizer["P4"].Value)</p>
 
 <div class="code-label">.NET CLI</div>
-<Pre class="no-highlight">dotnet add package BootstrapBlazor.SignaturePad</Pre>
 
 <div class="code-label">PackageReference</div>
-<Pre class="no-highlight">&lt;PackageReference Include="BootstrapBlazor.SignaturePad" /&gt;</Pre>
 
 <div class="code-label">Package Manager</div>
-<Pre class="no-highlight">Install-Package BootstrapBlazor.SignaturePad</Pre>
 
 <p><b>@Localizer["P6"]</b></p>
 <div class="code-label">Razor</div>
@@ -27,102 +24,64 @@
 <Pre class="no-highlight">2. &lt;input class="virtualkeyboard" data-kioskboard-type="all" data-kioskboard-specialcharacters="true" /&gt;</Pre>
 
 <DemoBlock Title="@Localizer["BaseUsageText"]" Introduction="@Localizer["BlockKeyboardTypeAllTitle"]" Name="Normal">
-
     <OnScreenKeyboard ClassName="@ClassName" KeyboardKeys="KeyboardKeysType.english" />
     <input class="form-control @ClassName"
            data-kioskboard-type="@KeyboardType.all.ToString()"
            data-kioskboard-specialcharacters="true"
            placeholder='@Localizer["BlockKeyboardTypeAllTitle"]' />
-
-    <Pre class="no-highlight">data-kioskboard-type="all"</Pre>
-
 </DemoBlock>
 
-<DemoBlock Title="@Localizer["BlockKeyboardTypekeyboard"]" Introduction="" Name="Normal">
-
+<DemoBlock Title="@Localizer["BlockKeyboardTypekeyboard"]" Introduction="" Name="BlockKeyboardTypekeyboard">
     <input class="form-control @ClassName"
            data-kioskboard-type="@KeyboardType.keyboard.ToString()"
            data-kioskboard-placement="@KeyboardPlacement.bottom.ToString()"
            placeholder='@Localizer["BlockKeyboardTypekeyboard"]' />
-
-    <Pre class="no-highlight">data-kioskboard-type="all"</Pre>
-
 </DemoBlock>
 
-<DemoBlock Title="@Localizer["BlockKeyboardTypeNumpadTitle"]" Introduction="" Name="Normal">
-
+<DemoBlock Title="@Localizer["BlockKeyboardTypeNumpadTitle"]" Introduction="" Name="BlockKeyboardTypeNumpadTitle">
     <input class="form-control @ClassName"
            data-kioskboard-type="@KeyboardType.numpad.ToString()"
            data-kioskboard-placement="@(KeyboardPlacement.bottom.ToString())"
            placeholder='@Localizer["BlockKeyboardTypeNumpadTitle"]' />
-
-    <Pre class="no-highlight">data-kioskboard-type="all"</Pre>
-
 </DemoBlock>
 
-<DemoBlock Title="@Localizer["BlockKeyboardThemeDarkTitle"]" Introduction="" Name="Normal">
-
+<DemoBlock Title="@Localizer["BlockKeyboardThemeDarkTitle"]" Introduction="" Name="BlockKeyboardThemeDarkTitle">
     <input class="form-control @ClassName1"
            data-kioskboard-type="@KeyboardType.keyboard.ToString()"
            placeholder='@Localizer["BlockKeyboardThemeDarkTitle"]' />
     <OnScreenKeyboard ClassName="@ClassName1" Option="Option1" />
-
-    <Pre class="no-highlight">KeyboardOption.Theme = KeyboardTheme.dark</Pre>
-
 </DemoBlock>
 
-<DemoBlock Title="@Localizer["BlockSpecialcharactersTitle"]" Introduction="" Name="Normal">
-
-
+<DemoBlock Title="@Localizer["BlockSpecialcharactersTitle"]" Introduction="" Name="BlockSpecialcharactersTitle">
     <input class="form-control @ClassName2"
            data-kioskboard-specialcharacters="true"
            placeholder='@Localizer["BlockSpecialcharactersTitle"]' />
     <OnScreenKeyboard ClassName="@ClassName2" Option="Option2" />
-
-    <Pre class="no-highlight">KeyboardOption.KeyboardSpecialcharacters = KeyboardSpecialcharacters.europe</Pre>
-
 </DemoBlock>
 
-<DemoBlock Title="@Localizer["BlockSpecialcharactersCustomerTitle"]" Introduction="[- + =]" Name="Normal">
-
-
+<DemoBlock Title="@Localizer["BlockSpecialcharactersCustomerTitle"]" Introduction="[- + =]" Name="BlockSpecialcharactersCustomerTitle">
     <input class="form-control @ClassName3" data-kioskboard-specialcharacters="true" placeholder='@Localizer["BlockSpecialcharactersCustomerTitle"]' />
     <OnScreenKeyboard ClassName="@ClassName3" Option="Option3" />
-
-    <Pre class="no-highlight">KeyboardOption.CustomerKeyboardSpecialcharacters = new string[] { "中", "国", "女", "足", "牛啊" }</Pre>
-
+Pre>
 </DemoBlock>
 
-<DemoBlock Title="@Localizer["BBUsageText"]" Introduction="" Name="Normal">
+<DemoBlock Title="@Localizer["BBUsageText"]" Introduction="" Name="App">
     <p>@Localizer["BBUsage2Text"]</p>
 
     <OnScreenKeyboard ClassName="@ClassNameBB" Option="OptionBB" />
-
     <div class="form-control textarea-demo"> @BindValue</div>
-
     <p>BootstrapInput</p>
-
     <BootstrapInput class="@ClassNameBB" data-kioskboard-specialcharacters="true" placeholder="BootstrapInput" @bind-Value="@BindValue" />
-
     <p>BootstrapPassword</p>
-
     <BootstrapPassword class="@ClassNameBB" data-kioskboard-specialcharacters="true" placeholder="BootstrapPassword" @bind-Value="@BindValue" />
-
     <p>Textarea</p>
-
     <Textarea class="@ClassNameBB" data-kioskboard-specialcharacters="true" placeholder="Textarea" rows="4" @bind-Value="@BindValue" />
 </DemoBlock>
 
-<Tips>
+<Tips class="y-2">
     <p><b>@Localizer["Tips"] ：</b></p>
     <p>@((MarkupString)Localizer["P5"].Value)</p>
 </Tips>
-
-<style>
-    .kioskboard-body-padding {
-        /*padding-top: unset !important;*/
-    }
-</style>
 
 <AttributeTable Items="@GetAttributes()" />
 

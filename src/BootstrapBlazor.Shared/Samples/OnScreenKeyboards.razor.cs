@@ -4,7 +4,6 @@
 
 using BootstrapBlazor.Components;
 using BootstrapBlazor.Shared.Common;
-using BootstrapBlazor.Shared.Components;
 
 namespace BootstrapBlazor.Shared.Samples;
 
@@ -13,37 +12,43 @@ namespace BootstrapBlazor.Shared.Samples;
 /// </summary>
 public sealed partial class OnScreenKeyboards
 {
-    string BindValue = "virtualkeyboard";
-    string ClassName = "virtualkeyboard";
-    string ClassName1 = "virtualkeyboard1";
-    string ClassName2 = "virtualkeyboard2";
-    string ClassName3 = "virtualkeyboard3";
-    string ClassNameBB = "virtualkeyboardbb";
+    string BindValue { get; set; } = "virtualkeyboard";
 
-    static Dictionary<string, string> keys1 = new Dictionary<string, string>() { { "0", "L" }, { "1", "O" } };
-    static Dictionary<string, string> keys2 = new Dictionary<string, string>() { { "0", "V" }, { "1", "E" } };
-    static List<Dictionary<string, string>> keysArray = new List<Dictionary<string, string>>() { keys1, keys2 };
+    string ClassName { get; set; } = "virtualkeyboard";
 
-    KeyboardOption Option1 = new KeyboardOption()
+    string ClassName1 { get; set; } = "virtualkeyboard1";
+
+    string ClassName2 { get; set; } = "virtualkeyboard2";
+
+    string ClassName3 { get; set; } = "virtualkeyboard3";
+
+    string ClassNameBB { get; set; } = "virtualkeyboardbb";
+
+    static readonly Dictionary<string, string> Keys1 = new() { { "0", "L" }, { "1", "O" } };
+    static readonly Dictionary<string, string> Keys2 = new() { { "0", "V" }, { "1", "E" } };
+    static readonly List<Dictionary<string, string>> KeysArray = new() { Keys1, Keys2 };
+
+    static KeyboardOption Option1 => new()
     {
-        //keysArrayOfObjects = keysArray,
         keysFontFamily = "Barlow",
         keysFontWeight = "500",
         Theme = KeyboardTheme.dark,
     };
-    KeyboardOption Option2 = new KeyboardOption()
+
+    static KeyboardOption Option2 => new()
     {
         KeyboardSpecialcharacters = KeyboardSpecialcharacters.europe
     };
-    KeyboardOption Option3 = new KeyboardOption()
+
+    static KeyboardOption Option3 => new()
     {
         CustomerKeyboardSpecialcharacters = new string[] { "中", "国", "女", "足", "牛啊" }
     };
-    KeyboardOption OptionBB = new KeyboardOption()
+
+    static KeyboardOption OptionBB => new()
     {
         autoScroll = true
     };
-
 
     /// <summary>
     /// 获得属性方法
