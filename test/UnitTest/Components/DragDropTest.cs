@@ -17,5 +17,17 @@ public class DragDropTest : BootstrapBlazorTestBase
         });
         cut.Contains("bb-dd-dropzone");
     }
+
+    [Fact]
+    public void ItemWrapperClass_Ok()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ItemWrapperClass, v => "test-ItemWrapperClass");
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+        });
+        cut.Contains("test-ItemWrapperClass");
+    }
     }
 }
