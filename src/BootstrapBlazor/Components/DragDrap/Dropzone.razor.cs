@@ -21,78 +21,68 @@ public partial class Dropzone<TItem> : IDisposable
     public List<TItem>? Items { get; set; }
 
     /// <summary>
-    /// 获取/设置 最大数量，Null为不限制
+    /// 获取/设置 最大数量 默认 null 不限制
     /// </summary>
     [Parameter]
     public int? MaxItems { get; set; }
 
     /// <summary>
-    /// 子组件
+    /// 获得/设置 子组件
     /// </summary>
     [Parameter]
     public RenderFragment<TItem>? ChildContent { get; set; }
 
     /// <summary>
-    /// 每个Item的特殊class
+    /// 获得/设置 每个 Item 的特殊 class
     /// </summary>
     [Parameter]
     public Func<TItem, string>? ItemWrapperClass { get; set; }
 
     /// <summary>
-    /// 复制内容
+    /// 获得/设置 复制内容
     /// </summary>
     [Parameter]
     public Func<TItem, TItem>? CopyItem { get; set; }
 
     /// <summary>
-    /// 是否允许拖拽释放
+    /// 获得/设置 是否允许拖拽释放
     /// </summary>
     [Parameter]
     public Func<TItem?, TItem?, bool>? Accepts { get; set; }
 
     /// <summary>
-    /// 当拖拽因为数量超限被禁止时调用
+    /// 获得/设置 当拖拽因为数量超限被禁止时调用
     /// </summary>
     [Parameter]
     public EventCallback<TItem> OnItemDropRejectedByMaxItemLimit { get; set; }
 
     /// <summary>
-    /// 当拖拽被禁止时调用
+    /// 获得/设置 当拖拽被禁止时调用
     /// </summary>
     [Parameter]
     public EventCallback<TItem> OnItemDropRejected { get; set; }
 
     /// <summary>
-    /// 返回被替换的Item
+    /// 获得/设置 返回被替换的 Item
     /// </summary>
     [Parameter]
     public EventCallback<TItem> OnReplacedItemDrop { get; set; }
 
     /// <summary>
-    /// 返回放下的Item
+    /// 获得/设置 返回放下的 Item
     /// </summary>
     [Parameter]
     public EventCallback<TItem> OnItemDrop { get; set; }
 
     /// <summary>
-    /// 当前节点是否允许被拖拽
+    /// 获得/设置 当前节点是否允许被拖拽
     /// </summary>
     [Parameter]
     public Func<TItem, bool>? AllowsDrag { get; set; }
 
-    /// <summary>
-    /// service
-    /// </summary>
     [Inject]
     [NotNull]
     private DragDropService<TItem>? DragDropService { get; set; }
-
-    /// <summary>
-    /// 获得 拖拽容器样式集合
-    /// </summary>
-    /// <returns></returns>
-    protected string? ClassName => CssBuilder.Default("bb-dd-dropzone").Build();
-
 
     private string? ItemClass =>
         CssBuilder.Default("").AddClass("bb-dd-inprogess", DragDropService.ActiveItem != null).Build();
