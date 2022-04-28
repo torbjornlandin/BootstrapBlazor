@@ -195,8 +195,28 @@
                 }).trigger('click');
             }
         },
-        bb_tooltip_site: function (el) {
+        bb_site_load: function (el) {
             $(el).tooltip();
+
+            var width = $(window).width();
+            if (width >= 768) {
+                // Intro 弹窗
+                var $intro = $('.blazor-intro');
+                $('.blazor-intro-close').on('click', function () {
+                    if (handler != null) {
+                        window.clearInterval(handler);
+                        $intro.slideToggle('fade');
+                    }
+                });
+                var count = 0;
+                var handler = window.setInterval(function () {
+                    count++;
+                    $intro.slideToggle('fade');
+                    if (count >= 2) {
+                        window.clearInterval(handler);
+                    }
+                }, 15000);
+            }
         },
         bb_block: function (el) {
             var $el = $(el);
@@ -275,18 +295,18 @@
         });
     });
 
-//    $(function () {
-//        new MutationObserver((mutations, observer) => {
-//            if (document.querySelector('#components-reconnect-modal h5 a')) {
-//                function attemptReload() {
-//                    fetch('').then(() => {
-//                        location.reload();
-//                    });
-//                }
-//                observer.disconnect();
-//                attemptReload();
-//                setInterval(attemptReload, 10000);
-//            }
-//        }).observe(document.body, { childList: true, subtree: true });
-//    });
+    //    $(function () {
+    //        new MutationObserver((mutations, observer) => {
+    //            if (document.querySelector('#components-reconnect-modal h5 a')) {
+    //                function attemptReload() {
+    //                    fetch('').then(() => {
+    //                        location.reload();
+    //                    });
+    //                }
+    //                observer.disconnect();
+    //                attemptReload();
+    //                setInterval(attemptReload, 10000);
+    //            }
+    //        }).observe(document.body, { childList: true, subtree: true });
+    //    });
 })(jQuery);
