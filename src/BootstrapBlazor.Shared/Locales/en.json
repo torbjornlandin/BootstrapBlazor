@@ -2941,7 +2941,7 @@
     "Application": "Application"
   },
   "BootstrapBlazor.Shared.Samples.OnScreenKeyboards": {
-    "Title": "On-screen keyboard",
+    "Title": "On-Screen keyboard",
     "P1": "Precautions",
     "P2": "This component relies on <a href='https://www.nuget.org/packages?q-BootstrapBlazor.OnScreenKeyboard' target'_blank'><code>BootstrapBlazor.OnScreenKeyboard</code></a>, which needs to reference its component package when using this component",
     "P3": "Nuget package installation",

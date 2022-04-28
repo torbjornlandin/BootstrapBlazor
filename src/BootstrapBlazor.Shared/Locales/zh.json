@@ -2955,7 +2955,7 @@
     "Application": "实战应用"
   },
   "BootstrapBlazor.Shared.Samples.OnScreenKeyboards": {
-    "Title": "On-screen keyboard 屏幕键盘",
+    "Title": "On-Screen keyboard 屏幕键盘",
     "P1": "注意事项",
     "P2": "本组件依赖于 <a href='https://www.nuget.org/packages?q=BootstrapBlazor.OnScreenKeyboard' target='_blank'><code>BootstrapBlazor.SignaturePad</code></a>，使用本组件时需要引用其组件包",
     "P3": "Nuget 包安装",
