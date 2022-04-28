@@ -62,7 +62,7 @@ public sealed partial class OnScreenKeyboards
         },
         new AttributeItem()
         {
-            Name = "ClassName",
+            Name = "KeyboardKeys",
             Description = "获得/设置 键盘语言布局",
             Type = "KeyboardKeysType?",
             ValueList = "arabic|english|french|german|hungarian|persian|russian|spanish|turkish",
@@ -122,14 +122,14 @@ public sealed partial class OnScreenKeyboards
         {
             Name = "keysArrayOfObjects",
             Description = "键盘布局数组",
-            Type = "List<Dictionary<string, string>>? keysArrayOfObjects",
+            Type = "List<Dictionary<string, string>>?",
             ValueList = " — ",
             DefaultValue = "英文键盘布局数组"
         },
         new AttributeItem()
         {
             Name = "KeyboardKeysType",
-            Description = "键盘语言布局,仅当“keysArrayOfObjects”为“null”时才需要设置",
+            Description = "键盘语言布局",
             Type = "KeyboardKeysType",
             ValueList = "arabic|english|french|german|hungarian|persian|russian|spanish|turkish",
             DefaultValue = "english"
@@ -137,15 +137,15 @@ public sealed partial class OnScreenKeyboards
         new AttributeItem()
         {
             Name = "keysJsonUrl",
-            Description = "“kioskboard-keys-${langugage}.json”文件的路径,仅当“keysArrayOfObjects”为“null”时才需要设置",
+            Description = "键盘布局.json文件的路径",
             Type = "string",
             ValueList = " - ",
-            DefaultValue = "./_content/BootstrapBlazor.OnScreenKeyboard/lib/kioskboard/kioskboard-keys-{KeyboardKeysType}.json"
+            DefaultValue = " - "
         },
         new AttributeItem()
         {
             Name = "KeyboardSpecialcharacters",
-            Description = "特殊符号键盘类型, 默认 || 欧洲 || 自定义",
+            Description = "特殊符号键盘类型, 默认|欧洲|自定义",
             Type = "KeyboardSpecialcharacters",
             ValueList = "all|europe|customer",
             DefaultValue = "all"
@@ -153,15 +153,15 @@ public sealed partial class OnScreenKeyboards
         new AttributeItem()
         {
             Name = "CustomerKeyboardSpecialcharacters",
-            Description = "自定义特殊符号键盘 , 字符串数组覆盖内置的特殊字符.",
+            Description = "自定义特殊符号键盘",
             Type = "string[]?",
             ValueList = " — ",
             DefaultValue = " — "
         },
         new AttributeItem()
         {
-            Name = "可选：可以设置一个数字数组来覆盖内置的小键盘键。（从 0 到 9，顺序不限。）",
-            Description = "keysNumpadArrayOfNumbers",
+            Name = "keysNumpadArrayOfNumbers",
+            Description = "自定义数字小键盘",
             Type = "string?",
             ValueList = " — ",
             DefaultValue = " — "
@@ -169,7 +169,7 @@ public sealed partial class OnScreenKeyboards
         new AttributeItem()
         {
             Name = "language",
-            Description = "可选：自定义键的语言代码 (ISO 639-1)（用于语言支持）",
+            Description = "自定义键的语言代码",
             Type = "string",
             ValueList = "例如 de || en || fr || hu || tr 等...",
             DefaultValue = "en"
@@ -177,7 +177,7 @@ public sealed partial class OnScreenKeyboards
         new AttributeItem()
         {
             Name = "Theme",
-            Description = "键盘主题, 浅色 || 暗黑 || 平板 || material ||oldschool",
+            Description = "键盘主题",
             Type = "KeyboardTheme",
             ValueList = "light|dark|flat|material|oldschool",
             DefaultValue = " — "
@@ -185,7 +185,7 @@ public sealed partial class OnScreenKeyboards
         new AttributeItem()
         {
             Name = "allowRealKeyboard",
-            Description = "允许或阻止真实/物理键盘的使用。“false”时阻止. 此外，如果想要使用真实/物理键盘，“allowMobileKeyboard”选项也必须为“true”",
+            Description = "允许或阻止物理键盘",
             Type = "bool",
             ValueList = "true|false",
             DefaultValue = "true"
@@ -225,15 +225,15 @@ public sealed partial class OnScreenKeyboards
         new AttributeItem()
         {
             Name = "keysAllowSpacebar",
-            Description = "启用或禁用键盘上的空格键功能",
+            Description = "启用或禁用空格键",
             Type = "bool",
             ValueList = "true|false",
             DefaultValue = "true"
         },
         new AttributeItem()
         {
-            Name = "空格键（空格键）的文本。不设置显示为”Space”",
-            Description = "keysSpacebarText",
+            Name = "keysSpacebarText",
+            Description = "空格键文本自定义",
             Type = "string",
             ValueList = " - ",
             DefaultValue = "Space"
@@ -273,7 +273,7 @@ public sealed partial class OnScreenKeyboards
         new AttributeItem()
         {
             Name = "autoScroll",
-            Description = "将文档滚动到 input/textarea 元素的顶部或底部（通过放置选项）",
+            Description = "自动滚动",
             Type = "bool",
             ValueList = "true|false",
             DefaultValue = "true"
