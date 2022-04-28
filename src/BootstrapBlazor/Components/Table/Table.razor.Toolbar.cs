@@ -83,6 +83,18 @@ public partial class Table<TItem>
     public int ExtendButtonColumnWidth { get; set; } = 130;
 
     /// <summary>
+    /// 获得/设置 是否显示行内扩展编辑按钮 默认 true 显示
+    /// </summary>
+    [Parameter]
+    public bool ShowExtendEditButton { get; set; } = true;
+
+    /// <summary>
+    /// 获得/设置 是否显示行内扩展编辑按钮 默认 true 显示
+    /// </summary>
+    [Parameter]
+    public bool ShowExtendDeleteButton { get; set; } = true;
+
+    /// <summary>
     /// 获得/设置 是否固定扩展按钮列 默认为 false 不固定
     /// </summary>
     [Parameter]
@@ -107,18 +119,6 @@ public partial class Table<TItem>
     /// </summary>
     [Parameter]
     public bool ShowColumnList { get; set; }
-
-    /// <summary>
-    /// 获得/设置 保存、删除失败后是否显示 Toast 提示框 默认为 true 显示
-    /// </summary>
-    /// <remarks>已过期请使用 <see cref="ShowToastAfterSaveOrDeleteModel"/></remarks>
-    [Parameter]
-    [Obsolete("请使用 ShowToastAfterSaveOrDeleteModel")]
-    public bool ShowErrorToast
-    {
-        get => ShowToastAfterSaveOrDeleteModel;
-        set => ShowToastAfterSaveOrDeleteModel = value;
-    }
 
     /// <summary>
     /// 获得/设置 保存、删除失败后是否显示 Toast 提示框 默认为 true 显示
@@ -459,11 +459,8 @@ public partial class Table<TItem>
                 {
                     SelectedRows.Clear();
                     EditInCell = false;
-                    if (AddInCell)
-                    {
-                        AddInCell = false;
-                        await QueryAsync();
-                    }
+                    AddInCell = false;
+                    await QueryAsync();
                 }
             }
             await ToggleLoading(false);
@@ -484,7 +481,7 @@ public partial class Table<TItem>
     /// 编辑框的大小
     /// </summary>
     [Parameter]
-    public Size EditDialogSize { get; set; } = Size.Large;
+    public Size EditDialogSize { get; set; } = Size.ExtraExtraLarge;
 
     /// <summary>
     /// 获得/设置 编辑框是否可以拖拽 默认 false 不可以拖拽
@@ -493,10 +490,16 @@ public partial class Table<TItem>
     public bool EditDialogIsDraggable { get; set; }
 
     /// <summary>
-    /// 获得/设置 编辑框是否显示最大化按钮 默认 false 不显示
+    /// 获得/设置 编辑框是否显示最大化按钮 默认 true 不显示
     /// </summary>
     [Parameter]
-    public bool EditDialogShowMaximizeButton { get; set; }
+    public bool EditDialogShowMaximizeButton { get; set; } = true;
+
+    /// <summary>
+    /// 获得/设置 未分组编辑项布局位置 默认 false 在尾部
+    /// </summary>
+    [Parameter]
+    public bool ShowUnsetGroupItemsOnTop { get; set; }
 
     /// <summary>
     /// 弹出编辑对话框方法
@@ -505,6 +508,7 @@ public partial class Table<TItem>
     {
         var option = new EditDialogOption<TItem>()
         {
+            Class = "modal-dialog-table",
             IsTracking = IsTracking,
             IsScrolling = ScrollingDialogContent,
             IsKeyboard = IsKeyboard,
@@ -522,6 +526,7 @@ public partial class Table<TItem>
             Size = EditDialogSize,
             IsDraggable = EditDialogIsDraggable,
             ShowMaximizeButton = EditDialogShowMaximizeButton,
+            ShowUnsetGroupItemsOnTop = ShowUnsetGroupItemsOnTop,
             OnCloseAsync = async () =>
             {
                 var d = DataService ?? InjectDataService;
@@ -540,10 +545,6 @@ public partial class Table<TItem>
                 var valid = await SaveModelAsync(context, changedType);
                 if (valid)
                 {
-                    if (DynamicContext != null)
-                    {
-                        SelectedRows.Clear();
-                    }
                     await QueryAsync();
                 }
                 await ToggleLoading(false);
@@ -682,6 +683,7 @@ public partial class Table<TItem>
             Columns.AddRange(cols);
 
             QueryItems = DynamicContext.GetItems().Cast<TItem>();
+            SelectedRows.Clear();
             RowItemsCache = null;
         }
     }
@@ -761,11 +763,11 @@ public partial class Table<TItem>
     /// 是否显示行内编辑按钮
     /// </summary>
     /// <returns></returns>
-    protected bool GetShowEditButton(TItem item) => ShowEditButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowEditButton);
+    protected bool GetShowEditButton(TItem item) => ShowExtendEditButton && (ShowEditButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowEditButton));
 
     /// <summary>
     /// 是否显示行内删除按钮
     /// </summary>
     /// <returns></returns>
-    protected bool GetShowDeleteButton(TItem item) => ShowDeleteButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowDeleteButton);
+    protected bool GetShowDeleteButton(TItem item) => ShowExtendDeleteButton && (ShowDeleteButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowDeleteButton));
 }

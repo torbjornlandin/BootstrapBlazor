@@ -47,10 +47,12 @@ public class BootstrapBlazorTestHost : IDisposable
     protected virtual void ConfigureServices(IServiceCollection services)
     {
         services.AddBootstrapBlazor();
-        services.ConfigureJsonLocalizationOptions(op =>
+        services.ConfigureIPLocatorOption(options =>
         {
-            op.AdditionalJsonAssemblies = new[] { typeof(Alert).Assembly, GetType().Assembly };
+            options.LocatorFactory = provider => new BaiDuIPLocator();
         });
+        services.ConfigureJsonLocalizationOptions(op => op.AdditionalJsonAssemblies = new[] { typeof(Alert).Assembly });
+        services.AddSingleton<ILookUpService, FooLookupService>();
     }
 
     protected virtual void ConfigureConfigration(IServiceCollection services)
@@ -63,5 +65,23 @@ public class BootstrapBlazorTestHost : IDisposable
     {
         Instance.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    class FooLookupService : ILookUpService
+    {
+        public IEnumerable<SelectedItem>? GetItemsByKey(string? key)
+        {
+            IEnumerable<SelectedItem>? ret = null;
+
+            if (key == "FooLookup")
+            {
+                ret = new SelectedItem[]
+                {
+                    new("v1", "LookupService-Test-1"),
+                    new("v2", "LookupService-Test-2")
+                };
+            }
+            return ret;
+        }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 namespace BootstrapBlazor.Components;
 
 /// <summary>
-/// 
+/// Dropdown 下拉框组件
 /// </summary>
 public partial class Dropdown<TValue>
 {
@@ -17,7 +17,7 @@ public partial class Dropdown<TValue>
     /// <returns></returns>
     private string? DirectionClassName => CssBuilder.Default()
         .AddClass($"btn-group", DropdownType == DropdownType.ButtonGroup)
-        .AddClass($"{Direction.ToDescriptionString()}", DropdownType == DropdownType.DropdownMenu)
+        .AddClass(Direction.ToDescriptionString(), DropdownType == DropdownType.DropdownMenu)
         .AddClassFromAttributes(AdditionalAttributes)
         .Build();
 
@@ -108,7 +108,11 @@ public partial class Dropdown<TValue>
     [NotNull]
     private List<SelectedItem>? DataSource { get; set; }
 
-    private string? ButtonText { get; set; }
+    /// <summary>
+    /// 获得/设置 固定按钮显示文字 默认 null
+    /// </summary>
+    [Parameter]
+    public string? FixedButtonText { get; set; }
 
     /// <summary>
     /// OnParametersSet 方法
@@ -131,11 +135,11 @@ public partial class Dropdown<TValue>
             ?? DataSource.FirstOrDefault(i => i.Active)
             ?? DataSource.FirstOrDefault();
 
-        ButtonText ??= SelectedItem?.Text;
+        FixedButtonText ??= SelectedItem?.Text;
     }
 
     private IEnumerable<SelectedItem> GetItems() => (IsFixedButtonText && !ShowFixedButtonTextInDropdown)
-        ? Items.Where(i => i.Text != ButtonText)
+        ? Items.Where(i => i.Text != FixedButtonText)
         : Items;
 
     /// <summary>
@@ -143,19 +147,16 @@ public partial class Dropdown<TValue>
     /// </summary>
     protected async Task OnItemClick(SelectedItem item)
     {
-        if (!IsDisabled && !item.IsDisabled)
-        {
-            item.Active = true;
-            SelectedItem = item;
-            CurrentValueAsString = item.Value;
+        item.Active = true;
+        SelectedItem = item;
+        CurrentValueAsString = item.Value;
 
-            // 触发 SelectedItemChanged 事件
-            if (OnSelectedItemChanged != null)
-            {
-                await OnSelectedItemChanged.Invoke(SelectedItem);
-            }
+        // 触发 SelectedItemChanged 事件
+        if (OnSelectedItemChanged != null)
+        {
+            await OnSelectedItemChanged.Invoke(SelectedItem);
         }
     }
 
-    private string? GetText => IsFixedButtonText ? ButtonText : SelectedItem?.Text;
+    private string? ButtonText => IsFixedButtonText ? FixedButtonText : SelectedItem?.Text;
 }

@@ -57,6 +57,12 @@ public abstract class DisplayBase<TValue> : TooltipComponentBase
     public bool? ShowLabel { get; set; }
 
     /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 null
+    /// </summary>
+    [Parameter]
+    public bool? ShowLabelTooltip { get; set; }
+
+    /// <summary>
     /// 获得/设置 显示名称
     /// </summary>
     [Parameter]
@@ -73,6 +79,12 @@ public abstract class DisplayBase<TValue> : TooltipComponentBase
     /// </summary>
     [CascadingParameter(Name = "EidtorForm")]
     protected IShowLabel? EditorForm { get; set; }
+
+    /// <summary>
+    /// 获得 InputGroup 实例
+    /// </summary>
+    [CascadingParameter]
+    protected BootstrapInputGroup? InputGroup { get; set; }
 
     /// <summary>
     /// SetParametersAsync 方法
@@ -104,18 +116,36 @@ public abstract class DisplayBase<TValue> : TooltipComponentBase
         // 显式设置显示标签时一定显示
         var showLabel = ShowLabel;
 
-        // 组件自身未设置 ShowLabel 取 EditorForm/VaidateForm 级联值
-        if (ShowLabel == null && (EditorForm != null || ValidateForm != null))
+        // 如果被 InputGroup 包裹不显示 Label
+        if (InputGroup == null)
         {
-            showLabel = EditorForm?.ShowLabel ?? ValidateForm?.ShowLabel ?? true;
+            // 组件自身未设置 ShowLabel 取 EditorForm/VaidateForm 级联值
+            if (ShowLabel == null && (EditorForm != null || ValidateForm != null))
+            {
+                showLabel = EditorForm?.ShowLabel ?? ValidateForm?.ShowLabel ?? true;
+            }
+
+            IsShowLabel = showLabel ?? false;
+
+            // 设置显示标签时未提供 DisplayText 通过双向绑定获取 DisplayName
+            if (IsShowLabel && DisplayText == null && FieldIdentifier.HasValue)
+            {
+                DisplayText = FieldIdentifier.Value.GetDisplayName();
+            }
+        }
+        else
+        {
+            IsShowLabel = false;
         }
 
-        IsShowLabel = showLabel ?? false;
-
-        // 设置显示标签时未提供 DisplayText 通过双向绑定获取 DisplayName
-        if (IsShowLabel && DisplayText == null && FieldIdentifier.HasValue)
+        if (ShowLabelTooltip == null && EditorForm != null)
         {
-            DisplayText = FieldIdentifier.Value.GetDisplayName();
+            ShowLabelTooltip = EditorForm.ShowLabelTooltip;
+        }
+
+        if (ShowLabelTooltip == null && ValidateForm != null)
+        {
+            ShowLabelTooltip = ValidateForm.ShowLabelTooltip;
         }
     }
 

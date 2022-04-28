@@ -250,7 +250,8 @@
     "Desc15": "额外程序集合，传递给 Tab 组件使用",
     "Desc16": "收缩展开回调委托",
     "Desc17": "点击菜单项时回调委托",
-    "TabDefaultUrl": "设置 Tab 组件默认标签页"
+    "TabDefaultUrl": "设置 Tab 组件默认标签页",
+    "IsAccordion": "是否设置手风琴菜单"
   },
   "BootstrapBlazor.Shared.Samples.Footers": {
     "Title": "Footer 页脚组件",
@@ -306,7 +307,9 @@
     "Block3Title": "表单骨架屏",
     "Block3Intro": "适用于编辑表单加载时显示",
     "Block4Title": "表格骨架屏",
-    "Block4Intro": "适用于编辑表格加载时显示"
+    "Block4Intro": "适用于编辑表格加载时显示",
+    "BlockTreeTitle": "树骨架屏",
+    "BlockTreeIntro": "适用于树组件加载时显示"
   },
   "BootstrapBlazor.Shared.Pages.Coms": {
     "Search": "搜索想要的组件",
@@ -371,6 +374,7 @@
     "DisplayText": "数据显示 Display",
     "EmptyText": "空状态 Empty",
     "LocatorText": "位置定位 Locator",
+    "ImageViewerText": "图片 ImageViewer",
     "IpText": "IP 地址 IpAddress",
     "PrintText": "打印组件 Print",
     "TitleText": "网站标题 Title",
@@ -384,6 +388,8 @@
     "PopoverText": "弹出框 Popover",
     "QRCodeText": "二维码 QRCode",
     "SearchText": "搜索框 Search",
+    "RecognizerText": "语音识别 Recognizer",
+    "SpeechWaveText": "语音波形图 SpeechWave",
     "TableText": "表格 Table",
     "TagText": "标签 Tag",
     "TimelineText": "时间线 Timeline",
@@ -393,7 +399,7 @@
     "BlockText": "条件块 Block",
     "CameraText": "摄像头组件 Camera",
     "HandwrittenPageText": "手写签名 Handwritten",
-    "Text5": "消息组件",
+    "Text5": "通知组件",
     "AlertText": "警告框 Alert",
     "ConsoleText": "控制台 Console",
     "DialogText": "对话框 Dialog",
@@ -404,6 +410,8 @@
     "LightText": "指示灯 Light",
     "PopconfirmText": "确认框 Popconfirm",
     "ProgressText": "进度条 Progress",
+    "ReconnectorText": "重连组件 Reconnector",
+    "ResponsiveText": "断点通知 Responsive",
     "SpinnerText": "旋转图标 Spinner",
     "SweetAlertText": "模态弹窗 SweetAlert",
     "SearchDialogText": "搜索弹窗 SearchDialog",
@@ -419,11 +427,12 @@
     "ChartBubbleText": "气泡图",
     "DispatchText": "消息分发 Dispatch",
     "GeolocationText": "地理定位组件 Geolocation",
-    "NotificationsText": "浏览器通知 Notification"
+    "NotificationsText": "浏览器通知 Notification",
+    "SignaturePadText": "手写签名 SignaturePad"
   },
   "BootstrapBlazor.Shared.Samples.GlobalException": {
     "Title": "全局异常",
-    "Introduce": "<p>增加组件 <code>ErrorLogger</code> 通过本组件可以对全局的日志、异常进行统一输出；目前由于 <code>Blazor</code> 框架并未提供一个类似 <code>MVC</code> 的 <b>全局异常</b> 整体解决方案</p><ul class='ul-demo'><li><b>NET5.0</b> 框架下暂时还需要在代码块中使用 <code>try/catch</code> 进行异常捕获</li><li><b>NET6.0</b> 框架下 <b>无需任何额外代码</b> 即可进行全局异常捕获与处理</li></ul>",
+    "Introduce": "<p>增加组件 <code>ErrorLogger</code> 通过本组件可以对全局的日志、异常进行统一输出；目前由于 <code>Blazor</code> 框架并未提供一个类似 <code>MVC</code> 的 <b>全局异常</b> 整体解决方案；通过使用 <code>ErrorLogger</code> 组件 <b>无需任何额外代码</b> 即可进行全局异常捕获与处理</p>",
     "H1": "使用方法",
     "Step1": "1. <code>Startup</code> 文件中增加 <code>AddLogging</code> 开启 <code>net core</code> 系统日志功能",
     "Step1Introduce": "使用 <code>AddFileLogger</code> 需要引用 <b>Longbow.Logging</b> 组件包 <a href='https://www.nuget.org/packages/Longbow.Logging/' target='_blank'>[传送门]</a>",
@@ -487,8 +496,11 @@
     "Block9Intro": "改变选项时，下拉框内菜单项会增加",
     "Block10Title": "级联绑定",
     "Block10Intro": "通过选择第一个下拉框不同选项，第二个下拉框动态填充内容。",
-    "FixedButtonTextTitle": "固定按钮文本",
-    "FixedButtonTextIntro": "通过设置 <code>IsFixedButtonText</code> 使更改下拉选项时按钮文本不变",
+    "IsFixedButtonTextTitle": "固定按钮文本",
+    "IsFixedButtonTextIntro": "通过设置 <code>IsFixedButtonText</code> 使更改下拉选项时按钮文本不变",
+    "FixedButtonTextTitle": "设置固定按钮文字",
+    "FixedButtonTextIntro": "通过设置 <code>FixedButtonText</code> 来设置固定按钮的初始文字",
+    "FixedButtonTextCity": "城市",
     "ADesc1": "当前选中的值",
     "ADesc2": "样式",
     "ADesc3": "颜色",
@@ -500,7 +512,8 @@
     "ADesc9": "分裂式按钮下拉菜单(使用分裂式组件时需要加上MenuType='MenuType.Btngroup')",
     "ADesc10": "尺寸",
     "ADesc11": "标签",
-    "EDesc1": "下拉框值发生改变时触发"
+    "EDesc1": "下拉框值发生改变时触发",
+    "FixedButtonText": "固定按钮显示文字"
   },
   "BootstrapBlazor.Shared.Samples.GoTops": {
     "Title": "GoTop 返回顶端组件",
@@ -796,7 +809,11 @@
     "Att9": "自定义集合过滤规则",
     "Att10": "js 防抖时间，毫秒",
     "SkipEnter": "是否跳过 Enter 按键处理",
-    "SkipEsc": "是否跳过 Esc 按键处理"
+    "SkipEsc": "是否跳过 Esc 按键处理",
+    "OnSelectedItemChanged": "下拉菜单选择回调方法",
+    "OnSelectedItemChangedTitle": "下拉菜单选选中回调",
+    "OnSelectedItemChangedIntro": "点击下拉菜单或者 <kbd>Enter</kbd> 回车时触发此回调方法",
+    "OnValueChanged": "Value 改变时回调方法"
   },
   "BootstrapBlazor.Shared.Samples.FullScreens": {
     "Title": "FullScreen 全屏",
@@ -830,6 +847,7 @@
     "Button13Text": "中等按钮",
     "Button14Text": "大按钮",
     "Button15Text": "超大按钮",
+    "ButtonExtraExtraLargeText": "超超大按钮",
     "Button16Text": "Block 按钮",
     "Block1Title": "基础用法",
     "Block1Intro": "基础的按钮用法。",
@@ -1012,7 +1030,7 @@
     "Block6Intro": "日期组件时间改变时文本框内的数值也跟着改变",
     "Block7Title": "带时间的选择器",
     "Block7Intro": "在同一个选择器里选择日期和时间，点击确认按钮后关闭弹窗",
-    "P1": "设置 <code>ViewModel</code> 属性值为 <code>DatePickerViewModel.DateTime</code>",
+    "P1": "设置 <code>ViewMode</code> 属性值为 <code>DatePickerViewMode.DateTime</code>",
     "Block8Title": "允许空时间",
     "Block8Intro": "多用于条件选择",
     "P2": "绑定值为可为空类型 <code>DateTime?</code> 时自动出现 <b>清空</b> 按钮",
@@ -1085,7 +1103,12 @@
     "Ret1": "<div class='text-danger'>从plugin1返回的数据</div>",
     "Swal2Title": "点击 plugin2 按钮后弹窗",
     "Swal2Content": "点击插件按钮后弹窗并确认后才进行下一步处理",
-    "Ret2": "从plugin2返回的数据"
+    "Ret2": "从plugin2返回的数据",
+    "DoMethodAsync": "实例方法",
+    "DoMethodAsyncIntro": "使用实例方法从外部操作 <code>Editor</code>，具体的参数参照 <a href='https://summernote.org/deep-dive'>summernote api</a>",
+    "DoMethodAsyncButton1": "插入一段 Html",
+    "DoMethodAsyncButton2": "将段落修改为 H2",
+    "DoMethodAsyncButton3": "添加一张图片"
   },
   "BootstrapBlazor.Shared.Samples.EditorForms": {
     "Title": "EditorForm 表单组件",
@@ -1138,7 +1161,8 @@
     "Att12": "是否只读",
     "Att13": "编辑列前置标签名",
     "Att14": "列编辑模板",
-    "IsDisplay": "是否显示为 Display 组件"
+    "IsDisplay": "是否显示为 Display 组件",
+    "ShowLabelTooltip": "鼠标悬停标签时显示完整信息"
   },
   "BootstrapBlazor.Shared.Samples.FloatingLabels": {
     "Title": "FloatingLabel 输入框",
@@ -1183,6 +1207,8 @@
     "Block1Title": "基础用法",
     "Block1Intro": "提供基本的文本录入组件",
     "P1": "可通过设置 <code>IsAutoFocus</code> 是否自动获取焦点，多个文本框设置自动获取焦点时最后执行的组件将会获得焦点",
+    "IsSelectAllTextOnFocusLabel": "获得焦点时全选",
+    "IsSelectAllTextOnEnterLabel": "回车时全选",
     "Span1": "基本用法",
     "Block2Title": "颜色",
     "Block2Intro": "通过设置 <code>Color</code> 更改文本框边框颜色",
@@ -1221,6 +1247,7 @@
     "Block11Intro": "使用 <code>BootstrapPassword</code> 组件",
     "IsTrimTitle": "修剪空白",
     "IsTrimIntro": "使用 <code>IsTrim=\"true\"</code> 可在输入内容的时候自动修剪空白",
+    "TrimDescription": "设置参数 <code>IsTrim</code> 值为 <code>true</code> 后，组件内的前后空格将会被裁减",
     "PlaceHolder": "请输入 ...",
     "TestName": "张三",
     "Log": "按键触发 当前文本框值",
@@ -1236,7 +1263,12 @@
     "Att10": "是否禁用",
     "Att11": "是否自动获取焦点",
     "IsSelectAllTextOnFocus": "获得焦点后自动选择输入框内所有字符串",
-    "ValidateRules": "自定义验证集合"
+    "IsSelectAllTextOnEnter": "Enter 键自动选择输入框内所有字符串",
+    "SelectAllTextAsync": "选择输入框内所有字符串方法",
+    "ValidateRules": "自定义验证集合",
+    "P8": "可通过设置 <code>IsSelectAllTextOnEnter</code> 用户按下 Enter 键自动选择输入框内所有字符串 ",
+    "P9": "执行 @ref.SelectAllTextAsync() 选择输入框内所有字符串"
+
   },
   "BootstrapBlazor.Shared.Samples.InputNumbers": {
     "Title": "InputNumber 组件",
@@ -1295,8 +1327,10 @@
     "P2": "本组件依赖于 <a href='https://www.nuget.org/packages?q=BootstrapBlazor.Markdown' target='_blank'><code>BootstrapBlazor.Markdown</code></a>，使用本组件时需要引用其组件包",
     "P3": "Nuget 包安装",
     "P4": "使用 <a href='https://www.nuget.org/packages?q=BootstrapBlazor.Markdown' target='_blank'>nuget.org</a> 进行 <code>BootstrapBlazor.Markdown</code> 组件的安装",
-    "H2": "CSS 文件",
-    "H3": "JS 文件",
+    "Css": "CSS 文件",
+    "CssText": "无需设置组件自动动态加载",
+    "Js": "JS 文件",
+    "JsText": "无需设置组件自动动态加载",
     "H4": "本地化",
     "Tips1": "组件内置中文，切换当前文化信息即可获得中文",
     "Block1Title": "普通用法",
@@ -1655,11 +1689,11 @@
     "SearchableTitle": "可搜索",
     "SearchableIntro": "在数据很多的情况下，可以对数据进行搜索和过滤。",
     "BindToWayTitle": "双向绑定",
-    "BindToWayIntro": "组件数据发生变化时，双向绑定 <code>bind_Value</code> 值同步变化",
+    "BindToWayIntro": "组件数据发生变化时，双向绑定 <code>bind-Value</code> 值同步变化",
     "BindToWayP1": "<code>Transfer</code> 组件为泛型组件，支持三种绑定类型 <code>string</code> <code>IEnumerable&lt;string&gt;</code> <code>IEnumerable&lt;SelectedItem&gt;</code> 本例中双向绑定 <code>SelectedValue</code> 类型为 <code>IEnumerable&lt;SelectedItem&gt;</code>",
     "BindToWayButtonText1": "增加",
     "ClientValidationTitle": "客户端验证",
-    "ClientValidationIntro": "组件数据发生变化时，双向绑定 <code>bind_Value</code> 值同步变化",
+    "ClientValidationIntro": "组件数据发生变化时，双向绑定 <code>bind-Value</code> 值同步变化",
     "ClientValidationP1": "<code>Transfer</code> 组件内置于 <code>ValidateForm</code> 组件即开启客户端验证，本例中组件双向绑定 <code>Model.Hobby</code> 类型为 <code>IEnumerable&lt;string&gt;</code>",
     "ClientValidationButtonText": "提交",
     "DisableTitle": "禁用",
@@ -1778,8 +1812,9 @@
     "BasicUsageLi5": "客户端验证机制支持模型的 <code>Required</code> 标签，通过设置 <code>ErrorMessage</code> 参数设置提示信息，未设置时使用默认的英文提示信息",
     "BasicUsageLi6": "表单默认检查表单内绑定字段值是否合法，如需要检查模型所有字段时可设置 <code>ValidateAllProperties</code> 属性值为 <code>true</code>",
     "BasicUsageLi7": "通过设置提交按钮 <code>Button</code> 属性 <code>IsAsync</code> 值，设置异步提交表单",
-    "BasicUsageLi8": "表单内组件通常用法都是使用双向绑定技术对 <code>Model</code> 的属性值进行双向绑定，当其值改变时会导致所在组件 <code>StateHasChanged</code>,方法被调用，即其所在组件或者页面进行刷新重新渲染",
+    "BasicUsageLi8": "表单内组件通常用法都是使用双向绑定技术对 <code>Model</code> 的属性值进行双向绑定，当其值改变时会导致所在组件 <code>StateHasChanged</code> 方法被调用，即其所在组件或者页面进行刷新重新渲染",
     "BasicUsageLi9": "表单内组件控件的值修改后 <code>OnFieldChanged</code> 方法被调用",
+    "FormLabelWidth": "组件前置标签默认宽度为 <code>120px</code> 六个汉字，如需要更多汉字请在项目样式文件中更改样式变量 <code>--bs-row-label-width</code> 即可，或者设置表单显示标签在组件上方",
     "BasicUsageP2": "注意事项：",
     "InnerComponentTitle": "内置组件",
     "InnerComponentIntro": "放置支持表单组件到 <code>ValidateForm</code> 中",
@@ -1793,7 +1828,7 @@
     "InnerComponentP2": "本例中通过设置 <b>提交按钮</b> 属性 <code>IsAsync</code> 来异步提交表单，点击提交后禁用自身，异步操作完毕后恢复",
     "CustomDisplsyErrorTitle": "自定义显示错误信息",
     "CustomDisplsyErrorIntro": "通过调用 <code>SetError</code> 方法设置自定义错误信息",
-    "CustomDisplsyErrorP1": "<b>应用场景</b>,<div>客户端验证通过后进行数据库保存操作，如果出现其他问题，后仍然可以进行表单自定义错误提示，本例中数据验证合法后，点击<code>提交表单</code>按钮后，姓名字段会显示,<code>数据库中已存在</code>这样的自定义提示信息</div>",
+    "CustomDisplsyErrorP1": "<b>应用场景</b><p>客户端验证通过后进行数据库保存操作，如果出现其他问题，后仍然可以进行表单自定义错误提示，本例中数据验证合法后，点击<code>提交表单</code>按钮后，姓名字段会显示,<code>数据库中已存在</code>这样的自定义提示信息</p>",
     "ValidatorAllFieldTitle": "验证所有字段值",
     "ValidatorAllFieldIntro": "此组件默认检查表单内模型绑定字段值，如需要检查模型所有字段值时设置 <code>ValidateAllProperties</code> 值",
     "ValidatorAllFieldP1": " 本例中未放置 <code>Address</code>，由于设置 <code>ValidateAllProperties</code> 参数值为 <code>true</code>，所以 <code>Address</code> 字段仍然被检查，及时表单内所有数据均合法后，提交数据时仍然触发 <code>OnInvalidSubmit</code> 回调委托",
@@ -1825,7 +1860,10 @@
     "OnValidSubmitDoneLog": "OnValidSubmit 回调委托: Done!",
     "OnInvalidSubmitCallBackLog": "OnInvalidSubmit 回调委托",
     "OnValidSubmitCallBackLog": "OnValidSubmit 回调委托",
-    "DatabaseExistLog": "数据库中已存在"
+    "DatabaseExistLog": "数据库中已存在",
+    "LongDisplayText": "我是特别长的显示标签",
+    "LongDisplayDescription": "本例中通过设置 <code>form-inline</code> 样式内的 <code>BootstrapInput</code> 组件 <code>ShowLabelTooltip</code> 为 <code>true</code> 使鼠标悬停在被裁剪的 <code>label</code> 时显示完整信息",
+    "ShowLabelTooltip": "鼠标悬停标签时显示完整信息"
   },
   "BootstrapBlazor.Shared.Samples.Avatars": {
     "Title": "Avatar 头像",
@@ -1980,8 +2018,8 @@
     "BasicUsageIntro": "基础的日历显示。",
     "BindTitle": "数据双向绑定",
     "BindIntro": "日历框选择时间时数据自动更新文本框",
-    "ViewModelTitle": "按周展示",
-    "ViewModelIntro": "通过设置属性 <code>CalendarViewModel.Week</code>",
+    "ViewModeTitle": "按周展示",
+    "ViewModeIntro": "通过设置属性 <code>CalendarViewMode.Week</code>",
     "AppTitle": "实战应用",
     "AppIntro": "课堂表",
     "AppText": "目前按周内组件暂时为统一使用 <code>ChildContext</code> 来进行渲染，所有单元格内的数据相关操作组件均未进行封装，稍后完善",
@@ -2278,7 +2316,7 @@
     "OnListViewItemClick": "ListView元素点击时回调委托",
     "QueryAsync": "手工查询数据方法"
   },
-  "BootstrapBlazor.Shared.Samples.Locator": {
+  "BootstrapBlazor.Shared.Samples.Locators": {
     "Title": "获取 IP 地理位置",
     "SubTitle": "多用于系统日志跟踪与分析",
     "BasicUsageTitle": "普通用法",
@@ -2299,6 +2337,9 @@
     "BasicUsageP11": "2. 配置自定义定位器",
     "BasicUsageP12": "通过 <code>AddBootstrapBlazor</code> 方法的回调委托参数进行自定义定位器 <code>CustomerLocator</code> 配置"
   },
+  "BootstrapBlazor.Shared.Samples.Images": {
+    "BasicUsageTitle": "基础用法"
+  },
   "BootstrapBlazor.Shared.Samples.Ips": {
     "BasicUsageTitle": "基础用法"
   },
@@ -2307,7 +2348,6 @@
     "SubTitle": "用于打印文档或者局部视图",
     "Tips1": "设置 <code style='margin-left: 14px;'>PreviewUrl</code> 时，单开一个新网页进行打印预览，点击此页面的打印按钮进行网页打印",
     "Tips2": "不设置 <code>PreviewUrl</code> 时，如果是 <code>Dialog</code> 组件中的打印按钮，则打印弹窗内容",
-    "Tips": "<b>打印弹窗</b>时由于仅打印弹窗内容，所以对 <code>_Host.cshtml/index.html</code> 页面有所要求，代码如下；<code>blazor</code> 生成的代码使用 <code>app</code> 进行包裹方便打印时隐藏这部分",
     "PreButtonText": "打印",
     "PrintButtonTitle": "普通用法",
     "PrintButtonIntro": "通过点击打印按钮将页面进行打印",
@@ -2590,6 +2630,7 @@
     "Labels": "表单标签",
     "GlobalException": "全局异常",
     "LayoutPage": "后台模拟器",
+    "FAIcon": "FontAwesome 图标集合",
     "Components": "组件总览",
     "LayoutComponents": "布局组件",
     "Client": "客户信息服务 Client",
@@ -2602,6 +2643,7 @@
     "Scroll": "滚动条 Scroll",
     "Skeleton": "骨架屏 Skeleton",
     "Split": "分割面板 Split",
+    "Responsive": "断点通知 Responsive",
     "NavigationComponents": "导航组件",
     "Anchor": "锚点 Anchor",
     "AnchorLink": "锚点链接 AnchorLink",
@@ -2680,6 +2722,7 @@
     "LinkButton": "链接按钮 LinkButton",
     "ListView": "列表组件 ListView",
     "Locator": "位置定位 Locator",
+    "ImageViewer": "图片 ImageViewer",
     "Popover": "弹出窗 Popover",
     "Print": "打印组件 Print",
     "QRCode": "二维码 QRCode",
@@ -2689,6 +2732,7 @@
     "Title": "网站标题 Title",
     "Download": "文件下载 Download",
     "Tooltip": "工具条 Tooltip",
+    "Reconnector": "重连组件 Reconnector",
     "Tree": "树形组件 Tree",
     "Table": "表格组件",
     "TableBase": "基本功能",
@@ -2729,7 +2773,15 @@
     "ChartBubble": "气泡图",
     "Transition": "过渡效果 Transition",
     "Geolocation": "地理定位组件 Geolocation",
-    "Notification": "浏览器通知 Notification"
+    "Notification": "浏览器通知 Notification",
+    "SignaturePad": "手写签名 SignaturePad",
+    "Speech": "语音识别 Speech",
+    "SpeechComponents": "语音组件",
+    "SpeechIntro": "简介",
+    "Recognizer": "语音识别 Recognizer",
+    "Synthesizer": "语音合成 Synthesizer",
+    "SpeechWave": "语音波形图 SpeechWave"
+
   },
   "BootstrapBlazor.Shared.Samples.Table.TablesFooter": {
     "Left": "左对齐",
@@ -2810,6 +2862,10 @@
     "ClearWatchPositionButtonText": "停止追踪",
     "GetLocationResultSuccess": "调用 GetLocaltion 成功",
     "GetLocationResultFailed": "调用 GetLocaltion 失败",
+    "WatchPositionResultSuccess": "调用 WatchPosition 成功",
+    "WatchPositionResultFailed": "调用 WatchPosition 失败",
+    "ClearWatchPositionResultSuccess": "停止追踪成功",
+    "ClearWatchPositionResultFailed": "停止追踪失败",
     "Longitude": "经度",
     "Latitude": "纬度",
     "Accuracy": "位置精度",
@@ -2844,5 +2900,58 @@
     "OnClickText": "通知点击后的回调方法名称",
     "TitleSampleText": "你有新的物流通知",
     "MessageSampleText": "您的包裹已到达亮马河南路,距离分发只剩3站."
+  },
+  "BootstrapBlazor.Shared.Samples.FAIcons": {
+    "Title": "FA 图标选择器",
+    "BaseUsageText": "目前 <code>BootstrapBlazor</code> 使用 <code>Font Awesome 4.7.0</code> 作为内置图标库，所有图标如下",
+    "SwitchButtonText": "",
+    "SwitchButtonTextOff": "点击拷贝",
+    "SwitchButtonTextOn": "显示高级拷贝"
+  },
+  "BootstrapBlazor.Shared.Samples.SignaturePads": {
+    "BackText": "返回前页",
+    "BaseUsageText": "基础用法",
+    "BaseUsageIntro": "鼠标滑动进行签名",
+    "ButtonCssStyleText": "按钮CSS式样",
+    "ButtonCssStyleIntro": "设置按钮样式",
+    "CustomButtonText": "自定义按钮文本",
+    "CustomButtonIntro": "自定义按钮文本",
+    "ResponsiveInterfaceText": "响应式签名界面",
+    "ResultBase64Text": "签名Base64",
+    "ResultText": "您的签名",
+    "SignText": "请签名",
+    "Tips": "复杂签名会导致传输数据量大ssr会出现断流显示reload错误,配置更改单个传入集线器消息的最大大小(默认32KB)解决这个问题. <code> builder.Services.AddServerSideBlazor().AddHubOptions(o => o.MaximumReceiveMessageSize = null); </code> ",
+    "TipsResponsive": "设备宽度小于 640px (例如手机) 自动置顶无边框, 宽度小于 500px 按钮自动旋转. 可选透明背景.",
+    "Title": "SignaturePad 手写签名",
+    "SignatureText": "签名",
+    "CleanText": "清除",
+    "P1": "注意事项",
+    "P2": "本组件依赖于 <a href='https://www.nuget.org/packages?q=BootstrapBlazor.SignaturePad' target='_blank'><code>BootstrapBlazor.SignaturePad</code></a>，使用本组件时需要引用其组件包",
+    "P3": "Nuget 包安装",
+    "P4": "使用 <a href='https://www.nuget.org/packages?q=BootstrapBlazor.SignaturePad' target='_blank'>nuget.org</a> 进行 <code>BootstrapBlazor.SignaturePad</code> 组件的安装"
+
+  },
+  "BootstrapBlazor.Shared.Samples.Reconnectors": {
+    "Title": "Reconnector 重连组件",
+    "SubTitle": "用于自定义连接失败时各种状态信息",
+    "ReconnectingTemplateAttr": "正在尝试重试连接对话框的模板",
+    "ReconnectFailedTemplateAttr": "连接失败对话框的模板",
+    "ReconnectRejectedTemplateAttr": "连接被拒绝对话框的模板",
+    "ReconnectingTemplateText": "正在连接模板",
+    "ReconnectFailedTemplateText": "连接失败模板",
+    "ReconnectRejectedTemplateText": "连接拒绝模板",
+    "Intro": "组件内置了默认样式如果不满意可根据自己需求进行样式覆盖，组件应用于 <code>components-reconnect-modal</code> 元素的 <code>CSS</code> 类",
+    "IntroTitle": "可单独设置不同状态模板",
+    "Usage": "使用方法",
+    "Step1": "1. <code>_Layout.cshtml</code> 文件中增加如下代码",
+    "Step2": "2. <code>App.razor</code> 文件中增加如下代码",
+    "TableHeader1": "CSS 类",
+    "TableHeader2": "说明",
+    "TableRow1": "连接已丢失。 客户端正在尝试重新连接。显示模式。",
+    "TableRow2": "将为服务器重新建立活动连接。隐藏模式。",
+    "TableRow3": "重新连接失败，可能是由于网络故障引起的。 若要尝试重新连接，请在 <b>JavaScript</b> 中调用 <code>window.Blazor.reconnect()</code>",
+    "TableRow4": "已拒绝重新连接。 已达到服务器，但拒绝连接，服务器上的用户状态丢失。 若要重新加载应用，请在 <b>JavaScript</b> 中调用 <code>location.reload()</code>。当出现以下情况时，可能会导致此连接状态：",
+    "TableRow5": "<li>服务器端线路发生故障。</li><li>客户端断开连接的时间足以使服务器删除用户的状态。用户组件的实例已被处置。</li><li>服务器已重启，或者应用的工作进程被回收。</li>",
+    "Application": "实战应用"
   }
 }

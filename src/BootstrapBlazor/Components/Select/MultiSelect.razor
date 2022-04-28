@@ -4,7 +4,7 @@
 
 @if (IsShowLabel)
 {
-    <label class="form-label" required="@Required" for="@Id">@DisplayText</label>
+    <BootstrapLabel required="@Required" for="@Id" ShowLabelTooltip="ShowLabelTooltip" Value="@DisplayText" />
 }
 <div class="@ClassString" @ref="SelectElement">
     <div class="@ToggleClassString" tabindex="0" hidefocus="true" outline="0" id="@Id" @onclick="@ToggleMenu">
@@ -51,7 +51,7 @@
         @foreach (var item in GetData())
         {
             <DynamicElement OnClick="() => ToggleRow(item, true)" TriggerClick="@CheckCanTrigger(item)" class="@GetItemClassString(item)">
-                <Checkbox TValue="bool" Value="GetCheckedState(item)" IsDisabled="@CheckCanSelect(item)"></Checkbox>
+                <Checkbox Value="GetCheckedState(item)" IsDisabled="@CheckCanSelect(item)"></Checkbox>
                 <span>@item.Text</span>
             </DynamicElement>
         }

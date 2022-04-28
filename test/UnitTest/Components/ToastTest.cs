@@ -12,16 +12,18 @@ public class ToastTest : BootstrapBlazorTestBase
     [Fact]
     public void Placement_Ok()
     {
-        var options = Context.Services.GetRequiredService<IOptions<BootstrapBlazorOptions>>();
-        options.Value.ToastPlacement = Placement.TopStart;
+        var options = Context.Services.GetRequiredService<IOptionsMonitor<BootstrapBlazorOptions>>();
+        options.CurrentValue.ToastPlacement = Placement.TopStart;
 
-        Context.RenderComponent<BootstrapBlazorRoot>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>();
 
         var service = Context.Services.GetRequiredService<ToastService>();
         service.Success("Test", "test content");
 
         // 恢复设置
-        options.Value.ToastPlacement = Placement.Auto;
+        options.CurrentValue.ToastPlacement = Placement.Auto;
+
+        Assert.NotNull(cut.Instance.ToastContainer);
     }
 
     [Fact]
@@ -43,5 +45,82 @@ public class ToastTest : BootstrapBlazorTestBase
 
         var service = Context.Services.GetRequiredService<ToastService>();
         service.Success("Test", "test content");
+        service.Error("Error", "test content");
+        service.Information("Information", "test content");
+        service.Warning("Warning", "test content");
+    }
+
+    [Fact]
+    public async Task Options_Ok()
+    {
+        Context.RenderComponent<Toast>();
+
+        var service = Context.Services.GetRequiredService<ToastService>();
+        var option = Context.Services.GetRequiredService<IOptionsMonitor<BootstrapBlazorOptions>>();
+        await service.Show(new ToastOption()
+        {
+            ForceDelay = true
+        });
+
+        await service.Success(null, "test content");
+        await service.Success("Test", null);
+        await service.Success("Test", "test content");
+
+        await service.Error(null, "test content");
+        await service.Error("Test", null);
+        await service.Error("Test", "test content");
+
+        await service.Information(null, "test content");
+        await service.Information("Test", null);
+        await service.Information("Test", "test content");
+
+        option.CurrentValue.ToastDelay = 2000;
+        await service.Warning(null, "test content");
+        await service.Warning("Test", null);
+        await service.Warning("Test", "test content");
+    }
+
+    [Fact]
+    public async Task AutoHide_Ok()
+    {
+        Context.RenderComponent<Toast>();
+        var service = Context.Services.GetRequiredService<ToastService>();
+        await service.Show(new ToastOption()
+        {
+            IsAutoHide = false
+        });
+    }
+
+    [Fact]
+    public async Task ChildContent_Ok()
+    {
+        var cut = Context.RenderComponent<Toast>();
+
+        var service = Context.Services.GetRequiredService<ToastService>();
+        await service.Show(new ToastOption()
+        {
+            ChildContent = new RenderFragment(builder =>
+            {
+                builder.AddContent(0, "Toast ChildContent");
+            })
+        });
+    }
+
+    [Fact]
+    public async Task Close_Ok()
+    {
+        var cut = Context.RenderComponent<Toast>();
+
+        var service = Context.Services.GetRequiredService<ToastService>();
+        var option = new ToastOption()
+        {
+            ChildContent = new RenderFragment(builder =>
+            {
+                builder.AddContent(0, "Toast ChildContent");
+            })
+        };
+        await service.Show(option);
+
+        await option.Close();
     }
 }

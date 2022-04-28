@@ -82,6 +82,7 @@ public class DynamicElement : BootstrapComponentBase
                 builder.AddMultipleAttributes(1, AdditionalAttributes);
             }
         }
+
         if (IsTriggerClick())
         {
             builder.AddAttribute(2, "onclick", EventCallback.Factory.Create<MouseEventArgs>(this, e => OnClick!()));
@@ -97,14 +98,15 @@ public class DynamicElement : BootstrapComponentBase
             builder.AddEventPreventDefaultAttribute(4, "onclick", PreventDefault);
             builder.AddEventStopPropagationAttribute(5, "onclick", StopPropagation);
         }
+
         builder.AddContent(6, ChildContent);
+
         if (GenerateElement || IsTriggerClick() || IsTriggerDoubleClick())
         {
             builder.CloseElement();
         }
 
         bool IsTriggerClick() => TriggerClick && OnClick != null;
-
         bool IsTriggerDoubleClick() => TriggerDoubleClick && OnDoubleClick != null;
     }
 }

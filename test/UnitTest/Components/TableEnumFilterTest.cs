@@ -3,7 +3,6 @@
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
 using BootstrapBlazor.Shared;
-using UnitTest.Extensions;
 
 namespace UnitTest.Components;
 
@@ -74,5 +73,34 @@ public class TableEnumFilterTest : BootstrapBlazorTestBase
         cut.InvokeAsync(() => items[1].Click());
         cut.InvokeAsync(() => condtions = cut.FindComponent<EnumFilter>().Instance.GetFilterConditions());
         Assert.Single(condtions);
+    }
+
+    [Fact]
+    public async Task SetFilterConditions_Ok()
+    {
+        var cut = Context.RenderComponent<EnumFilter>(pb =>
+        {
+            pb.Add(a => a.Type, typeof(EnumEducation));
+        });
+        var filter = cut.Instance;
+        var conditions = filter.GetFilterConditions();
+        Assert.Empty(conditions);
+
+        var newConditions = new List<FilterKeyValueAction>
+        {
+            new FilterKeyValueAction() { FieldValue = EnumEducation.Middel }
+        };
+        await filter.SetFilterConditionsAsync(newConditions);
+
+        conditions = filter.GetFilterConditions();
+        Assert.Equal(EnumEducation.Middel, conditions.First().FieldValue);
+
+        newConditions = new List<FilterKeyValueAction>
+        {
+            new FilterKeyValueAction() { FieldValue = null }
+        };
+        await filter.SetFilterConditionsAsync(newConditions);
+        conditions = filter.GetFilterConditions();
+        Assert.Empty(conditions);
     }
 }

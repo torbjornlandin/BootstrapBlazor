@@ -3,6 +3,7 @@
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
 using BootstrapBlazor.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 
 namespace UnitTest.Components;
@@ -24,6 +25,19 @@ public class EditorFormTest : BootstrapBlazorTestBase
                 });
             });
         });
+    }
+
+    [Fact]
+    public void CanWrite_Ok()
+    {
+        var foo = new Dummy();
+        var cut = Context.RenderComponent<EditorForm<Dummy>>(pb =>
+        {
+            pb.Add(a => a.Model, foo);
+        });
+
+        // 只读属性渲染成 Display 组件
+        cut.Contains("form-control is-display");
     }
 
     [Fact]
@@ -239,6 +253,151 @@ public class EditorFormTest : BootstrapBlazorTestBase
         });
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ShowLabelTooltip_Ok(bool showTooltip)
+    {
+        var foo = new Foo();
+        var cut = Context.RenderComponent<EditorForm<Foo>>(pb =>
+        {
+            pb.Add(a => a.Model, foo);
+            pb.Add(a => a.ShowLabelTooltip, showTooltip);
+            pb.Add(a => a.AutoGenerateAllItem, false);
+            pb.Add(a => a.FieldItems, f => builder =>
+            {
+                var index = 0;
+                builder.OpenComponent<EditorItem<Foo, string>>(index++);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Field), f.Name);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.FieldExpression), Utility.GenerateValueExpression(foo, nameof(Foo.Name), typeof(string)));
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Readonly), true);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Text), "Test-Text");
+                builder.CloseComponent();
+            });
+        });
+        var display = cut.FindComponent<Display<string>>();
+        Assert.Equal(showTooltip, display.Instance.ShowLabelTooltip);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void EditorItem_ShowLabelTooltip_Ok(bool showTooltip)
+    {
+        var foo = new Foo();
+        var cut = Context.RenderComponent<EditorForm<Foo>>(pb =>
+        {
+            pb.Add(a => a.Model, foo);
+            pb.Add(a => a.AutoGenerateAllItem, false);
+            pb.Add(a => a.FieldItems, f => builder =>
+            {
+                var index = 0;
+                builder.OpenComponent<EditorItem<Foo, string>>(index++);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Field), f.Name);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.FieldExpression), Utility.GenerateValueExpression(foo, nameof(Foo.Name), typeof(string)));
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Readonly), true);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Text), "Test-Text");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.ShowLabelTooltip), showTooltip);
+                builder.CloseComponent();
+            });
+        });
+        var display = cut.FindComponent<Display<string>>();
+        Assert.Equal(showTooltip, display.Instance.ShowLabelTooltip);
+    }
+
+    [Fact]
+    public void Order_Ok()
+    {
+        var foo = new Foo();
+        var cut = Context.RenderComponent<EditorForm<Foo>>(pb =>
+        {
+            pb.Add(a => a.Model, foo);
+            pb.Add(a => a.AutoGenerateAllItem, false);
+            pb.Add(a => a.FieldItems, f => builder =>
+            {
+                var index = 0;
+                builder.OpenComponent<EditorItem<Foo, string>>(index++);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Field), f.Name);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.FieldExpression), Utility.GenerateValueExpression(foo, nameof(Foo.Name), typeof(string)));
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Text), "Test-Text");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Order), 1);
+                builder.CloseComponent();
+            });
+        });
+        var item = cut.FindComponent<EditorItem<Foo, string>>();
+        Assert.Equal(1, item.Instance.Order);
+    }
+
+    [Fact]
+    public void LookUpServiceKey_Ok()
+    {
+        var foo = new Foo();
+        var cut = Context.RenderComponent<EditorForm<Foo>>(pb =>
+        {
+            pb.Add(a => a.Model, foo);
+            pb.Add(a => a.AutoGenerateAllItem, false);
+            pb.Add(a => a.FieldItems, f => builder =>
+            {
+                var index = 0;
+                builder.OpenComponent<EditorItem<Foo, string>>(index++);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Field), f.Name);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.FieldExpression), Utility.GenerateValueExpression(foo, nameof(Foo.Name), typeof(string)));
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Text), "Test-Text");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.LookUpServiceKey), "FooLookup");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.LookupStringComparison), StringComparison.OrdinalIgnoreCase);
+                builder.CloseComponent();
+            });
+        });
+        var select = cut.FindComponent<Select<string>>();
+        var lookupService = Context.Services.GetRequiredService<ILookUpService>();
+        var lookup = lookupService.GetItemsByKey("FooLookup");
+        Assert.Equal(lookup!.Count(), select.Instance.Items.Count());
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void GroupName_Order_Ok(bool showUnsetGroupItemsOnTop)
+    {
+        var foo = new Foo();
+        var cut = Context.RenderComponent<EditorForm<Foo>>(pb =>
+        {
+            pb.AddCascadingValue("IsSearch", true);
+            pb.Add(a => a.ShowUnsetGroupItemsOnTop, showUnsetGroupItemsOnTop);
+            pb.Add(a => a.Model, foo);
+            pb.Add(a => a.AutoGenerateAllItem, false);
+            pb.Add(a => a.FieldItems, f => builder =>
+            {
+                var index = 0;
+                builder.OpenComponent<EditorItem<Foo, string>>(index++);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Field), f.Name);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.FieldExpression), Utility.GenerateValueExpression(foo, nameof(Foo.Name), typeof(string)));
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Text), "Test-Text");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Order), 1);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.GroupName), "Test-Group-1");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.GroupOrder), 1);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.EditTemplate), new RenderFragment<Foo>(foo => builder => builder.AddContent(0, "Test")));
+                builder.CloseComponent();
+
+                builder.OpenComponent<EditorItem<Foo, string>>(index++);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Field), f.Address);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.FieldExpression), Utility.GenerateValueExpression(foo, nameof(Foo.Address), typeof(string)));
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Text), "Test-Address");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.Order), 1);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.GroupName), "Test-Group-2");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, string>.GroupOrder), 2);
+                builder.CloseComponent();
+
+                builder.OpenComponent<EditorItem<Foo, bool>>(index++);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, bool>.Field), f.Complete);
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, bool>.FieldExpression), Utility.GenerateValueExpression(foo, nameof(Foo.Complete), typeof(bool)));
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, bool>.Text), "Test-Complete");
+                builder.AddAttribute(index++, nameof(EditorItem<Foo, bool>.Order), 1);
+                builder.CloseComponent();
+            });
+        });
+    }
+
     private static RenderFragment<Foo> GenerateEditorItems(Foo foo) => f => builder =>
     {
         builder.OpenComponent<EditorItem<Foo, string>>(0);
@@ -260,7 +419,7 @@ public class EditorFormTest : BootstrapBlazorTestBase
 
     private class Dummy
     {
-        public string? Name { get; set; }
+        public string? Name { get; }
     }
 
     private class MockEditorItem : EditorItem<Foo, string>

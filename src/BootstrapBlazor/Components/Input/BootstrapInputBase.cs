@@ -74,10 +74,19 @@ public abstract class BootstrapInputBase<TValue> : ValidateBase<TValue>
     public bool IsSelectAllTextOnFocus { get; set; }
 
     /// <summary>
+    /// 获得/设置 Enter 键自动选择输入框内所有字符串 默认 false 未启用
+    /// </summary>
+    [Parameter]
+    public bool IsSelectAllTextOnEnter { get; set; }
+
+    /// <summary>
     /// 获得/设置 是否自动修剪空白 默认 false 未启用
     /// </summary>
     [Parameter]
     public bool IsTrim { get; set; }
+
+    [CascadingParameter]
+    private Modal? Modal { get; set; }
 
     /// <summary>
     /// 获得 input 组件类型 默认 text
@@ -89,6 +98,12 @@ public abstract class BootstrapInputBase<TValue> : ValidateBase<TValue>
     /// </summary>
     /// <returns></returns>
     public ValueTask FocusAsync() => FocusElement.FocusAsync();
+
+    /// <summary>
+    /// 全选文字
+    /// </summary>
+    /// <returns></returns>
+    public async ValueTask SelectAllTextAsync() => await JSRuntime.InvokeVoidAsync(FocusElement, "bb_input_selectAll");
 
     private JSInterop<BootstrapInputBase<TValue>>? Interop { get; set; }
 
@@ -125,10 +140,6 @@ public abstract class BootstrapInputBase<TValue> : ValidateBase<TValue>
 
         if (firstRender)
         {
-            if (IsAutoFocus)
-            {
-                await FocusAsync();
-            }
             if (OnEnterAsync != null || OnEscAsync != null)
             {
                 Interop ??= new JSInterop<BootstrapInputBase<TValue>>(JSRuntime);
@@ -136,7 +147,19 @@ public abstract class BootstrapInputBase<TValue> : ValidateBase<TValue>
             }
             if (IsSelectAllTextOnFocus)
             {
-                await JSRuntime.InvokeVoidAsync(FocusElement, "bb_input_selectAll");
+                await JSRuntime.InvokeVoidAsync(FocusElement, "bb_input_selectAll_focus");
+            }
+            if (IsSelectAllTextOnEnter)
+            {
+                await JSRuntime.InvokeVoidAsync(FocusElement, "bb_input_selectAll_enter");
+            }
+            if (IsAutoFocus)
+            {
+                if (Modal != null)
+                {
+                    await Task.Delay(100);
+                }
+                await FocusAsync();
             }
         }
     }

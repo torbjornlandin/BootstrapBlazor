@@ -14,10 +14,66 @@
 }
 else
 {
-    <div class="@FormClassString">
+    <div class="form-body">
         <CascadingValue Value="this" Name="EidtorForm">
-            @foreach (var item in FormItems)
+            @if(ShowUnsetGroupItemsOnTop)
             {
+                if (UnsetGroupItems.Any())
+                {
+                    @RenderUnsetGroupItems
+                }
+                @foreach (var g in GroupItems)
+                {
+                    @RenderGroupItems(g)
+                }
+            }
+            else
+            {
+                @foreach (var g in GroupItems)
+                {
+                    @RenderGroupItems(g)
+                }
+                if (UnsetGroupItems.Any())
+                {
+                    @RenderUnsetGroupItems
+                }
+            }
+        </CascadingValue>
+    </div>
+    @if (Buttons != null)
+    {
+        <div class="form-footer">
+            @Buttons
+        </div>
+    }
+}
+
+@code
+{
+    RenderFragment RenderUnsetGroupItems =>
+    @<div class="@FormClassString">
+        @foreach (var item in UnsetGroupItems)
+        {
+            var render = GetRenderTemplate(item);
+            @if (render != null)
+            {
+                @render(Model)
+            }
+            else
+            {
+                <div class="@GetCssString(item)">
+                    @AutoGenerateTemplate(item)
+                </div>
+            }
+        }
+    </div>;
+
+    RenderFragment<KeyValuePair<string, IOrderedEnumerable<IEditorItem>>> RenderGroupItems => g =>
+    @<GroupBox Title="@g.Key">
+        <div class="@FormClassString">
+            @foreach (var item in g.Value)
+            {
+
                 var render = GetRenderTemplate(item);
                 @if (render != null)
                 {
@@ -30,12 +86,6 @@ else
                     </div>
                 }
             }
-        </CascadingValue>
-        @if (Buttons != null)
-        {
-            <div class="col-12">
-                @Buttons
-            </div>
-        }
-    </div>
+        </div>
+    </GroupBox>;
 }

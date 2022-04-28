@@ -4,7 +4,7 @@
 
 @if (IsShowLabel)
 {
-    <label class="form-label" required="@Required" for="@InputId">@DisplayText</label>
+    <BootstrapLabel required="@Required" for="@InputId" ShowLabelTooltip="ShowLabelTooltip" Value="@DisplayText" />
 }
 <div @attributes="AdditionalAttributes" id="@Id" data-bs-toggle="lgbSelect" class="@ClassName" @ref="SelectElement">
     <CascadingValue Value="this" IsFixed="true">
@@ -15,7 +15,7 @@
             ResetSelectedItem();
         }
         <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <input type="text" id="@InputId" readonly disabled="@Disabled" class="@InputClassName" value="@SelectedItem?.Text" />
+            <input type="text" id="@InputId" readonly disabled="@Disabled" placeholder="@PlaceHolder" class="@InputClassName" value="@SelectedItem?.Text" />
             <span class="@AppendClassName"><i class="fa fa-angle-up"></i></span>
         </div>
         <div class="dropdown-menu shadow">

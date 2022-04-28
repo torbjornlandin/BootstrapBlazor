@@ -91,17 +91,9 @@
                                 <span class="caret"></span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right shadow">
-                                <div class="dropdown-item">
-                                    <i class="fa fa-file-text-o"></i>
-                                    <span>CSV （未实现）</span>
-                                </div>
                                 <div class="dropdown-item" @onclick="@ExportAsync">
                                     <i class="fa fa-file-excel-o"></i>
                                     <span>MS-Excel</span>
-                                </div>
-                                <div class="dropdown-item">
-                                    <i class="fa fa-file-pdf-o"></i>
-                                    <span>PDF（未实现）</span>
                                 </div>
                             </div>
                         </div>
@@ -238,7 +230,7 @@
                 {
                     <div class="table-row table-footer">
                         <CascadingValue Value="@ScreenSize" Name="ScreenSize">
-                            <CascadingValue Value="@RenderModelResponsiveWidth" Name="RenderModelResponsiveWidth">
+                            <CascadingValue Value="@RenderModeResponsiveWidth" Name="RenderModeResponsiveWidth">
                                 @TableFooter?.Invoke(RowItems)
                             </CascadingValue>
                         </CascadingValue>
@@ -247,7 +239,7 @@
             }
         </div>
 
-        if (ActiveRenderMode == TableRenderMode.Table)
+        @if (ActiveRenderMode == TableRenderMode.Table && !ShowFilterHeader)
         {
             if (FilterColumns == null) FilterColumns = Columns.Where(i => i.Filterable);
             if (FilterColumns.Any())
@@ -296,12 +288,12 @@
             {
                 @if(Items != null)
                 {
-                    <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
+                    <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize @ref="VirtualizeElement"
                         ItemSize="RowHeight" OverscanCount="10" Items="@Items.ToList()" ChildContent="RenderRow" />
                 }
                 else
                 {
-                    <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
+                    <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize @ref="VirtualizeElement"
                         ItemSize="RowHeight" OverscanCount="10"
                         ItemsProvider="LoadItems" ItemContent="RenderRow">
                         <Placeholder>
@@ -323,7 +315,7 @@
                                 <div class="table-cell is-wrap">
                                     @if (DetailRows.Contains(item))
                                     {
-                                        @DetailRowTemplate?.Invoke(item)
+                                        @DetailRowTemplate!(item)
                                     }
                                     else
                                     {
@@ -354,7 +346,7 @@
         @if (ShowFooter && !IsHideFooterWhenNoData)
         {
             <tfoot>
-                <CascadingValue Value="@(ScreenSize > RenderModelResponsiveWidth)" Name="IsMobileMode">
+                <CascadingValue Value="@(ScreenSize > RenderModeResponsiveWidth)" Name="IsMobileMode">
                     <CascadingValue Value="@RowItems" Name="TableFooterContext">
                         @if (FooterTemplate != null)
                         {
@@ -527,7 +519,10 @@ RenderFragment<bool> RenderHeader => hasScroll =>
                         var displayName = col.GetDisplayName();
                         <th class="@GetHeaderClassString(col, true)" style="@GetFixedCellStyleString(col, 6)">
                             <div class="tabel-cell">
-                                <TableFilter Column="col" IsHeaderRow="true" />
+                                @if(col.Filterable)
+                                {
+                                    <TableFilter Column="col" IsHeaderRow="true" />
+                                }                             
                             </div>
                         </th>
                     }
@@ -595,7 +590,7 @@ RenderFragment<TItem> RenderRow => item =>
                 continue;
             }
             var cellClass = "";
-            int? colspan = null;
+            int colspan = 0;
             string? value = null;
             @if (col.OnCellRender != null)
             {
@@ -604,7 +599,7 @@ RenderFragment<TItem> RenderRow => item =>
                 cellClass = args.Class;
                 colspan = args.Colspan;
                 value = args.Value;
-                prevColspan = colspan.HasValue ? colspan.Value : 0;
+                prevColspan = colspan;
             }
             <td colspan="@GetColspan(colspan)" class="@GetFixedCellClassString(col, cellClass)" style="@GetFixedCellStyleString(col)">
                 @{
@@ -698,7 +693,7 @@ RenderFragment<(TItem Item, ItemChangedType ChangedType)> RenderEditForm => item
                 <ValidateForm Model="@item.Item" OnValidSubmit="context => SaveAsync(context, item.ChangedType)">
                     <EditorForm TModel="TItem" Items="Columns.Where(c => c.Editable)" ItemsPerRow="EditDialogItemsPerRow" RowType="EditDialogRowType" LabelAlign="EditDialogLabelAlign">
                         <Buttons>
-                            <div class="table-modal-footer">
+                            <div class="text-end">
                                 @if (IsTracking)
                                 {
                                     <Button Color="Color.Primary" Icon="fa fa-save" Text="@CloseButtonText" OnClick="CancelSave" />
@@ -806,10 +801,10 @@ RenderFragment<TItem> RenderRowExtendButtons => item =>
 </td>;
 
 RenderFragment RenderSearch =>
-@<Card>
-    <CardHeader>
+@<div class="@TopSearchClassString">
+    <div class="card-header">
         <div class="d-flex">
-            <div class="table-search-collapse is-open">
+            <div class="@TopSearchHeaderClassString">
                 <i class="table-search-collapse-arrow fa fa-chevron-circle-right"></i>
                 <div class="table-search-collapse-title">@SearchModalTitle</div>
             </div>
@@ -848,8 +843,8 @@ RenderFragment RenderSearch =>
                 }
             </div>
         </div>
-    </CardHeader>
-    <CardBody>
+    </div>
+    <div class="card-body" style="@TopSearchBodyClassString">
         @if(CustomerSearchModel != null && CustomerSearchTemplate != null)
         {
             @CustomerSearchTemplate(CustomerSearchModel)
@@ -865,6 +860,6 @@ RenderFragment RenderSearch =>
                 </EditorForm>
             </CascadingValue>
         }
-    </CardBody>
-</Card>;
+    </div>
+</div>;
 }

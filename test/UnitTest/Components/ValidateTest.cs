@@ -17,12 +17,13 @@ public class ValidateTest : BootstrapBlazorTestBase
         var cut = Context.RenderComponent<BootstrapInput<string>>(builder =>
         {
             builder.AddChildContent("ChildContent-Test");
+            builder.Add(a => a.ShowLabelTooltip, true);
         });
         Assert.Contains("ChildContent-Test", cut.Markup);
     }
 
     [Fact]
-    public void CascadedEditContext_Ok()
+    public async Task CascadedEditContext_Ok()
     {
         var model = new Foo() { Name = "Name-Test" };
         Context.RenderTree.Add<CascadingValue<EditContext>>(builder =>
@@ -36,7 +37,7 @@ public class ValidateTest : BootstrapBlazorTestBase
             builder.Add(a => a.ValueExpression, model.GenerateValueExpression());
         });
         Assert.Equal(model.Name, cut.Instance.Value);
-        cut.Find("input").Change("Test");
+        await cut.InvokeAsync(() => cut.Find("input").Change("Test"));
         Assert.Equal("Test", model.Name);
     }
 
@@ -160,7 +161,7 @@ public class ValidateTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void SkipValidate_Ok()
+    public async Task SkipValidate_Ok()
     {
         var model = new Foo() { Name = "Name-Test" };
         var valid = false;
@@ -186,7 +187,7 @@ public class ValidateTest : BootstrapBlazorTestBase
 
         // 提交表单
         var form = cut.Find("form");
-        form.Submit();
+        await cut.InvokeAsync(() => form.Submit());
 
         // 内置 ValidateForm 验证表单中 设置 SkipValidate=true 提交表单时不进行验证
         Assert.True(valid);
@@ -229,26 +230,26 @@ public class ValidateTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void SetDisable_Ok()
+    public async Task SetDisable_Ok()
     {
         var cut = Context.RenderComponent<BootstrapInput<string>>(builder =>
         {
             builder.Add(a => a.IsDisabled, false);
         });
         Assert.False(cut.Instance.IsDisabled);
-        cut.InvokeAsync(() => cut.Instance.SetDisable(true));
+        await cut.InvokeAsync(() => cut.Instance.SetDisable(true));
         Assert.True(cut.Instance.IsDisabled);
     }
 
     [Fact]
-    public void SetValue_Ok()
+    public async Task SetValue_Ok()
     {
         var cut = Context.RenderComponent<BootstrapInput<string>>(builder =>
         {
             builder.Add(a => a.Value, "test");
         });
         Assert.Equal("test", cut.Instance.Value);
-        cut.InvokeAsync(() => cut.Instance.SetValue("test2"));
+        await cut.InvokeAsync(() => cut.Instance.SetValue("test2"));
         Assert.Equal("test2", cut.Instance.Value);
     }
 
@@ -276,7 +277,7 @@ public class ValidateTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void ValidateRules_Ok()
+    public async Task ValidateRules_Ok()
     {
         var model = new Foo() { Name = "test" };
         var invalid = false;
@@ -301,15 +302,18 @@ public class ValidateTest : BootstrapBlazorTestBase
         });
 
         var form = cut.Find("form");
-        form.Submit();
+        await cut.InvokeAsync(() => form.Submit());
         // 提交表单验证通过
         Assert.False(invalid);
 
         // 设置 Name="" 验证不通过
         var input = cut.FindComponent<BootstrapInput<string>>();
         var c = input.Find("input");
-        c.Change("");
-        form.Submit();
+        await cut.InvokeAsync(() =>
+        {
+            c.Change("");
+            form.Submit();
+        });
         Assert.True(invalid);
 
         // 增加邮箱验证规则
@@ -322,14 +326,71 @@ public class ValidateTest : BootstrapBlazorTestBase
             pb.Add(v => v.ValidateRules, rules);
         });
         invalid = false;
-        c.Change("argo@163.com");
-        form.Submit();
+        await cut.InvokeAsync(() =>
+        {
+            c.Change("argo@163.com");
+            form.Submit();
+        });
         Assert.False(invalid);
 
         // 更改值不符合邮箱规则验证不通过
-        c.Change("argo");
-        form.Submit();
+        await cut.InvokeAsync(() =>
+        {
+            c.Change("argo");
+            form.Submit();
+        });
         Assert.True(invalid);
+    }
+
+    [Fact]
+    public async Task AsyncRules_Ok()
+    {
+        var model = new Foo() { Name = "test" };
+        var invalid = false;
+        var cut = Context.RenderComponent<ValidateForm>(builder =>
+        {
+            builder.Add(v => v.Model, model);
+            builder.Add(v => v.OnInvalidSubmit, context =>
+            {
+                invalid = true;
+                return Task.CompletedTask;
+            });
+            builder.AddChildContent<FooAsync>(pb =>
+            {
+                pb.Add(v => v.Value, model.Name);
+                pb.Add(v => v.ValueChanged, v => model.Name = v);
+                pb.Add(v => v.ValueExpression, model.GenerateValueExpression());
+            });
+            builder.AddChildContent<Button>(pb =>
+            {
+                pb.Add(b => b.ButtonType, ButtonType.Submit);
+            });
+        });
+        var form = cut.Find("form");
+        var c = cut.Find("input");
+        await cut.InvokeAsync(() => c.Change("Test"));
+        await Task.Delay(300);
+        await cut.InvokeAsync(() => form.Submit());
+        Assert.True(invalid);
+    }
+
+    class FooAsync : BootstrapInput<string>
+    {
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            Rules.Add(new MockAsyncValidator());
+        }
+    }
+
+    class MockAsyncValidator : ValidatorAsyncBase
+    {
+        public override async Task ValidateAsync(object? propertyValue, ValidationContext context, List<ValidationResult> results)
+        {
+            await Task.Delay(100);
+            results.Add(new ValidationResult("Invalid", new string[] { context.DisplayName }));
+        }
     }
 
     [Fact]
@@ -428,7 +489,7 @@ public class ValidateTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void ValidateType_Ok()
+    public async Task ValidateType_Ok()
     {
         var model = new Foo() { Count = 0 };
         var cut = Context.RenderComponent<RenderTemplate>(builder =>
@@ -440,7 +501,7 @@ public class ValidateTest : BootstrapBlazorTestBase
             });
         });
         var intValidate = cut.FindComponent<MockValidate<int>>();
-        intValidate.Instance.ValidateTypeTest(model);
+        await intValidate.Instance.ValidateTypeTest(model);
     }
 
     [Fact]
@@ -524,13 +585,13 @@ public class ValidateTest : BootstrapBlazorTestBase
             CurrentValueAsString = "1";
         }
 
-        public void ValidateTypeTest(Foo model)
+        public async Task ValidateTypeTest(Foo model)
         {
             CurrentValueAsString = "test";
 
             var results = new List<ValidationResult>();
             var context = new ValidationContext(model);
-            ValidateProperty(1, context, results);
+            await ValidatePropertyAsync(1, context, results);
         }
 
         public void OnValidateTest()

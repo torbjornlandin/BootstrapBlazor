@@ -25,7 +25,7 @@ public sealed partial class ListViews
 
         Products = Enumerable.Range(1, 100).Select(i => new Product()
         {
-            ImageUrl = $"{WebsiteOption.Value.ImageLibUrl}/images/Pic{i}.jpg",
+            ImageUrl = $"{WebsiteOption.CurrentValue.ImageLibUrl}/images/Pic{i}.jpg",
             Description = $"Pic{i}.jpg",
             Category = $"Group{(i % 4) + 1}"
         });
@@ -45,99 +45,84 @@ public sealed partial class ListViews
         Trace?.Log($"ListViewItem: {item.Description} clicked");
         return Task.CompletedTask;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
+
     private IEnumerable<AttributeItem> GetAttributes() => new AttributeItem[]
     {
-            new AttributeItem(){
-                Name = "Items",
-                Description = Localizer["Items"],
-                Type = "IEnumerable<TItem>",
-                ValueList = " — ",
-                DefaultValue = " — "
-            },
-            new AttributeItem(){
-                Name = "Pageable",
-                Description = Localizer["Pageable"],
-                Type = "bool",
-                ValueList = "true|false",
-                DefaultValue = "false"
-            },
-            new AttributeItem(){
-                Name = "PageItemsSource",
-                Description =Localizer["PageItemsSource"],
-                Type = "IEnumerable<int>",
-                ValueList = " — ",
-                DefaultValue = " — "
-            },
-            new AttributeItem(){
-                Name = "HeaderTemplate",
-                Description = Localizer["HeaderTemplate"],
-                Type = "RenderFragment",
-                ValueList = " — ",
-                DefaultValue = " — "
-            },
-            new AttributeItem(){
-                Name = "BodyTemplate",
-                Description = Localizer["BodyTemplate"],
-                Type = "RenderFragment<TItem>",
-                ValueList = " — ",
-                DefaultValue = " — "
-            },
-            new AttributeItem(){
-                Name = "FooterTemplate",
-                Description = Localizer["FooterTemplate"],
-                Type = "RenderFragment",
-                ValueList = " — ",
-                DefaultValue = " — "
-            },
-            new AttributeItem() {
-                Name = "OnQueryAsync",
-                Description = Localizer["OnQueryAsync"],
-                Type = "Func<QueryPageOptions, Task<QueryData<TItem>>>",
-                ValueList = "—",
-                DefaultValue = " — "
-            },
-            new AttributeItem() {
-                Name = "OnListViewItemClick",
-                Description = Localizer["OnListViewItemClick"],
-                Type = "Func<TItem, Task>",
-                ValueList = " — ",
-                DefaultValue = " — "
-            }
+        new AttributeItem(){
+            Name = "Items",
+            Description = Localizer["Items"],
+            Type = "IEnumerable<TItem>",
+            ValueList = " — ",
+            DefaultValue = " — "
+        },
+        new AttributeItem(){
+            Name = "Pageable",
+            Description = Localizer["Pageable"],
+            Type = "bool",
+            ValueList = "true|false",
+            DefaultValue = "false"
+        },
+        new AttributeItem(){
+            Name = "PageItemsSource",
+            Description =Localizer["PageItemsSource"],
+            Type = "IEnumerable<int>",
+            ValueList = " — ",
+            DefaultValue = " — "
+        },
+        new AttributeItem(){
+            Name = "HeaderTemplate",
+            Description = Localizer["HeaderTemplate"],
+            Type = "RenderFragment",
+            ValueList = " — ",
+            DefaultValue = " — "
+        },
+        new AttributeItem(){
+            Name = "BodyTemplate",
+            Description = Localizer["BodyTemplate"],
+            Type = "RenderFragment<TItem>",
+            ValueList = " — ",
+            DefaultValue = " — "
+        },
+        new AttributeItem(){
+            Name = "FooterTemplate",
+            Description = Localizer["FooterTemplate"],
+            Type = "RenderFragment",
+            ValueList = " — ",
+            DefaultValue = " — "
+        },
+        new AttributeItem() {
+            Name = "OnQueryAsync",
+            Description = Localizer["OnQueryAsync"],
+            Type = "Func<QueryPageOptions, Task<QueryData<TItem>>>",
+            ValueList = "—",
+            DefaultValue = " — "
+        },
+        new AttributeItem() {
+            Name = "OnListViewItemClick",
+            Description = Localizer["OnListViewItemClick"],
+            Type = "Func<TItem, Task>",
+            ValueList = " — ",
+            DefaultValue = " — "
+        }
     };
 
     private IEnumerable<MethodItem> GetMethods() => new MethodItem[]
     {
-            new MethodItem()
-            {
-                Name = "QueryAsync",
-                Description = Localizer["QueryAsync"],
-                Parameters = " — ",
-                ReturnValue = "Task"
-            },
+        new MethodItem()
+        {
+            Name = "QueryAsync",
+            Description = Localizer["QueryAsync"],
+            Parameters = " — ",
+            ReturnValue = "Task"
+        }
     };
 }
 
-/// <summary>
-/// 
-/// </summary>
 internal class Product
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public string ImageUrl { get; set; } = "";
 
-    /// <summary>
-    /// 
-    /// </summary>
     public string Description { get; set; } = "";
 
-    /// <summary>
-    /// 
-    /// </summary>
     public string Category { get; set; } = "";
 }

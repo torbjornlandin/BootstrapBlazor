@@ -9,7 +9,7 @@
 </Tips>
 
 <DemoBlock Title="具有搜索功能的表格" Introduction="设置 <code>ShowSearch</code> 显示查询组件，通过设置 <code>SearchTemplate</code> 模板自定义搜索 UI" Name="SearchTable">
-    <ul class="ul-demo">
+    <ul class="ul-demo mb-3">
         <li>通过设置 <code>ShowEmpty="true"</code> 开启无数据显示功能</li>
         <li><code>EmptyText</code> 参数用于设置无数据时显示文字，默认取资源文件中的内置文字</li>
         <li><code>EmptyTemplate</code> 参数用于自定义无数据显示模板</li>
@@ -81,7 +81,7 @@
             <TableColumn @bind-Field="@context.DateTime" Width="180" Filterable="true" />
             <TableColumn @bind-Field="@context.Name" Searchable="true" />
             <TableColumn @bind-Field="@context.Address" Searchable="true" />
-            <TableColumn @bind-Field="@context.Education" />
+            <TableColumn @bind-Field="@context.Education" Searchable="true" />
         </TableColumns>
     </Table>
 </DemoBlock>
@@ -102,17 +102,9 @@
             <TableColumn @bind-Field="@context.DateTime" Width="180" Filterable="true" />
             <TableColumn @bind-Field="@context.Name" Searchable="true">
                 <SearchTemplate Context="model">
-                    @{
-                        var items = new List<SelectedItem>()
-                    {
-                    new SelectedItem { Text = "请选择 ...", Value = "" },
-                    new SelectedItem { Text = "姓名1", Value = "姓名1" },
-                    new SelectedItem { Text = "姓名2", Value = "姓名2" },
-                    };
-                        <div class="col-12 col-sm-6">
-                            <Select Items="items" @bind-Value="@model!.Name" ShowLabel="true" DisplayText="姓名" />
-                        </div>
-                    }
+                    <div class="col-12 col-sm-6">
+                        <Select Items="SearchItems" @bind-Value="@model!.Name" ShowLabel="true" DisplayText="姓名" />
+                    </div>
                 </SearchTemplate>
             </TableColumn>
             <TableColumn @bind-Field="@context.Address" Searchable="true" />

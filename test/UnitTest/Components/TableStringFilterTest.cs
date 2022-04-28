@@ -84,5 +84,54 @@ public class TableStringFilterTest : BootstrapBlazorTestBase
         Assert.Equal("1", condtion.First().FieldValue);
         Assert.Equal(FilterAction.NotEqual, condtion.First().FilterAction);
         Assert.Equal(FilterLogic.And, condtion.First().FilterLogic);
+
+        searchFilterAction.Reset();
+        Assert.Null(searchFilterAction.Value);
+
+        searchFilterAction.SetFilterConditionsAsync(new List<FilterKeyValueAction>()
+        {
+            new FilterKeyValueAction()
+            {
+                FieldKey = "Test-Search",
+                FieldValue = "test"
+            }
+        });
+        Assert.Equal("test", searchFilterAction.Value);
+    }
+
+    [Fact]
+    public async Task SetFilterConditions_Ok()
+    {
+        var cut = Context.RenderComponent<StringFilter>();
+        var filter = cut.Instance;
+        var conditions = filter.GetFilterConditions();
+        Assert.Empty(conditions);
+
+        var newConditions = new List<FilterKeyValueAction>
+        {
+            new FilterKeyValueAction() { FieldValue = "test1" },
+            new FilterKeyValueAction() { FieldValue = "test2" }
+        };
+        await filter.SetFilterConditionsAsync(newConditions);
+        conditions = filter.GetFilterConditions();
+        Assert.Equal(2, conditions.Count());
+
+        newConditions = new List<FilterKeyValueAction>
+        {
+            new FilterKeyValueAction() { FieldValue = true },
+            new FilterKeyValueAction() { FieldValue = false }
+        };
+        await filter.SetFilterConditionsAsync(newConditions);
+        conditions = filter.GetFilterConditions();
+        Assert.Empty(conditions);
+
+        newConditions = new List<FilterKeyValueAction>
+        {
+            new FilterKeyValueAction() { FieldValue = "" },
+            new FilterKeyValueAction() { FieldValue = "" }
+        };
+        await filter.SetFilterConditionsAsync(newConditions);
+        conditions = filter.GetFilterConditions();
+        Assert.Empty(conditions);
     }
 }

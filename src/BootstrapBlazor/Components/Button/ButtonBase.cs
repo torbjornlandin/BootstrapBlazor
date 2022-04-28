@@ -69,7 +69,7 @@ public abstract class ButtonBase : TooltipComponentBase
     /// 获得/设置 按钮颜色
     /// </summary>
     [Parameter]
-    public Color Color { get; set; } = Color.Primary;
+    public virtual Color Color { get; set; } = Color.Primary;
 
     /// <summary>
     /// 获得/设置 显示图标
@@ -210,5 +210,30 @@ public abstract class ButtonBase : TooltipComponentBase
     {
         IsDisabled = disable;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// 显示 Tooltip 方法
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    public virtual async Task ShowTooltip(string message)
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            await JSRuntime.InvokeVoidAsync(null, "bb_tooltip", Id, "show", message, "top", false, "hover");
+        }
+    }
+
+    /// <summary>
+    /// 销毁 Tooltip 方法
+    /// </summary>
+    /// <returns></returns>
+    public virtual async Task RemoveTooltip()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            await JSRuntime.InvokeVoidAsync(null, "bb_tooltip", Id, "dispose");
+        }
     }
 }

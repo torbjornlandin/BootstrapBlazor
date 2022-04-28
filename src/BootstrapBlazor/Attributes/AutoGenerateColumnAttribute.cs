@@ -49,6 +49,17 @@ public class AutoGenerateColumnAttribute : AutoGenerateBaseAttribute, ITableColu
     public bool IsReadonlyWhenEdit { get; set; }
 
     /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 false
+    /// </summary>
+    public bool ShowLabelTooltip { get; set; }
+
+    bool? IEditorItem.ShowLabelTooltip
+    {
+        get => ShowLabelTooltip;
+        set => ShowLabelTooltip = value.HasValue && value.Value;
+    }
+
+    /// <summary>
     /// 获得/设置 是否为默认排序规则 默认为 SortOrder.Unset
     /// </summary>
     public SortOrder DefaultSortOrder { get; set; }
@@ -174,6 +185,16 @@ public class AutoGenerateColumnAttribute : AutoGenerateBaseAttribute, ITableColu
     IEnumerable<SelectedItem>? IEditorItem.Lookup { get; set; }
 
     /// <summary>
+    /// 获得/设置 字典数据源字符串比较规则 默认 StringComparison.OrdinalIgnoreCase 大小写不敏感 
+    /// </summary>
+    public StringComparison LookupStringComparison { get; set; } = StringComparison.OrdinalIgnoreCase;
+
+    /// <summary>
+    /// 获得/设置 LookupService 服务指定数据集合键值 常用于外键自动转换为名称操作
+    /// </summary>
+    public string? LookUpServiceKey { get; set; }
+
+    /// <summary>
     /// 获得/设置 单元格回调方法
     /// </summary>
     Action<TableCellArgs>? ITableColumn.OnCellRender { get; set; }
@@ -194,4 +215,14 @@ public class AutoGenerateColumnAttribute : AutoGenerateBaseAttribute, ITableColu
     /// </summary>
     /// <returns></returns>
     public string GetFieldName() => FieldName;
+
+    /// <summary>
+    /// 获得/设置 当前属性分组
+    /// </summary>
+    public string? GroupName { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组排序 默认 0
+    /// </summary>
+    public int GroupOrder { get; set; }
 }

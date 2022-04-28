@@ -105,6 +105,11 @@ public partial class Editor : IDisposable
     public Func<string, Task<string>>? OnClickButton { get; set; }
 
     /// <summary>
+    /// 执行editor的方法
+    /// </summary>
+    public ValueTask DoMethodAysnc(string method, params object[] value) => JSRuntime.InvokeVoidAsync(EditorElement, "bb_editor_method", method, value);
+
+    /// <summary>
     /// OnInitialized 方法
     /// </summary>
     protected override void OnInitialized()
@@ -114,16 +119,16 @@ public partial class Editor : IDisposable
         PlaceHolder ??= Localizer[nameof(PlaceHolder)];
 
         ToolbarItems ??= new List<object>
-            {
-                new List<object> { "style", new List<string>() { "style" } },
-                new List<object> { "font", new List<string>() { "bold", "underline", "clear" } },
-                new List<object> { "fontname", new List<string>() { "fontname"} },
-                new List<object> { "color", new List<string>() { "color"} },
-                new List<object> { "para", new List<string>() { "ul", "ol", "paragraph"} },
-                new List<object> { "table", new List<string>() { "table"} },
-                new List<object> { "insert", new List<string>() { "link", "picture", "video" } },
-                new List<object> { "view", new List<string>() { "fullscreen", "codeview", "help"} }
-            };
+        {
+            new List<object> { "style", new List<string>() { "style" } },
+            new List<object> { "font", new List<string>() { "bold", "underline", "clear" } },
+            new List<object> { "fontname", new List<string>() { "fontname"} },
+            new List<object> { "color", new List<string>() { "color"} },
+            new List<object> { "para", new List<string>() { "ul", "ol", "paragraph"} },
+            new List<object> { "table", new List<string>() { "table"} },
+            new List<object> { "insert", new List<string>() { "link", "picture", "video" } },
+            new List<object> { "view", new List<string>() { "fullscreen", "codeview", "help"} }
+        };
         CustomerToolbarButtons ??= Enumerable.Empty<EditorToolbarButton>();
     }
 
@@ -187,10 +192,10 @@ public partial class Editor : IDisposable
         list.AddRange(ToolbarItems);
 
         var itemList = new List<object>
-            {
-                "custom",
-                CustomerToolbarButtons.Select(p => p.ButtonName).ToList()
-            };
+        {
+            "custom",
+            CustomerToolbarButtons.Select(p => p.ButtonName).ToList()
+        };
         list.Add(itemList);
 
         return Task.FromResult(list);
@@ -230,8 +235,11 @@ public partial class Editor : IDisposable
     {
         if (disposing)
         {
-            Interope?.Dispose();
-            Interope = null;
+            if (Interope != null)
+            {
+                Interope.Dispose();
+                Interope = null;
+            }
         }
     }
 

@@ -5,7 +5,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Reflection;
 
 namespace BootstrapBlazor.Components;
 
@@ -17,6 +19,8 @@ namespace BootstrapBlazor.Components;
 #endif
 public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable where TItem : class, new()
 {
+    private Virtualize<TItem>? VirtualizeElement { get; set; }
+
     [NotNull]
     private JSInterop<Table<TItem>>? Interop { get; set; }
 
@@ -117,7 +121,7 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
         .AddClass("fa-rotate-90", ExpandRows.Contains(item))
         .Build();
 
-    private static string? GetColspan(int? colspan) => (colspan.HasValue && colspan.Value > 1) ? colspan.Value.ToString() : null;
+    private static string? GetColspan(int colspan) => colspan > 1 ? colspan.ToString() : null;
 
     /// <summary>
     /// 明细行集合用于数据懒加载
@@ -259,7 +263,11 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
 
     [Inject]
     [NotNull]
-    private IOptions<BootstrapBlazorOptions>? Options { get; set; }
+    private IOptionsMonitor<BootstrapBlazorOptions>? Options { get; set; }
+
+    [Inject]
+    [NotNull]
+    private ILookUpService? LookUpService { get; set; }
 
     [NotNull]
     private string? NotSetOnTreeExpandErrorMessage { get; set; }
@@ -446,13 +454,6 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     public List<ITableColumn> Columns { get; } = new(50);
 
     /// <summary>
-    /// 获得/设置 是否使用注入的数据服务
-    /// </summary>
-    [Parameter]
-    [Obsolete("已弃用，组件内部采用就近原则智能推断是否使用全局注册数据服务")]
-    public bool UseInjectDataService { get; set; }
-
-    /// <summary>
     /// 获得/设置 明细行模板 <see cref="IsDetails" />
     /// </summary>
     [Parameter]
@@ -477,7 +478,7 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     public RenderFragment<IEnumerable<TItem>>? FooterTemplate { get; set; }
 
     /// <summary>
-    /// 获得/设置 数据集合，适用于无功能时仅做数据展示使用，高级功能时请使用 <see cref="OnQueryAsync"/> 回调委托
+    /// 获得/设置 数据集合，适用于无功能仅做数据展示使用，高级功能时请使用 <see cref="OnQueryAsync"/> 回调委托
     /// </summary>
     [Parameter]
     public IEnumerable<TItem>? Items { get; set; }
@@ -647,6 +648,11 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     private bool OnAfterRenderIsTriggered { get; set; }
 
     /// <summary>
+    /// 获得/设置 模型是否有 [KeyAttribute] 标签
+    /// </summary>
+    protected bool HasKeyAttribute { get; set; }
+
+    /// <summary>
     /// OnInitialized 方法
     /// </summary>
     protected override void OnInitialized()
@@ -670,6 +676,12 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
 
             // 重新查询
             await QueryAsync();
+
+            if (ScrollMode == ScrollMode.Virtual && VirtualizeElement is not null)
+            {
+                await VirtualizeElement.RefreshDataAsync();
+                StateHasChanged();
+            }
         };
 
         // 设置 OnFilter 回调方法
@@ -677,7 +689,15 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
         {
             PageIndex = 1;
             await QueryAsync();
+
+            if (ScrollMode == ScrollMode.Virtual && VirtualizeElement is not null)
+            {
+                await VirtualizeElement.RefreshDataAsync();
+                StateHasChanged();
+            }
         };
+
+        HasKeyAttribute = typeof(TItem).GetRuntimeProperties().Any(p => p.IsDefined(typeof(KeyAttribute)));
 
         if (IsTree)
         {
@@ -691,29 +711,30 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
 
     private void OnInitParameters()
     {
+        var op = Options.CurrentValue;
         if (ShowCheckboxTextColumnWidth == 0)
         {
-            ShowCheckboxTextColumnWidth = Options.Value.TableSettings.ShowCheckboxTextColumnWidth;
+            ShowCheckboxTextColumnWidth = op.TableSettings.ShowCheckboxTextColumnWidth;
         }
 
         if (DetailColumnWidth == 0)
         {
-            DetailColumnWidth = Options.Value.TableSettings.DetailColumnWidth;
+            DetailColumnWidth = op.TableSettings.DetailColumnWidth;
         }
 
         if (LineNoColumnWidth == 0)
         {
-            LineNoColumnWidth = Options.Value.TableSettings.LineNoColumnWidth;
+            LineNoColumnWidth = op.TableSettings.LineNoColumnWidth;
         }
 
         if (CheckboxColumnWidth == 0)
         {
-            CheckboxColumnWidth = Options.Value.TableSettings.CheckboxColumnWidth;
+            CheckboxColumnWidth = op.TableSettings.CheckboxColumnWidth;
         }
 
-        if (Options.Value.TableSettings.TableRenderMode != null && RenderMode == TableRenderMode.Auto)
+        if (op.TableSettings.TableRenderMode != null && RenderMode == TableRenderMode.Auto)
         {
-            RenderMode = Options.Value.TableSettings.TableRenderMode.Value;
+            RenderMode = op.TableSettings.TableRenderMode.Value;
         }
     }
 
@@ -938,6 +959,13 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
             var content = "";
             var val = GetItemValue(col.GetFieldName(), item);
 
+            if (col.Lookup == null && !string.IsNullOrEmpty(col.LookUpServiceKey))
+            {
+                // 未设置 Lookup
+                // 设置 LookupService 键值
+                col.Lookup = LookUpService.GetItemsByKey(col.LookUpServiceKey);
+            }
+
             if (col.Lookup == null && val is bool v1)
             {
                 // 自动化处理 bool 值
@@ -950,7 +978,7 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
             if (col.Lookup != null && val != null)
             {
                 // 转化 Lookup 数据源
-                var lookupVal = col.Lookup.FirstOrDefault(l => l.Value.Equals(val.ToString(), StringComparison.OrdinalIgnoreCase));
+                var lookupVal = col.Lookup.FirstOrDefault(l => l.Value.Equals(val.ToString(), col.LookupStringComparison));
                 if (lookupVal != null)
                 {
                     content = lookupVal.Text;
@@ -1016,12 +1044,12 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     }
     #endregion
 
-    private RenderFragment RenderCell(ITableColumn col, TItem item, ItemChangedType changedType) => col.IsEditable(changedType)
+    private RenderFragment RenderCell(ITableColumn col, TItem item, ItemChangedType changedType) => col.CanWrite(typeof(TItem)) && col.IsEditable(changedType)
         ? (col.EditTemplate == null
-            ? builder => builder.CreateComponentByFieldType(this, col, item, false, changedType)
+            ? builder => builder.CreateComponentByFieldType(this, col, item, changedType, false, LookUpService)
             : col.EditTemplate(item))
         : (col.Template == null
-            ? builder => builder.CreateDisplayByFieldType(this, col, item, false)
+            ? builder => builder.CreateDisplayByFieldType(col, item)
             : col.Template(item));
 
     private RenderFragment RenderExcelCell(ITableColumn col, TItem item, ItemChangedType changedType)
@@ -1054,7 +1082,7 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
                     parameters.Add(new(nameof(ValidateBase<string>.OnValueChanged), onValueChanged.Invoke(d, col, (model, column, val) => DynamicContext.OnValueChanged(model, column, val))));
                     col.ComponentParameters = parameters;
                 }
-                builder.CreateComponentByFieldType(this, col, row, false, changedType);
+                builder.CreateComponentByFieldType(this, col, row, changedType, false, LookUpService);
             };
         }
 
@@ -1081,12 +1109,13 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     /// <summary>
     /// 获得/设置 表头过滤时回调方法
     /// </summary>
+    [NotNull]
     public Func<Task>? OnFilterAsync { get; private set; }
 
     /// <summary>
     /// 获得 过滤集合
     /// </summary>
-    public Dictionary<string, IFilterAction> Filters { get; } = new Dictionary<string, IFilterAction>();
+    public Dictionary<string, IFilterAction> Filters { get; } = new();
 
     /// <summary>
     /// 点击 过滤小图标方法
@@ -1163,6 +1192,19 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
             ret = ShowMultiFilterHeader;
         }
         return ret;
+    }
+
+    /// <summary>
+    /// Reset all Columns Filter
+    /// </summary>
+    public async Task ResetFilters()
+    {
+        foreach (var column in Columns)
+        {
+            column.Filter?.FilterAction?.Reset();
+        }
+        Filters.Clear();
+        await OnFilterAsync();
     }
 
     #region Dispose

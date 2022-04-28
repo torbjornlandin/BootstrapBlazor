@@ -27,6 +27,13 @@ public partial class Tree
         .Build();
 
     /// <summary>
+    /// 获得 Loading 样式集合
+    /// </summary>
+    private string? LoadingClassString => CssBuilder.Default("table-loading")
+        .AddClassFromAttributes(AdditionalAttributes)
+        .Build();
+
+    /// <summary>
     /// 获得/设置 TreeItem 图标
     /// </summary>
     /// <param name="item"></param>
@@ -224,15 +231,20 @@ public partial class Tree
 
         if (OnTreeItemChecked != null)
         {
-            var checkedItems = Items.Aggregate(new List<TreeItem>(), (t, item) =>
-            {
-                t.Add(item);
-                t.AddRange(item.GetAllSubItems());
-                return t;
-            });
-            await OnTreeItemChecked(checkedItems);
+            await OnTreeItemChecked(GetCheckedItems().ToList());
         }
     }
+
+    /// <summary>
+    /// 获得 所有选中节点集合
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<TreeItem> GetCheckedItems() => Items.Aggregate(new List<TreeItem>(), (t, item) =>
+    {
+        t.Add(item);
+        t.AddRange(item.GetAllSubItems());
+        return t;
+    }).Where(i => i.Checked);
 
     private async Task OnRadioClick(TreeItem item)
     {

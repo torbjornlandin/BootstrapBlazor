@@ -202,6 +202,12 @@ public partial class Tab
     [Parameter]
     public string? ToastTitle { get; set; }
 
+    /// <summary>
+    /// 获得/设置 按钮模板 默认 null
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ButtonTemplate { get; set; }
+
     [Inject]
     [NotNull]
     private IStringLocalizer<Tab>? Localizer { get; set; }
@@ -476,7 +482,8 @@ public partial class Tab
             parameters.Add(nameof(TabItem.ChildContent), new RenderFragment(builder =>
             {
                 builder.OpenComponent<BootstrapBlazorAuthorizeView>(0);
-                builder.AddAttribute(1, nameof(BootstrapBlazorAuthorizeView.RouteContext), context);
+                builder.AddAttribute(1, nameof(BootstrapBlazorAuthorizeView.Type), context.Handler);
+                builder.AddAttribute(1, nameof(BootstrapBlazorAuthorizeView.Parameters), context.Parameters);
                 builder.AddAttribute(2, nameof(BootstrapBlazorAuthorizeView.NotAuthorized), NotAuthorized);
                 builder.CloseComponent();
             }));
@@ -521,6 +528,7 @@ public partial class Tab
     private void AddTabItem(Dictionary<string, object?> parameters)
     {
         var item = TabItem.Create(parameters);
+        item.TabSet = this;
         if (item.IsActive)
         {
             _items.ForEach(i => i.SetActive(false));

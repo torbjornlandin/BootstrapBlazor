@@ -34,9 +34,9 @@ public class JSInterop<TValue> : IDisposable where TValue : class
     {
         _objRef = DotNetObjectReference.Create(value);
         var paras = new List<object>()
-            {
-                _objRef
-            };
+        {
+            _objRef
+        };
         paras.AddRange(args);
         await _jsRuntime.InvokeVoidAsync(el, func, paras.ToArray());
     }
@@ -70,6 +70,24 @@ public class JSInterop<TValue> : IDisposable where TValue : class
         return _jsRuntime.InvokeAsync<bool>("$.bb_geo_getCurrnetPosition", _objRef, callbackMethodName);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    internal ValueTask<long> GetWatchPositionItemAsync(TValue value, string callbackMethodName)
+    {
+        _objRef = DotNetObjectReference.Create(value);
+        return _jsRuntime.InvokeAsync<long>("$.bb_geo_watchPosition", _objRef, callbackMethodName);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    internal ValueTask<bool> SetClearWatchPositionAsync(long watchid)
+    {
+        return _jsRuntime.InvokeAsync<bool>("$.bb_geo_clearWatchLocation", watchid);
+    }
 
     /// <summary>
     /// 
@@ -99,8 +117,11 @@ public class JSInterop<TValue> : IDisposable where TValue : class
     {
         if (disposing)
         {
-            _objRef?.Dispose();
-            _objRef = null;
+            if (_objRef != null)
+            {
+                _objRef.Dispose();
+                _objRef = null;
+            }
         }
     }
 

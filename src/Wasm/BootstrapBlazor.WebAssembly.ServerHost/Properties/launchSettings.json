@@ -2,9 +2,8 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
-    "hotReloadProfile": "blazorwasm",
     "iisExpress": {
-      "applicationUrl": "http://localhost:50855",
+      "applicationUrl": "http://localhost:50855/",
       "sslPort": 0
     }
   },

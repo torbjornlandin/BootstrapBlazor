@@ -71,13 +71,6 @@ public class TableColumn<TItem, TType> : BootstrapComponentBase, ITableColumn
     public bool DefaultSort { get; set; }
 
     /// <summary>
-    /// 获得/设置 本列是否允许换行 默认为 false 已过期改用 <see cref="TextWrap"/>
-    /// </summary>
-    [Parameter]
-    [Obsolete("请使用 TextWrap 参数代替")]
-    public bool AllowTextWrap { get { return TextWrap; } set { TextWrap = value; } }
-
-    /// <summary>
     /// 获得/设置 本列是否允许换行 默认为 false
     /// </summary>
     [Parameter]
@@ -88,6 +81,12 @@ public class TableColumn<TItem, TType> : BootstrapComponentBase, ITableColumn
     /// </summary>
     [Parameter]
     public bool TextEllipsis { get; set; }
+
+    /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 null
+    /// </summary>
+    [Parameter]
+    public bool? ShowLabelTooltip { get; set; }
 
     /// <summary>
     /// 获得/设置 步长 默认为 null
@@ -342,6 +341,18 @@ public class TableColumn<TItem, TType> : BootstrapComponentBase, ITableColumn
     public IEnumerable<SelectedItem>? Lookup { get; set; }
 
     /// <summary>
+    /// 获得/设置 字典数据源字符串比较规则 默认 StringComparison.OrdinalIgnoreCase 大小写不敏感 
+    /// </summary>
+    [Parameter]
+    public StringComparison LookupStringComparison { get; set; } = StringComparison.OrdinalIgnoreCase;
+
+    /// <summary>
+    /// 获得/设置 字典数据源服务的类别 常用于外键自动转换为名称操作
+    /// </summary>
+    [Parameter]
+    public string? LookUpServiceKey { get; set; }
+
+    /// <summary>
     /// 获得/设置 单元格回调方法
     /// </summary>
     [Parameter]
@@ -378,9 +389,25 @@ public class TableColumn<TItem, TType> : BootstrapComponentBase, ITableColumn
     /// <summary>
     /// 获取绑定字段显示名称方法
     /// </summary>
-    public string GetDisplayName() => Text ?? _fieldIdentifier?.GetDisplayName() ?? "";
+    public string GetDisplayName() => Text ?? _fieldIdentifier?.GetDisplayName() ?? FieldName ?? "";
 
-    private string? FieldName { get; set; }
+    /// <summary>
+    /// 获得/设置 绑定类字段名称
+    /// </summary>
+    [Parameter]
+    public string? FieldName { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组 默认 null
+    /// </summary>
+    [Parameter]
+    public string? GroupName { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组排序 默认 0
+    /// </summary>
+    [Parameter]
+    public int GroupOrder { get; set; }
 
     /// <summary>
     /// 获取绑定字段信息方法

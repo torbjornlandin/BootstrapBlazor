@@ -80,6 +80,12 @@ public sealed partial class EditorForm<TModel> : IShowLabel
     public bool? ShowLabel { get; set; }
 
     /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 null
+    /// </summary>
+    [Parameter]
+    public bool? ShowLabelTooltip { get; set; }
+
+    /// <summary>
     /// 获得/设置 是否显示为 Display 组件 默认为 false
     /// </summary>
     [Parameter]
@@ -106,6 +112,12 @@ public sealed partial class EditorForm<TModel> : IShowLabel
     public IEnumerable<IEditorItem>? Items { get; set; }
 
     /// <summary>
+    /// 获得/设置 未设置 GroupName 编辑项是否放置在顶部 默认 false
+    /// </summary>
+    [Parameter]
+    public bool ShowUnsetGroupItemsOnTop { get; set; }
+
+    /// <summary>
     /// 获得/设置 级联上下文 EditContext 实例 内置于 EditForm 或者 ValidateForm 时有值
     /// </summary>
     [CascadingParameter]
@@ -121,15 +133,26 @@ public sealed partial class EditorForm<TModel> : IShowLabel
     [NotNull]
     private IStringLocalizer<EditorForm<TModel>>? Localizer { get; set; }
 
+    [Inject]
+    [NotNull]
+    private ILookUpService? LookUpService { get; set; }
+
     /// <summary>
     /// 获得/设置 配置编辑项目集合
     /// </summary>
-    private List<IEditorItem> EditorItems { get; } = new List<IEditorItem>();
+    private List<IEditorItem> EditorItems { get; } = new();
 
     /// <summary>
     /// 获得/设置 渲染的编辑项集合
     /// </summary>
-    private List<IEditorItem> FormItems { get; } = new List<IEditorItem>();
+    private List<IEditorItem> FormItems { get; } = new();
+
+    private IEnumerable<IEditorItem> UnsetGroupItems => FormItems.Where(i => string.IsNullOrEmpty(i.GroupName)).OrderBy(i => i.Order);
+
+    private IEnumerable<KeyValuePair<string, IOrderedEnumerable<IEditorItem>>> GroupItems => FormItems
+        .Where(i => !string.IsNullOrEmpty(i.GroupName))
+        .GroupBy(i => i.GroupOrder).OrderBy(i => i.Key)
+        .Select(i => new KeyValuePair<string, IOrderedEnumerable<IEditorItem>>(i.First().GroupName!, i.OrderBy(x => x.Order)));
 
     [NotNull]
     private string? PlaceHolderText { get; set; }
@@ -225,6 +248,8 @@ public sealed partial class EditorForm<TModel> : IShowLabel
                                 item.Text = el.Text;
                                 item.Items = el.Items;
                                 item.Lookup = el.Lookup;
+                                item.LookupStringComparison = el.LookupStringComparison;
+                                item.LookUpServiceKey = el.LookUpServiceKey;
                                 item.ComponentType = el.ComponentType;
                                 item.ComponentParameters = el.ComponentParameters;
                                 item.SkipValidate = el.SkipValidate;
@@ -245,15 +270,17 @@ public sealed partial class EditorForm<TModel> : IShowLabel
 
     private RenderFragment AutoGenerateTemplate(IEditorItem item) => builder =>
     {
-        if (IsDisplay || !item.IsEditable(ItemChangedType, IsSearch.Value))
+        if (IsDisplay || !CanWrite(item))
         {
-            builder.CreateDisplayByFieldType(this, item, Model, ShowLabel);
+            builder.CreateDisplayByFieldType(item, Model);
         }
         else
         {
             item.PlaceHolder ??= PlaceHolderText;
-            builder.CreateComponentByFieldType(this, item, Model, ShowLabel, ItemChangedType, IsSearch.Value);
+            builder.CreateComponentByFieldType(this, item, Model, ItemChangedType, IsSearch.Value, LookUpService);
         }
+
+        bool CanWrite(IEditorItem item) => item.CanWrite(typeof(TModel)) && item.IsEditable(ItemChangedType, IsSearch.Value);
     };
 
     private RenderFragment<object>? GetRenderTemplate(IEditorItem item) => IsSearch.Value && item is ITableColumn col

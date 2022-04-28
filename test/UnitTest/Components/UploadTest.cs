@@ -11,7 +11,7 @@ namespace UnitTest.Components;
 public class UploadTest : BootstrapBlazorTestBase
 {
     [Fact]
-    public void InputUpload_Ok()
+    public async Task InputUpload_Ok()
     {
         UploadFile? uploadFile = null;
         var cut = Context.RenderComponent<InputUpload<string>>(pb =>
@@ -27,7 +27,7 @@ public class UploadTest : BootstrapBlazorTestBase
         cut.Contains("value=\"test.jpg\"");
 
         var input = cut.FindComponent<InputFile>();
-        cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
+        await cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
         {
             new MockBrowserFile()
         })));
@@ -66,7 +66,7 @@ public class UploadTest : BootstrapBlazorTestBase
         cut.Contains("btn btn-delete");
 
         var button = cut.Find(".input-group button");
-        cut.InvokeAsync(() => button.Click());
+        await cut.InvokeAsync(() => button.Click());
         Assert.True(deleted);
 
         // IsDisable
@@ -221,11 +221,11 @@ public class UploadTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void AvatarUpload_ListValue_Ok()
+    public async Task AvatarUpload_ListValue_Ok()
     {
         var cut = Context.RenderComponent<AvatarUpload<List<IBrowserFile>>>();
         var input = cut.FindComponent<InputFile>();
-        cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
+        await cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
         {
             new MockBrowserFile()
         })));
@@ -385,7 +385,7 @@ public class UploadTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void ButtonUpload_OnDeleteFile_Ok()
+    public async Task ButtonUpload_OnDeleteFile_Ok()
     {
         UploadFile? deleteFile = null;
         var cut = Context.RenderComponent<ButtonUpload<string>>(pb =>
@@ -401,7 +401,7 @@ public class UploadTest : BootstrapBlazorTestBase
                 return Task.FromResult(true);
             });
         });
-        cut.InvokeAsync(() => cut.Find(".fa-trash-o.text-danger").Click());
+        await cut.InvokeAsync(() => cut.Find(".fa-trash-o.text-danger").Click());
         Assert.NotNull(deleteFile);
         Assert.Null(deleteFile!.Error);
 
@@ -414,7 +414,7 @@ public class UploadTest : BootstrapBlazorTestBase
                 new UploadFile() { FileName  = "Test-File2", Code = 1001 }
             });
         });
-        cut.InvokeAsync(() => cut.Find(".fa-trash-o.text-danger").Click());
+        await cut.InvokeAsync(() => cut.Find(".fa-trash-o.text-danger").Click());
         Assert.NotNull(deleteFile);
     }
 
@@ -437,7 +437,7 @@ public class UploadTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void ButtonUpload_IsDirectory_Ok()
+    public async Task ButtonUpload_IsDirectory_Ok()
     {
         var fileNames = new List<string>();
         var cut = Context.RenderComponent<ButtonUpload<string>>(pb =>
@@ -450,7 +450,7 @@ public class UploadTest : BootstrapBlazorTestBase
             });
         });
         var input = cut.FindComponent<InputFile>();
-        cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
+        await cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
         {
             new MockBrowserFile(),
             new MockBrowserFile("UploadTestFile2")
@@ -529,17 +529,12 @@ public class UploadTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void CardUpload_Ok()
+    public async Task CardUpload_Ok()
     {
         var zoom = false;
         var deleted = false;
         var cut = Context.RenderComponent<CardUpload<string>>(pb =>
         {
-            pb.Add(a => a.OnZoomAsync, file =>
-            {
-                zoom = true;
-                return Task.CompletedTask;
-            });
             pb.Add(a => a.OnDelete, file =>
             {
                 deleted = true;
@@ -557,13 +552,25 @@ public class UploadTest : BootstrapBlazorTestBase
                 new UploadFile() { FileName = null! }
             });
         });
+        cut.Contains("bb-viewer-wrapper active");
 
         // OnZoom
-        cut.InvokeAsync(() => cut.Find(".btn-outline-secondary").Click());
+        await cut.InvokeAsync(() => cut.Find(".btn-outline-secondary").Click());
+        Assert.False(zoom);
+
+        cut.SetParametersAndRender(pb =>
+        {
+            pb.Add(a => a.OnZoomAsync, file =>
+            {
+                zoom = true;
+                return Task.CompletedTask;
+            });
+        });
+        await cut.InvokeAsync(() => cut.Find(".btn-outline-secondary").Click());
         Assert.True(zoom);
 
         // OnDelete
-        cut.InvokeAsync(() => cut.Find(".btn-outline-danger").Click());
+        await cut.InvokeAsync(() => cut.Find(".btn-outline-danger").Click());
         Assert.True(deleted);
 
         // ShowProgress
@@ -576,21 +583,21 @@ public class UploadTest : BootstrapBlazorTestBase
             });
         });
         var input = cut.FindComponent<InputFile>();
-        cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
+        await cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
         {
             new MockBrowserFile("test.txt", "Image-Png")
         })));
-        cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
+        await cut.InvokeAsync(() => input.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs(new List<MockBrowserFile>()
         {
             new MockBrowserFile("test.png")
         })));
     }
 
     [Fact]
-    public void CardUpload_Reset()
+    public async Task CardUpload_Reset()
     {
         var cut = Context.RenderComponent<CardUpload<string>>();
-        cut.InvokeAsync(() => cut.Instance.Reset());
+        await cut.InvokeAsync(() => cut.Instance.Reset());
         Assert.Null(cut.Instance.DefaultFileList);
 
         cut.SetParametersAndRender(pb =>
@@ -600,7 +607,7 @@ public class UploadTest : BootstrapBlazorTestBase
                 new UploadFile() { FileName  = "Test-File1.text" }
             });
         });
-        cut.InvokeAsync(() => cut.Instance.Reset());
+        await cut.InvokeAsync(() => cut.Instance.Reset());
         Assert.Empty(cut.Instance.DefaultFileList);
     }
 

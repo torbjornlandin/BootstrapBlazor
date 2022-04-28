@@ -4,7 +4,7 @@
 
 @if (IsShowLabel)
 {
-    <label class="form-label" required="@Required">@DisplayText</label>
+    <BootstrapLabel required="@Required" for="@Id" ShowLabelTooltip="ShowLabelTooltip" Value="@DisplayText" />
 }
 <div @attributes="@AdditionalAttributes" id="@Id" class="@ClassString" @ref="Picker" data-bs-placement="@PlacementString">
     <div class="datetime-picker-bar">
@@ -15,7 +15,7 @@
     </div>
     <DatePickerBody @bind-Value="@ComponentValue" AllowNull="@AllowNull" ShowSidebar="@ShowSidebar"
                     OnConfirm="@OnConfirm" OnClear="@OnClear" MinValue="@MinValue" MaxValue="@MaxValue"
-                    ViewModel="@ViewModel">
+                    ViewMode="@ViewMode">
     </DatePickerBody>
 </div>
 

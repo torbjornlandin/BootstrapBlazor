@@ -19,6 +19,18 @@ public class UtilityTest : BootstrapBlazorTestBase
     }
 
     [Fact]
+    public void GetKeyValue_Ok()
+    {
+        var foo = new Foo() { Id = 1 };
+        var v = Utility.GetKeyValue<Foo, int>(foo);
+        Assert.Equal(1, v);
+
+        object foo1 = new Foo() { Id = 2 };
+        v = Utility.GetKeyValue<object, int>(foo1);
+        Assert.Equal(2, v);
+    }
+
+    [Fact]
     public void GetPropertyValue_Ok()
     {
         var v = Utility.GetPropertyValue(Model, nameof(Foo.Name));
@@ -108,5 +120,46 @@ public class UtilityTest : BootstrapBlazorTestBase
         var d2 = new Dummy();
         Utility.Copy(d1, d2);
         Assert.Equal("Test", d2.Name);
+    }
+
+    [Fact]
+    public void CascadingTree_Ok()
+    {
+        var items = new List<TreeItem>
+        {
+            new TreeItem() { Text = "001_系统管理", Id = "001" },
+            new TreeItem() { Text = "001_01_基础数据管理", Id = "001_01", ParentId = "001" },
+            new TreeItem() { Text = "001_01_01_教师", Id = "001_01_01", ParentId = "001_01" },
+            new TreeItem() { Text = "001_01_02_职工", Id = "001_01_02", ParentId = "001_01" },
+
+            new TreeItem() { Text = "001_02_餐厅数据管理", Id = "001_02", ParentId = "001" },
+            new TreeItem() { Text = "001_02_01_厨师", Id = "001_02_01", ParentId = "001_02" },
+            new TreeItem() { Text = "001_02_02_服务员", Id = "001_02_02", ParentId = "001_02" },
+
+        };
+        var GetTreeItems = items.CascadingTree();
+        Assert.NotNull(GetTreeItems);
+        Assert.Equal(2, GetTreeItems.First().Items.Count());
+    }
+
+
+    [Fact]
+    public void CascadingMenu_Ok()
+    {
+        var items2 = new List<MenuItem>
+        {
+            new MenuItem() { Text = "001_系统管理", Id = "001" },
+            new MenuItem() { Text = "001_01_基础数据管理", Id = "001_01", ParentId = "001" },
+            new MenuItem() { Text = "001_01_01_教师", Id = "001_01_01", ParentId = "001_01" },
+            new MenuItem() { Text = "001_01_02_职工", Id = "001_01_02", ParentId = "001_01" },
+
+            new MenuItem() { Text = "001_02_餐厅数据管理", Id = "001_02", ParentId = "001" },
+            new MenuItem() { Text = "001_02_01_厨师", Id = "001_02_01", ParentId = "001_02" },
+            new MenuItem() { Text = "001_02_02_服务员", Id = "001_02_02", ParentId = "001_02" },
+
+        };
+        var GetMenuItems = items2.CascadingMenu();
+        Assert.NotNull(GetMenuItems);
+        Assert.Equal(2, GetMenuItems.First().Items.Count());
     }
 }

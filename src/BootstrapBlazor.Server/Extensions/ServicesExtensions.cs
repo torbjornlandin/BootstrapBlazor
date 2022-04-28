@@ -18,8 +18,8 @@ internal static class ServicesExtensions
     /// 添加示例后台任务
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="themes"></param>
-    public static IServiceCollection AddBootstrapBlazorServices(this IServiceCollection services, IEnumerable<KeyValuePair<string, string>> themes)
+    /// <param name="configureOptions"></param>
+    public static IServiceCollection AddBootstrapBlazorServices(this IServiceCollection services, Action<BootstrapBlazorOptions>? configureOptions = null)
     {
         // 增加错误日志
         services.AddLogging(logging => logging.AddFileLogger());
@@ -32,22 +32,22 @@ internal static class ServicesExtensions
         services.AddWebSiteServices();
 
         // 增加 BootstrapBlazor 组件
-        services.AddBootstrapBlazor();
+        services.AddBootstrapBlazor(configureOptions);
 
-        services.ConfigureBootstrapBlazorOption(options =>
-        {
-            // 统一设置 Toast 组件自动消失时间
-            options.ToastDelay = 4000;
-            options.Themes.AddRange(themes);
-        });
+        // 增加 Azure 语音服务
+        services.AddBootstrapBlazorAzureSpeech();
 
-        services.ConfigureJsonLocalizationOptions(options =>
+        // 增加 Baidu 语音服务
+        services.AddBootstrapBlazorBaiduSpeech();
+
+        services.ConfigureJsonLocalizationOptions(op =>
         {
             // 附加自己的 json 多语言文化资源文件 如 zh-TW.json
-            options.AdditionalJsonAssemblies = new Assembly[]
+            op.AdditionalJsonAssemblies = new Assembly[]
             {
                 typeof(BootstrapBlazor.Shared.App).Assembly,
-                typeof(BootstrapBlazor.Components.Chart).Assembly
+                typeof(BootstrapBlazor.Components.Chart).Assembly,
+                typeof(BootstrapBlazor.Components.SignaturePad).Assembly
             };
         });
 
@@ -55,12 +55,17 @@ internal static class ServicesExtensions
         services.ConfigureIPLocatorOption(op => op.LocatorFactory = sp => new BaiDuIPLocator());
 
         // 增加多语言支持配置信息
-        services.AddRequestLocalization<IOptions<BootstrapBlazorOptions>>((localizerOption, blazorOption) =>
+        services.AddRequestLocalization<IOptionsMonitor<BootstrapBlazorOptions>>((localizerOption, blazorOption) =>
         {
-            var supportedCultures = blazorOption.Value.GetSupportedCultures();
+            blazorOption.OnChange(op => Invoke(op));
+            Invoke(blazorOption.CurrentValue);
 
-            localizerOption.SupportedCultures = supportedCultures;
-            localizerOption.SupportedUICultures = supportedCultures;
+            void Invoke(BootstrapBlazorOptions option)
+            {
+                var supportedCultures = option.GetSupportedCultures();
+                localizerOption.SupportedCultures = supportedCultures;
+                localizerOption.SupportedUICultures = supportedCultures;
+            }
         });
 
         // 增加 PetaPoco ORM 数据服务操作类

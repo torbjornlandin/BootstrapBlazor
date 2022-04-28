@@ -48,6 +48,11 @@ public interface IEditorItem
     string? Text { get; set; }
 
     /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 null
+    /// </summary>
+    bool? ShowLabelTooltip { get; set; }
+
+    /// <summary>
     /// 获得/设置 placeholder 文本 默认为 null
     /// </summary>
     string? PlaceHolder { get; set; }
@@ -88,6 +93,16 @@ public interface IEditorItem
     IEnumerable<SelectedItem>? Lookup { get; set; }
 
     /// <summary>
+    /// 获得/设置 字典数据源字符串比较规则 默认 StringComparison.OrdinalIgnoreCase 大小写不敏感 
+    /// </summary>
+    StringComparison LookupStringComparison { get; set; }
+
+    /// <summary>
+    /// 获得/设置 LookupService 服务获取 Lookup 数据集合键值 常用于外键自动转换为名称操作
+    /// </summary>
+    string? LookUpServiceKey { get; set; }
+
+    /// <summary>
     /// 获得/设置 自定义验证集合
     /// </summary>
     List<IValidator>? ValidateRules { get; set; }
@@ -101,4 +116,19 @@ public interface IEditorItem
     /// 获取绑定字段信息方法
     /// </summary>
     string GetFieldName();
+
+    /// <summary>
+    /// 获得/设置 顺序号
+    /// </summary>
+    int Order { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组
+    /// </summary>
+    string? GroupName { get; set; }
+
+    /// <summary>
+    /// 获得/设置 当前属性分组排序 默认 0
+    /// </summary>
+    int GroupOrder { get; set; }
 }

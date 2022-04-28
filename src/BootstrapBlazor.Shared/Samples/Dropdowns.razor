@@ -41,6 +41,7 @@
         <div class="col-6 col-sm-4 col-md-3 col-lg-auto"><Dropdown TValue="string" Items="Items" Size="Size.Medium"></Dropdown></div>
         <div class="col-6 col-sm-4 col-md-3 col-lg-auto"><Dropdown TValue="string" Items="Items" Size="Size.Large"></Dropdown></div>
         <div class="col-6 col-sm-4 col-md-3 col-lg-auto"><Dropdown TValue="string" Items="Items" Size="Size.ExtraLarge"></Dropdown></div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-auto"><Dropdown TValue="string" Items="Items" Size="Size.ExtraExtraLarge"></Dropdown></div>
     </div>
 </DemoBlock>
 
@@ -95,8 +96,12 @@
     </div>
 </DemoBlock>
 
-<DemoBlock Title="@Localizer["FixedButtonTextTitle"]" Introduction="@Localizer["FixedButtonTextIntro"]" Name="FixedButtonText">
+<DemoBlock Title="@Localizer["IsFixedButtonTextTitle"]" Introduction="@Localizer["IsFixedButtonTextIntro"]" Name="IsFixedButtonText">
     <Dropdown TValue="string" Items="RadioItems" IsFixedButtonText="true" />
+</DemoBlock>
+
+<DemoBlock Title="@Localizer["FixedButtonTextTitle"]" Introduction="@Localizer["FixedButtonTextIntro"]" Name="FixedButtonText">
+    <Dropdown TValue="string" Items="RadioItems" IsFixedButtonText="true" FixedButtonText="@Localizer["FixedButtonTextCity"]"></Dropdown>
 </DemoBlock>
 
 <AttributeTable Items="@GetAttributes()" />

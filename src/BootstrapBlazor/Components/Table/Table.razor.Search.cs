@@ -52,6 +52,12 @@ public partial class Table<TItem>
     public bool ShowSearch { get; set; }
 
     /// <summary>
+    /// 获得/设置 是否收缩顶部搜索框 默认为 false 不收缩搜索框 是否显示搜索框请设置 <see cref="SearchMode"/> 值 Top
+    /// </summary>
+    [Parameter]
+    public bool CollapsedTopSearch { get; set; }
+
+    /// <summary>
     /// 获得/设置 是否显示搜索框 默认为 true 显示搜索文本框  <see cref="ShowSearch" />
     /// </summary>
     [Parameter]
@@ -117,6 +123,18 @@ public partial class Table<TItem>
     [Parameter]
     public Func<TItem, Task>? OnResetSearchAsync { get; set; }
 
+    private string? TopSearchClassString => CssBuilder.Default("card")
+        .AddClass("collapsed", CollapsedTopSearch)
+        .Build();
+
+    private string? TopSearchHeaderClassString => CssBuilder.Default("table-search-collapse")
+        .AddClass("is-open", !CollapsedTopSearch)
+        .Build();
+
+    private string? TopSearchBodyClassString => CssBuilder.Default()
+        .AddClass("display: none;", CollapsedTopSearch)
+        .Build();
+
     /// <summary>
     /// 重置查询方法
     /// </summary>
@@ -154,7 +172,7 @@ public partial class Table<TItem>
     /// 获得/设置 搜索框的大小
     /// </summary>
     [Parameter]
-    public Size SearchDialogSize { get; set; } = Size.Large;
+    public Size SearchDialogSize { get; set; } = Size.ExtraExtraLarge;
 
     /// <summary>
     /// 获得/设置 搜索框是否可以拖拽 默认 false 不可以拖拽
@@ -163,10 +181,10 @@ public partial class Table<TItem>
     public bool SearchDialogIsDraggable { get; set; }
 
     /// <summary>
-    /// 获得/设置 搜索框是否显示最大化按钮 默认 false 不显示
+    /// 获得/设置 搜索框是否显示最大化按钮 默认 true 不显示
     /// </summary>
     [Parameter]
-    public bool SearchDialogShowMaximizeButton { get; set; }
+    public bool SearchDialogShowMaximizeButton { get; set; } = true;
 
     /// <summary>
     /// 高级查询按钮点击时调用此方法
@@ -184,6 +202,7 @@ public partial class Table<TItem>
 
         SearchDialogOption<TItem> CreateModelDialog() => new()
         {
+            Class = "modal-dialog-table",
             IsScrolling = ScrollingDialogContent,
             Title = SearchModalTitle,
             Model = SearchModel,
@@ -196,7 +215,8 @@ public partial class Table<TItem>
             Size = SearchDialogSize,
             Items = Columns.Where(i => i.Searchable),
             IsDraggable = SearchDialogIsDraggable,
-            ShowMaximizeButton = SearchDialogShowMaximizeButton
+            ShowMaximizeButton = SearchDialogShowMaximizeButton,
+            ShowUnsetGroupItemsOnTop = ShowUnsetGroupItemsOnTop
         };
 
         SearchDialogOption<ITableSearchModel> CreateCustomerModelDialog() => new()

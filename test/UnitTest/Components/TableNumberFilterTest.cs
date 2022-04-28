@@ -151,4 +151,31 @@ public class TableNumberFilterTest : BootstrapBlazorTestBase
         var input = cut.FindComponent<BootstrapInput<string>>().Instance;
         cut.InvokeAsync(() => input.SetValue("10"));
     }
+
+    [Fact]
+    public async Task SetFilterConditions_Ok()
+    {
+        var cut = Context.RenderComponent<NumberFilter<int?>>();
+        var filter = cut.Instance;
+        var conditions = filter.GetFilterConditions();
+        Assert.Empty(conditions);
+
+        var newConditions = new List<FilterKeyValueAction>
+        {
+            new FilterKeyValueAction() { FieldValue = 1 },
+            new FilterKeyValueAction() { FieldValue = 2 }
+        };
+        await filter.SetFilterConditionsAsync(newConditions);
+        conditions = filter.GetFilterConditions();
+        Assert.Equal(2, conditions.Count());
+
+        newConditions = new List<FilterKeyValueAction>
+        {
+            new FilterKeyValueAction() { FieldValue = null },
+            new FilterKeyValueAction() { FieldValue = null }
+        };
+        await filter.SetFilterConditionsAsync(newConditions);
+        conditions = filter.GetFilterConditions();
+        Assert.Empty(conditions);
+    }
 }

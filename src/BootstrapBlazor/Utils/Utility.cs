@@ -4,6 +4,8 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -30,6 +32,31 @@ public static class Utility
     /// <param name="fieldName">字段名称</param>
     /// <returns></returns>
     public static string GetDisplayName(Type modelType, string fieldName) => CacheManager.GetDisplayName(modelType, fieldName);
+
+    /// <summary>
+    /// 获取资源文件中 NullableBoolItemsAttribute 标签名称方法
+    /// </summary>
+    /// <param name="model">模型实例</param>
+    /// <param name="fieldName">字段名称</param>
+    /// <returns></returns>
+    public static IEnumerable<SelectedItem> GetNullableBoolItems(object model, string fieldName) => GetNullableBoolItems(model.GetType(), fieldName);
+
+    /// <summary>
+    /// 获取资源文件中 NullableBoolItemsAttribute 标签名称方法
+    /// </summary>
+    /// <param name="modelType">模型实例</param>
+    /// <param name="fieldName">字段名称</param>
+    /// <returns></returns>
+    public static IEnumerable<SelectedItem> GetNullableBoolItems(Type modelType, string fieldName) => CacheManager.GetNullableBoolItems(modelType, fieldName);
+
+    /// <summary>
+    /// 获得 指定模型标记 <see cref="KeyAttribute"/> 的属性值
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    public static TValue GetKeyValue<TModel, TValue>(TModel model) => CacheManager.GetKeyValue<TModel, TValue>(model);
 
     /// <summary>
     /// 
@@ -107,7 +134,7 @@ public static class Utility
         : CacheManager.GetPlaceholder(modelType, fieldName);
 
     /// <summary>
-    /// 
+    /// 通过 数据类型与字段名称获取 PropertyInfo 实例方法
     /// </summary>
     /// <param name="modelType"></param>
     /// <param name="fieldName"></param>
@@ -228,21 +255,18 @@ public static class Utility
     public static IEnumerable<ITableColumn> GenerateColumns<TModel>(Func<ITableColumn, bool> predicate) => InternalTableColumn.GetProperties<TModel>().Where(predicate);
 
     /// <summary>
-    /// 
+    /// RenderTreeBuilder 扩展方法 通过 IEditorItem 与 model 创建 Display 组件
     /// </summary>
     /// <param name="builder"></param>
-    /// <param name="component"></param>
     /// <param name="item"></param>
     /// <param name="model"></param>
-    /// <param name="showLabel"></param>
-    public static void CreateDisplayByFieldType(this RenderTreeBuilder builder, ComponentBase component, IEditorItem item, object model, bool? showLabel = null)
+    public static void CreateDisplayByFieldType(this RenderTreeBuilder builder, IEditorItem item, object model)
     {
         var fieldType = item.PropertyType;
         var fieldName = item.GetFieldName();
         var displayName = item.GetDisplayName() ?? GetDisplayName(model, fieldName);
 
         var fieldValue = GenerateValue(model, fieldName);
-        var fieldValueChanged = GenerateValueChanged(component, model, fieldName, fieldType);
         var valueExpression = GenerateValueExpression(model, fieldName, fieldType);
 
         var type = (Nullable.GetUnderlyingType(fieldType) ?? fieldType);
@@ -251,31 +275,33 @@ public static class Utility
             builder.OpenComponent<Switch>(0);
             builder.AddAttribute(1, nameof(Switch.Value), fieldValue);
             builder.AddAttribute(2, nameof(Switch.IsDisabled), true);
+            builder.AddAttribute(3, nameof(Switch.DisplayText), displayName);
+            builder.AddAttribute(4, nameof(Switch.ShowLabelTooltip), item.ShowLabelTooltip);
             builder.CloseComponent();
         }
         else
         {
             builder.OpenComponent(0, typeof(Display<>).MakeGenericType(fieldType));
-            builder.AddAttribute(1, nameof(ValidateBase<string>.DisplayText), displayName);
-            builder.AddAttribute(2, nameof(ValidateBase<string>.Value), fieldValue);
-            builder.AddAttribute(3, nameof(ValidateBase<string>.ValueChanged), fieldValueChanged);
-            builder.AddAttribute(4, nameof(ValidateBase<string>.ValueExpression), valueExpression);
-            builder.AddAttribute(5, nameof(ValidateBase<string>.ShowLabel), showLabel ?? true);
+            builder.AddAttribute(1, nameof(Display<string>.DisplayText), displayName);
+            builder.AddAttribute(2, nameof(Display<string>.Value), fieldValue);
+            builder.AddAttribute(3, nameof(Display<string>.ValueExpression), valueExpression);
+            builder.AddAttribute(4, nameof(Display<string>.LookUpServiceKey), item.LookUpServiceKey);
+            builder.AddAttribute(5, nameof(Display<string>.ShowLabelTooltip), item.ShowLabelTooltip);
             builder.CloseComponent();
         }
     }
 
     /// <summary>
-    /// RenderTreeBuilder 扩展方法，通过指定模型与属性生成编辑组件
+    /// RenderTreeBuilder 扩展方法 通过指定模型与属性生成编辑组件
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="model"></param>
     /// <param name="component"></param>
     /// <param name="item"></param>
-    /// <param name="showLabel"></param>
     /// <param name="changedType"></param>
     /// <param name="isSearch"></param>
-    public static void CreateComponentByFieldType(this RenderTreeBuilder builder, ComponentBase component, IEditorItem item, object model, bool? showLabel = null, ItemChangedType changedType = ItemChangedType.Update, bool isSearch = false)
+    /// <param name="lookUpService"></param>
+    public static void CreateComponentByFieldType(this RenderTreeBuilder builder, ComponentBase component, IEditorItem item, object model, ItemChangedType changedType = ItemChangedType.Update, bool isSearch = false, ILookUpService? lookUpService = null)
     {
         var fieldType = item.PropertyType;
         var fieldName = item.GetFieldName();
@@ -284,7 +310,7 @@ public static class Utility
         var fieldValue = GenerateValue(model, fieldName);
         var fieldValueChanged = GenerateValueChanged(component, model, fieldName, fieldType);
         var valueExpression = GenerateValueExpression(model, fieldName, fieldType);
-        var lookup = item is ITableColumn col ? col.Lookup : null;
+        var lookup = item.Lookup ?? lookUpService?.GetItemsByKey(item.LookUpServiceKey);
         var componentType = item.ComponentType ?? GenerateComponentType(fieldType, item.Rows != 0, lookup);
         builder.OpenComponent(0, componentType);
         if (componentType.IsSubclassOf(typeof(ValidateBase<>).MakeGenericType(fieldType)))
@@ -303,36 +329,59 @@ public static class Utility
             {
                 builder.AddAttribute(6, nameof(ValidateBase<string>.ValidateRules), item.ValidateRules);
             }
+
+            if (item.ShowLabelTooltip != null)
+            {
+                builder.AddAttribute(7, nameof(ValidateBase<string>.ShowLabelTooltip), item.ShowLabelTooltip);
+            }
+        }
+
+        if (componentType == typeof(NullSwitch) && TryGetProperty(model.GetType(), fieldName, out var propertyInfo))
+        {
+            // 读取默认值
+            var defaultValueAttr = propertyInfo.GetCustomAttribute<DefaultValueAttribute>();
+            if (defaultValueAttr != null)
+            {
+                var dv = defaultValueAttr.Value is bool v && v;
+                builder.AddAttribute(8, nameof(NullSwitch.DefaultValueWhenNull), dv);
+            }
         }
 
         if (IsCheckboxList(fieldType, componentType) && item.Items != null)
         {
-            builder.AddAttribute(7, nameof(CheckboxList<IEnumerable<string>>.Items), item.Items.Clone());
+            builder.AddAttribute(9, nameof(CheckboxList<IEnumerable<string>>.Items), item.Items.Clone());
+        }
+
+        // Nullabl<bool?>
+        if (fieldType == typeof(bool?) && lookup == null && item.Items == null)
+        {
+            builder.AddAttribute(10, nameof(Select<bool?>.Items), GetNullableBoolItems(model, fieldName));
         }
 
         // Lookup
         if (lookup != null && item.Items == null)
         {
-            builder.AddAttribute(8, nameof(Select<SelectedItem>.Items), lookup.Clone());
+            builder.AddAttribute(11, nameof(Select<SelectedItem>.Items), lookup.Clone());
+            builder.AddAttribute(12, nameof(Select<SelectedItem>.StringComparison), item.LookupStringComparison);
         }
 
         // 增加非枚举类,手动设定 ComponentType 为 Select 并且 Data 有值 自动生成下拉框
         if (item.Items != null && item.ComponentType == typeof(Select<>).MakeGenericType(fieldType))
         {
-            builder.AddAttribute(9, nameof(Select<SelectedItem>.Items), item.Items.Clone());
+            builder.AddAttribute(13, nameof(Select<SelectedItem>.Items), item.Items.Clone());
         }
 
         // 设置 SkipValidate 参数
         if (IsValidatableComponent(componentType))
         {
-            builder.AddAttribute(10, nameof(IEditorItem.SkipValidate), item.SkipValidate);
+            builder.AddAttribute(14, nameof(IEditorItem.SkipValidate), item.SkipValidate);
         }
 
-        builder.AddMultipleAttributes(11, CreateMultipleAttributes(fieldType, model, fieldName, item, showLabel));
+        builder.AddMultipleAttributes(15, CreateMultipleAttributes(fieldType, model, fieldName, item));
 
         if (item.ComponentParameters != null)
         {
-            builder.AddMultipleAttributes(12, item.ComponentParameters);
+            builder.AddMultipleAttributes(16, item.ComponentParameters);
         }
         builder.CloseComponent();
     }
@@ -356,7 +405,7 @@ public static class Utility
     public static object GenerateValueExpression(object model, string fieldName, Type fieldType)
     {
         var type = model.GetType();
-        return fieldName.Contains(".") ? ComplexPropertyValueExpression() : SimplePropertyValueExpression();
+        return fieldName.Contains('.') ? ComplexPropertyValueExpression() : SimplePropertyValueExpression();
 
         object SimplePropertyValueExpression()
         {
@@ -413,6 +462,10 @@ public static class Utility
         else if (IsCheckboxList(type))
         {
             ret = typeof(CheckboxList<IEnumerable<string>>);
+        }
+        else if (fieldType == typeof(bool?))
+        {
+            ret = typeof(Select<bool?>);
         }
         else
         {
@@ -477,9 +530,8 @@ public static class Utility
     /// <param name="model">上下文模型</param>
     /// <param name="fieldName">字段名称</param>
     /// <param name="item">IEditorItem 实例</param>
-    /// <param name="showLabel"></param>
     /// <returns></returns>
-    private static IEnumerable<KeyValuePair<string, object>> CreateMultipleAttributes(Type fieldType, object model, string fieldName, IEditorItem item, bool? showLabel = null)
+    private static IEnumerable<KeyValuePair<string, object>> CreateMultipleAttributes(Type fieldType, object model, string fieldName, IEditorItem item)
     {
         var ret = new List<KeyValuePair<string, object>>();
         var type = Nullable.GetUnderlyingType(fieldType) ?? fieldType;
@@ -513,11 +565,6 @@ public static class Utility
                 break;
             default:
                 break;
-        }
-
-        if (showLabel != null)
-        {
-            ret.Add(new("ShowLabel", showLabel));
         }
         return ret;
     }
@@ -590,6 +637,17 @@ public static class Utility
     });
 
     /// <summary>
+    /// 菜单树状数据层次化方法
+    /// </summary>
+    /// <param name="items">数据集合</param>
+    /// <param name="parentId">父级节点</param>
+    public static IEnumerable<MenuItem> CascadingMenu(this IEnumerable<MenuItem> items, string? parentId = null) => items.Where(i => i.ParentId == parentId).Select(i =>
+    {
+        i.Items = CascadingMenu(items, i.Id).ToList();
+        return i;
+    });
+
+    /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
@@ -620,7 +678,15 @@ public static class Utility
         return ret;
     }
 
-    internal static object? GenerateValueChanged(ComponentBase component, object model, string fieldName, Type fieldType)
+    /// <summary>
+    /// 获得 ValueChanged 回调委托
+    /// </summary>
+    /// <param name="component"></param>
+    /// <param name="model"></param>
+    /// <param name="fieldName"></param>
+    /// <param name="fieldType"></param>
+    /// <returns></returns>
+    public static object? GenerateValueChanged(ComponentBase component, object model, string fieldName, Type fieldType)
     {
         var valueChangedInvoker = CreateLambda(fieldType).Compile();
         return valueChangedInvoker(component, model, fieldName);

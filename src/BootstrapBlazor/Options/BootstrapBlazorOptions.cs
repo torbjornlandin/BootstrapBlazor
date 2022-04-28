@@ -61,22 +61,16 @@ public class BootstrapBlazorOptions
     /// <summary>
     /// 获得/设置 网站主题集合
     /// </summary>
-    public List<KeyValuePair<string, string>> Themes { get; private set; } = new()
+    public List<KeyValuePair<string, string>> Themes { get; } = new()
     {
         new("Bootstrap", "bootstrap.blazor.bundle.min.css"),
         new("Motronic", "motronic.min.css")
     };
 
-    private Lazy<List<CultureInfo>>? CulturesCache { get; set; }
     /// <summary>
     /// 获得支持多语言集合
     /// </summary>
     /// <returns></returns>
-    public IList<CultureInfo> GetSupportedCultures()
-    {
-        // 用户设置时使用用户设置，未设置时使用内置中英文文化
-        CulturesCache ??= new Lazy<List<CultureInfo>>(() => SupportedCultures?.Select(name => new CultureInfo(name)).ToList()
-            ?? new List<CultureInfo> { new("zh"), new("en") });
-        return CulturesCache.Value;
-    }
+    public IList<CultureInfo> GetSupportedCultures() => SupportedCultures?.Select(name => new CultureInfo(name)).ToList()
+        ?? new List<CultureInfo> { new("zh"), new("en") };
 }

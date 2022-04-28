@@ -305,5 +305,22 @@
   "BootstrapBlazor.Components.Handwritten": {
     "SaveButtonText": "Save",
     "ClearButtonText": "Clear"
+  },
+  "BootstrapBlazor.Components.SignaturePad": {
+    "SignAboveLabel": "Sign in the box",
+    "ClearBtnTitle": "Clear",
+    "SignatureAlertText": "Please provide a signature first",
+    "ChangeColorBtnTitle": "Change color",
+    "UndoBtnTitle": "Undo",
+    "CloseBtnTitle": "Close",
+    "SaveBase64BtnTitle": "OK",
+    "SavePNGBtnTitle": "PNG",
+    "SaveJPGBtnTitle": "JPG",
+    "SaveSVGBtnTitle": "SVG"
+  },
+  "BootstrapBlazor.Components.NullableBoolItemsAttribute": {
+    "NullValueDisplayText": "Please select ...",
+    "TrueValueDisplayText": "True",
+    "FalseValueDisplayText": "False"
   }
 }

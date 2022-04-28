@@ -4,7 +4,7 @@
 
 @if (IsShowLabel)
 {
-    <label class="form-label" required="@Required">@DisplayText</label>
+    <BootstrapLabel required="@Required" ShowLabelTooltip="ShowLabelTooltip" Value="@DisplayText" />
 }
 <div @attributes="@AdditionalAttributes" class="@ClassString" @ref="UploaderElement">
     <div class="@BodyClassString">
@@ -56,4 +56,9 @@
         }
     </div>
     <InputFile AdditionalAttributes="@GetUploadAdditionalAttributes()" OnChange="OnFileChange" />
+
+    @if (ShowPreviewList)
+    {
+        <ImagePreview PreviewList="PreviewList" />
+    }
 </div>

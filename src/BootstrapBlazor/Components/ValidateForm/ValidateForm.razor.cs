@@ -75,6 +75,12 @@ public partial class ValidateForm : IAsyncDisposable
     [Parameter]
     public bool ShowLabel { get; set; } = true;
 
+    /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 null
+    /// </summary>
+    [Parameter]
+    public bool? ShowLabelTooltip { get; set; }
+
     [Inject]
     [NotNull]
     private IOptions<JsonLocalizationOptions>? Options { get; set; }
@@ -192,11 +198,11 @@ public partial class ValidateForm : IAsyncDisposable
     /// </summary>
     /// <param name="context"></param>
     /// <param name="results"></param>
-    internal void ValidateObject(ValidationContext context, List<ValidationResult> results)
+    internal async Task ValidateObject(ValidationContext context, List<ValidationResult> results)
     {
         if (ValidateAllProperties)
         {
-            ValidateProperty(context, results);
+            await ValidateProperty(context, results);
         }
         else
         {
@@ -222,7 +228,7 @@ public partial class ValidateForm : IAsyncDisposable
                         // 设置其关联属性字段
                         var propertyValue = Utility.GetPropertyValue(fieldIdentifier.Model, fieldIdentifier.FieldName);
 
-                        Validate(validator, propertyValidateContext, messages, pi, propertyValue);
+                        await ValidateAsync(validator, propertyValidateContext, messages, pi, propertyValue);
                     }
                     // 客户端提示
                     validator.ToggleMessage(messages, false);
@@ -237,20 +243,18 @@ public partial class ValidateForm : IAsyncDisposable
     /// </summary>
     /// <param name="context"></param>
     /// <param name="results"></param>
-    /// <param name="fieldIdentifier"></param>
-    internal void ValidateField(ValidationContext context, List<ValidationResult> results, in FieldIdentifier fieldIdentifier)
+    internal async Task ValidateFieldAsync(ValidationContext context, List<ValidationResult> results)
     {
-        if (ValidatorCache.TryGetValue((fieldIdentifier.FieldName, fieldIdentifier.Model.GetType()), out var v))
+        if (!string.IsNullOrEmpty(context.MemberName) && ValidatorCache.TryGetValue((context.MemberName, context.ObjectType), out var v))
         {
             var validator = v.ValidateComponent;
             if (validator.IsNeedValidate)
             {
-                var fieldName = fieldIdentifier.FieldName;
-                var pi = fieldIdentifier.Model.GetType().GetPropertyByName(fieldName);
+                var pi = context.ObjectType.GetPropertyByName(context.MemberName);
                 if (pi != null)
                 {
-                    var propertyValue = Utility.GetPropertyValue(fieldIdentifier.Model, fieldIdentifier.FieldName);
-                    Validate(validator, context, results, pi, propertyValue);
+                    var propertyValue = Utility.GetPropertyValue(context.ObjectInstance, context.MemberName);
+                    await ValidateAsync(validator, context, results, pi, propertyValue);
                 }
 
                 // 客户端提示
@@ -332,7 +336,10 @@ public partial class ValidateForm : IAsyncDisposable
                 {
                     rule.ErrorMessage = result.ErrorMessage;
                 }
-                results.Add(new ValidationResult(rule.ErrorMessage, new string[] { memberName }));
+                var errorMessage = !string.IsNullOrEmpty(rule.ErrorMessage) && rule.ErrorMessage.Contains("{0}")
+                    ? rule.FormatErrorMessage(displayName)
+                    : rule.ErrorMessage;
+                results.Add(new ValidationResult(errorMessage, new string[] { memberName }));
             }
         }
     }
@@ -342,7 +349,7 @@ public partial class ValidateForm : IAsyncDisposable
     /// </summary>
     /// <param name="context"></param>
     /// <param name="results"></param>
-    private void ValidateProperty(ValidationContext context, List<ValidationResult> results)
+    private async Task ValidateProperty(ValidationContext context, List<ValidationResult> results)
     {
         // 获得所有可写属性
         var properties = context.ObjectType.GetRuntimeProperties().Where(p => IsPublic(p) && p.CanWrite && !p.GetIndexParameters().Any());
@@ -357,7 +364,7 @@ public partial class ValidateForm : IAsyncDisposable
                 && propertyValue.GetType().IsClass)
             {
                 var fieldContext = new ValidationContext(propertyValue);
-                ValidateProperty(fieldContext, results);
+                await ValidateProperty(fieldContext, results);
             }
             else
             {
@@ -373,7 +380,7 @@ public partial class ValidateForm : IAsyncDisposable
                     if (validator.IsNeedValidate)
                     {
                         // 组件进行验证
-                        Validate(validator, context, messages, pi, propertyValue);
+                        await ValidateAsync(validator, context, messages, pi, propertyValue);
 
                         // 客户端提示
                         validator.ToggleMessage(messages, true);
@@ -384,7 +391,7 @@ public partial class ValidateForm : IAsyncDisposable
         }
     }
 
-    private void Validate(IValidateComponent validator, ValidationContext context, List<ValidationResult> messages, PropertyInfo pi, object? propertyValue)
+    private async Task ValidateAsync(IValidateComponent validator, ValidationContext context, List<ValidationResult> messages, PropertyInfo pi, object? propertyValue)
     {
         // 单独处理 Upload 组件
         if (validator is IUpload uploader)
@@ -410,7 +417,7 @@ public partial class ValidateForm : IAsyncDisposable
             if (messages.Count == 0)
             {
                 // 自定义验证组件
-                validator.ValidateProperty(propertyValue, context, messages);
+                await validator.ValidatePropertyAsync(propertyValue, context, messages);
             }
         }
     }
@@ -473,7 +480,7 @@ public partial class ValidateForm : IAsyncDisposable
     {
         if (disposing)
         {
-            await JSRuntime.InvokeVoidAsync(Id, "bb_form", "dispose");
+            await JSRuntime.InvokeVoidAsync(Id, "bb_form");
         }
     }
 

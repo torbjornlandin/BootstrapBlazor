@@ -17,11 +17,8 @@ public class EditDialogOption<TModel> : DialogOption
     /// </summary>
     public EditDialogOption()
     {
-        IsScrolling = true;
-        Size = Size.ExtraLarge;
         ShowCloseButton = false;
         ShowFooter = false;
-        ShowLabel = true;
     }
 
     /// <summary>
@@ -32,7 +29,7 @@ public class EditDialogOption<TModel> : DialogOption
     /// <summary>
     /// 获得/设置 是否显示标签 默认为 true 显示标签
     /// </summary>
-    public bool ShowLabel { get; set; }
+    public bool ShowLabel { get; set; } = true;
 
     /// <summary>
     /// 获得/设置 实体类编辑模式 Add 还是 Update
@@ -58,6 +55,11 @@ public class EditDialogOption<TModel> : DialogOption
     /// 获得/设置 查询时是否显示正在加载中动画 默认为 false
     /// </summary>
     public bool ShowLoading { get; set; }
+
+    /// <summary>
+    /// 获得/设置 未分组编辑项布局位置 默认 false 在尾部
+    /// </summary>
+    public bool ShowUnsetGroupItemsOnTop { get; set; }
 
     /// <summary>
     /// 获得/设置 编辑框模型
