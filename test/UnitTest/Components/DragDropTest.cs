@@ -41,5 +41,17 @@ public class DragDropTest : BootstrapBlazorTestBase
         var div = cut.Find(".bb-dd-dropzone");
         cut.InvokeAsync(() => div.DragOver());
     }
+
+    [Fact]
+    public void DragEnter_Ok()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+        });
+        var div = cut.Find(".bb-dd-dropzone");
+        cut.InvokeAsync(() => div.DragEnter());
+    }
     }
 }
