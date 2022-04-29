@@ -136,11 +136,180 @@ public class DragDropTest : BootstrapBlazorTestBase
             pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
         });
         var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[^2];
+        await cut.InvokeAsync(() => div.DragStart());
+        await cut.InvokeAsync(() => div.DragEnd());
+
+        divs = cut.FindAll(".bb-dd-dropzone > div");
+        var divTarget = divs[0];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => div.DragLeave());
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => div.Drop());
+    }
+
+    [Fact]
+    public async Task MaxItem_Ok()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+        });
+        var cut1 = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "3", "4" });
+            pb.Add(a => a.MaxItems, 2);
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.OnItemDropRejectedByMaxItemLimit, EventCallback.Factory.Create<string>(this, e =>
+            {
+
+            }));
+        });
+
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
         var div = divs[1];
         await cut.InvokeAsync(() => div.DragStart());
 
+        divs = cut1.FindAll(".bb-dd-dropzone > div");
+        var divTarget = divs[0];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => divTarget.Drop());
+    }
+
+    [Fact]
+    public async Task IsItemDragable_Ok()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.AllowsDrag, s => false);
+        });
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[^2];
+        await cut.InvokeAsync(() => div.DragStart());
+        await cut.InvokeAsync(() => div.DragEnd());
+
+        divs = cut.FindAll(".bb-dd-dropzone > div");
+        var divTarget = divs[0];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => divTarget.Drop());
+    }
+
+    [Fact]
+    public async Task DropRejected_Test()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.Accepts, (s, s1) => false);
+            pb.Add(a => a.OnItemDropRejected, EventCallback<string>.Empty);
+            pb.Add(a => a.OnItemDrop, EventCallback<string>.Empty);
+        });
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[^2];
+        await cut.InvokeAsync(() => div.DragStart());
+        await cut.InvokeAsync(() => div.DragEnd());
+
+        divs = cut.FindAll(".bb-dd-dropzone > div");
+        var divTarget = divs[0];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => div.Drop());
+    }
+
+    [Fact]
+    public async Task OnDropOver_Test()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.OnReplacedItemDrop, EventCallback<string>.Empty);
+        });
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[^2];
+        await cut.InvokeAsync(() => div.DragStart());
+        await cut.InvokeAsync(() => div.DragEnd());
+
         divs = cut.FindAll(".bb-dd-dropzone > div");
         var divTarget = divs[1];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => div.Drop());
+    }
+
+    [Fact]
+    public async Task CopyItem_Ok()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+        });
+        var cut1 = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "3", "4" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.CopyItem, s => s);
+        });
+
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[1];
+        await cut.InvokeAsync(() => div.DragStart());
+
+        divs = cut1.FindAll(".bb-dd-dropzone > div");
+        var divTarget = divs[1];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => divTarget.Drop());
+    }
+
+    [Fact]
+    public async Task CopyItem2_Ok()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+        });
+        var cut1 = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "3", "4" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.CopyItem, s => s);
+        });
+
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[1];
+        await cut.InvokeAsync(() => div.DragStart());
+
+        divs = cut1.FindAll(".bb-dd-dropzone");
+        var divTarget = divs[0];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => divTarget.Drop());
+    }
+
+    [Fact]
+    public async Task CopyItem3_Ok()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+        });
+        var cut1 = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "3", "4" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.CopyItem, s => s);
+        });
+
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[1];
+        await cut.InvokeAsync(() => div.DragStart());
+
+        divs = cut1.FindAll(".bb-dd-dropzone > div");
+        var divTarget = divs[2];
         await cut.InvokeAsync(() => divTarget.DragEnter());
         await cut.InvokeAsync(() => divTarget.Drop());
     }

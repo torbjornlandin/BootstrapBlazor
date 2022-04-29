@@ -158,11 +158,6 @@ public partial class Dropzone<TItem> : IDisposable
             return "true";
         }
 
-        if (item == null)
-        {
-            return "false";
-        }
-
         return AllowsDrag(item).ToString();
     }
 
