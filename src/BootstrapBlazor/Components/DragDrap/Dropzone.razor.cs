@@ -198,11 +198,7 @@ public partial class Dropzone<TItem> : IDisposable
     private bool IsMaxItemLimitReached()
     {
         var activeItem = DragDropService.ActiveItem;
-        if (activeItem == null)
-        {
-            return false;
-        }
-        return (!Items.Contains(activeItem) && MaxItems.HasValue && MaxItems == Items.Count);
+        return (!Items.Contains(activeItem!) && MaxItems.HasValue && MaxItems == Items.Count);
     }
 
     private bool IsValidItem()
@@ -219,33 +215,23 @@ public partial class Dropzone<TItem> : IDisposable
         }
 
         var activeItem = DragDropService.ActiveItem;
-        if (activeItem == null)
-        {
-            DragDropService.Reset();
-            return;
-        }
-        // 当从其他地方拖过来并且当前以达到最大限制，放弃
-        if (IsMaxItemLimitReached())
-        {
-            DragDropService.Reset();
-            return;
-        }
+
         bool sameDropZone = Equals(DragDropService.Items, Items);
 
         if (CopyItem == null || sameDropZone)
         {
-            Items.Insert(newIndex, activeItem);
+            Items.Insert(newIndex, activeItem!);
             DragDropService.Commit();
         }
         else
         {
             // for the same zone - do not call CopyItem
-            Items.Insert(newIndex, CopyItem(activeItem));
+            Items.Insert(newIndex, CopyItem(activeItem!));
             DragDropService.Reset();
         }
 
         //Operation is finished
-        OnItemDrop.InvokeAsync(activeItem);
+        OnItemDrop.InvokeAsync(activeItem!);
     }
 
     private void OnDragStart(TItem item)
@@ -281,15 +267,6 @@ public partial class Dropzone<TItem> : IDisposable
         {
             return;
         }
-        if (item.Equals(activeItem))
-        {
-            return;
-        }
-
-        if (!IsValidItem())
-        {
-            return;
-        }
 
         if (IsMaxItemLimitReached())
         {
@@ -321,10 +298,6 @@ public partial class Dropzone<TItem> : IDisposable
         }
 
         var activeItem = DragDropService.ActiveItem;
-        if (activeItem == null)
-        {
-            return;
-        }
 
         // 如果没有释放在Item上，则添加到最后
         if (DragDropService.DragTargetItem == null)
@@ -332,12 +305,12 @@ public partial class Dropzone<TItem> : IDisposable
             // 当从其他位置拖拽过来的时候
             if (!Equals(DragDropService.Items, Items) && CopyItem != null)
             {
-                Items.Insert(Items.Count, CopyItem(activeItem));
+                Items.Insert(Items.Count, CopyItem(activeItem!));
                 DragDropService.Reset();
             }
             else
             {
-                Items.Insert(Items.Count, activeItem);
+                Items.Insert(Items.Count, activeItem!);
                 DragDropService.Commit();
             }
         }
@@ -346,12 +319,12 @@ public partial class Dropzone<TItem> : IDisposable
             OnReplacedItemDrop.InvokeAsync(DragDropService.DragTargetItem);
             if (!Equals(DragDropService.Items, Items) && CopyItem != null)
             {
-                Swap(DragDropService.DragTargetItem, CopyItem(activeItem));
+                Swap(DragDropService.DragTargetItem, CopyItem(activeItem!));
                 DragDropService.Reset();
             }
             else
             {
-                Swap(DragDropService.DragTargetItem, activeItem);
+                Swap(DragDropService.DragTargetItem, activeItem!);
                 DragDropService.Commit();
             }
         }

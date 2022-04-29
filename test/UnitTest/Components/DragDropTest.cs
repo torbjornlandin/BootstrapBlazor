@@ -324,4 +324,45 @@ public class DragDropTest : BootstrapBlazorTestBase
         divTarget = divs[4];
         await cut.InvokeAsync(() => divTarget.Drop());
     }
+
+    [Fact]
+    public async Task Special_Test()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string?> { null, "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, (object?)null));
+        });
+        var cut1 = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "3", "4" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.MaxItems, 2);
+        });
+        var cut2 = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "3", "4" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+            pb.Add(a => a.Accepts, ((s, s1) => false));
+        });
+
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[1];
+        await cut.InvokeAsync(() => div.DragEnter());
+        divs = cut.FindAll(".bb-dd-dropzone > div");
+        div = divs[3];
+        await cut.InvokeAsync(() => div.DragStart());
+
+        divs = cut1.FindAll(".bb-dd-dropzone > div");
+        var divTarget = divs[1];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+
+        divs = cut1.FindAll(".bb-dd-dropzone > div");
+        div = divs[3];
+        await cut.InvokeAsync(() => div.DragStart());
+
+        divs = cut2.FindAll(".bb-dd-dropzone > div");
+        divTarget = divs[1];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+    }
 }
