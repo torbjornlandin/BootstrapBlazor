@@ -103,4 +103,16 @@ public class DragDropTest : BootstrapBlazorTestBase
         var div = cut.Find(".bb-dd-spacing");
         cut.InvokeAsync(() => div.DragLeave());
     }
+
+    [Fact]
+    public void ItemOnDropStart_Ok()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+        });
+        var div = cut.Find(".bb-dd-draggable");
+        cut.InvokeAsync(() => div.DragStart());
+    }
 }
