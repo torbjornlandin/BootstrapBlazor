@@ -311,6 +311,17 @@ public class DragDropTest : BootstrapBlazorTestBase
         divs = cut1.FindAll(".bb-dd-dropzone > div");
         var divTarget = divs[2];
         await cut.InvokeAsync(() => divTarget.DragEnter());
+
+        divs = cut1.FindAll(".bb-dd-dropzone > div");
+        divTarget = divs[4];
+        await cut.InvokeAsync(() => divTarget.DragLeave());
+
+        divs = cut1.FindAll(".bb-dd-dropzone > div");
+        divTarget = divs[2];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+
+        divs = cut1.FindAll(".bb-dd-dropzone > div");
+        divTarget = divs[4];
         await cut.InvokeAsync(() => divTarget.Drop());
     }
 }
