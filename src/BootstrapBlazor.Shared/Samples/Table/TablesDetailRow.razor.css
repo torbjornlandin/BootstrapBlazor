@@ -1,0 +1,11 @@
+﻿.table-demo > .table-scroll {
+    overflow: hidden;
+}
+
+    .table-demo > .table-scroll > table {
+        table-layout: fixed;
+    }
+
+        .table-demo > .table-scroll > table > tbody > tr > td > .table-cell {
+            white-space: normal !important;
+        }

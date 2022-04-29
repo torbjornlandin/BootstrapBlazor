@@ -88,7 +88,7 @@
 <DemoBlock Title="明细行中使用 Tab 组件" Introduction="通过设置 <code>DetailRowTemplate</code> 模板设置明细行内容" Name="DetailRowTemplate3">
     <p>本例中明细行内使用 <code>Tab</code> 组件再次将数据分割成两个 <code>TabItem</code> 内容，进行再次数据拆分演示</p>
     <Table TItem="Foo" IsPagination="true" PageItemsSource="@PageItemsSource"
-           IsStriped="true" IsBordered="true"
+           IsStriped="true" IsBordered="true" class="table-demo"
            ShowToolbar="true" ShowDefaultButtons="false"
            OnQueryAsync="@OnQueryAsync">
         <TableColumns>
