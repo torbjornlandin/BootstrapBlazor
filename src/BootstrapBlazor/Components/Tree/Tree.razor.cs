@@ -196,6 +196,30 @@ public partial class Tree
         {
             await OnTreeItemClick(item);
         }
+
+        if (ShowRadio)
+        {
+            if (OnTreeItemChecked != null)
+            {
+                await OnTreeItemChecked(new List<TreeItem> { item });
+            }
+        }
+        else
+        {
+            if (item.Checked)
+            {
+                item.Checked = false;
+            }
+            else
+            {
+                item.Checked = true;
+            }
+            item.CascadeSetCheck(item.Checked);
+            if (OnTreeItemChecked != null)
+            {
+                await OnTreeItemChecked(GetCheckedItems().ToList());
+            }
+        }
     }
 
     /// <summary>
