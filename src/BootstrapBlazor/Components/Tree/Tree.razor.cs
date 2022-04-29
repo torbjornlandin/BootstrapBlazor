@@ -199,26 +199,12 @@ public partial class Tree
 
         if (ShowRadio)
         {
-            if (OnTreeItemChecked != null)
-            {
-                await OnTreeItemChecked(new List<TreeItem> { item });
-            }
+            await OnRadioClick(item);
         }
-        else
+        else if (ShowCheckbox)
         {
-            if (item.Checked)
-            {
-                item.Checked = false;
-            }
-            else
-            {
-                item.Checked = true;
-            }
-            item.CascadeSetCheck(item.Checked);
-            if (OnTreeItemChecked != null)
-            {
-                await OnTreeItemChecked(GetCheckedItems().ToList());
-            }
+            var status = item.Checked ? CheckboxState.Checked : CheckboxState.UnChecked;
+            await OnStateChanged(status, item);
         }
     }
 
