@@ -16,6 +16,8 @@ public class DragDropTest : BootstrapBlazorTestBase
             pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
         });
         cut.Contains("bb-dd-dropzone");
+
+        cut.SetParametersAndRender(pb => pb.Add(a => a.ChildContent, (RenderFragment<string>?)null));
     }
 
     [Fact]
