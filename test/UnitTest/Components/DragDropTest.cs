@@ -16,7 +16,6 @@ public class DragDropTest : BootstrapBlazorTestBase
             pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
         });
         cut.Contains("bb-dd-dropzone");
-
         cut.SetParametersAndRender(pb => pb.Add(a => a.ChildContent, (RenderFragment<string>?)null));
     }
 
@@ -126,5 +125,23 @@ public class DragDropTest : BootstrapBlazorTestBase
         });
         var div = cut.Find(".bb-dd-draggable");
         cut.InvokeAsync(() => div.DragEnter());
+    }
+
+    [Fact]
+    public async Task OnDrop_Test()
+    {
+        var cut = Context.RenderComponent<Dropzone<string>>(pb =>
+        {
+            pb.Add(a => a.Items, new List<string> { "1", "2" });
+            pb.Add(a => a.ChildContent, v => builder => builder.AddContent(0, v));
+        });
+        var divs = cut.FindAll(".bb-dd-dropzone > div");
+        var div = divs[1];
+        await cut.InvokeAsync(() => div.DragStart());
+
+        divs = cut.FindAll(".bb-dd-dropzone > div");
+        var divTarget = divs[1];
+        await cut.InvokeAsync(() => divTarget.DragEnter());
+        await cut.InvokeAsync(() => divTarget.Drop());
     }
 }
