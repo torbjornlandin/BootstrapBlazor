@@ -31,13 +31,54 @@ public class TreeTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void OnClick_Ok()
+    public async Task OnClick_Checkbox_Ok()
+    {
+        var cut = Context.RenderComponent<Tree>(pb =>
+        {
+            pb.Add(a => a.IsAccordion, true);
+            pb.Add(a => a.ShowCheckbox, true);
+            pb.Add(a => a.ClickToggleNode, true);
+            pb.Add(a => a.Items, new List<TreeItem>()
+            {
+                new TreeItem()
+                {
+                    Text = "Test1",
+                    Items = new List<TreeItem>()
+                    {
+                        new TreeItem()
+                        {
+                            Text = "Test11",
+                        }
+                    }
+                },
+                new TreeItem()
+                {
+                    Text = "Test2",
+                    IsCollapsed = false,
+                    Items = new List<TreeItem>()
+                    {
+                        new TreeItem()
+                        {
+                            Text = "Test21",
+                        }
+                    }
+                }
+            });
+        });
+        await cut.InvokeAsync(() => cut.Find(".tree-node").Click());
+        await Task.Delay(2000);
+        await cut.InvokeAsync(() => cut.Find(".tree-node").Click());
+    }
+
+    [Fact]
+    public async Task OnClick_Ok()
     {
         var clicked = false;
         var expanded = false;
         var cut = Context.RenderComponent<Tree>(pb =>
         {
             pb.Add(a => a.IsAccordion, true);
+            pb.Add(a => a.ShowRadio, true);
             pb.Add(a => a.ClickToggleNode, true);
             pb.Add(a => a.OnTreeItemClick, item =>
             {
@@ -77,7 +118,7 @@ public class TreeTest : BootstrapBlazorTestBase
             });
         });
 
-        cut.InvokeAsync(() => cut.Find(".tree-node").Click());
+        await cut.InvokeAsync(() => cut.Find(".tree-node").Click());
         Assert.True(clicked);
         Assert.True(expanded);
     }
