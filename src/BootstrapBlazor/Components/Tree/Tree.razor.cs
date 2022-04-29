@@ -203,6 +203,7 @@ public partial class Tree
         }
         else if (ShowCheckbox)
         {
+            item.Checked = !item.Checked;
             var status = item.Checked ? CheckboxState.Checked : CheckboxState.UnChecked;
             await OnStateChanged(status, item);
         }
