@@ -248,9 +248,15 @@ public partial class Dropzone<TItem> : IDisposable
 
     private void OnDragEnd()
     {
-        if (DragDropService.Items != null && DragDropService.OldIndex != null && DragDropService.ActiveItem != null)
+        if (DragDropService.Items != null)
         {
-            DragDropService.Items.Insert(DragDropService.OldIndex.Value, DragDropService.ActiveItem);
+            if (DragDropService.OldIndex.HasValue)
+            {
+                if (DragDropService.ActiveItem != null)
+                {
+                    DragDropService.Items.Insert(DragDropService.OldIndex.Value, DragDropService.ActiveItem);
+                }
+            }
             StateHasChanged();
         }
         Items.Remove(default!);
