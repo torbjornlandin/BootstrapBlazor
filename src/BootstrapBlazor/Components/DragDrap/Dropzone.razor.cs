@@ -84,8 +84,9 @@ public partial class Dropzone<TItem> : IDisposable
     [NotNull]
     private DragDropService<TItem>? DragDropService { get; set; }
 
-    private string? ItemClass =>
-        CssBuilder.Default("").AddClass("bb-dd-inprogess", DragDropService.ActiveItem != null).Build();
+    private string? ItemClass => CssBuilder.Default()
+        .AddClass("bb-dd-inprogess", DragDropService.ActiveItem != null)
+        .Build();
 
     private string GetItemClass(TItem? item)
     {
