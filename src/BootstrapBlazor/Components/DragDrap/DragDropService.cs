@@ -56,6 +56,9 @@ internal class DragDropService<T>
         Items = null;
         DragTargetItem = default;
 
-        StateHasChanged?.Invoke(this, EventArgs.Empty);
+        if (StateHasChanged != null)
+        {
+            StateHasChanged.Invoke(this, EventArgs.Empty);
+        }
     }
 }
