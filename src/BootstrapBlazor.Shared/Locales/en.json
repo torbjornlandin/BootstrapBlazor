@@ -2007,6 +2007,7 @@
     "Color": "Set the color of the card border",
     "IsCenter": "Make align center by set IsCenter to true",
     "IsCollapsible": "Collapse card body by set IsCollapsible to true",
+    "Collapsed": "Collapsed by default",
     "IsShadow": "Add shadow effect by set IsShadow to true"
   },
   "BootstrapBlazor.Shared.Samples.Calendars": {

@@ -2004,14 +2004,15 @@
     "ShadowTitle": "带有阴影的卡片",
     "ShadowIntro": "通过设置 <code>IsShadow</code> 开启阴影特效",
     "ShadowBody": "阴影特效示例",
-    "CardBody": "获得/设置 CardBody",
-    "CardFooter": "获得/设置 CardFooter",
-    "CardHeader": "获得/设置 CardHeader",
+    "CardBody": "Body 模板",
+    "CardFooter": "Footer 模板",
+    "CardHeader": "Header 模板",
     "Class": "样式",
     "Color": "设置卡片边框颜色",
-    "IsCenter": "通过设置 <code>IsCenter</code> 使内容居中",
-    "IsCollapsible": "通过设置 <code>IsCollapsible</code> 使 <code>CardBody</code> 可以收缩",
-    "IsShadow": "通过设置 <code>IsShadow</code> 开启阴影特效"
+    "IsCenter": "是否居中",
+    "IsCollapsible": "是否可以收缩",
+    "Collapsed": "默认是否收缩",
+    "IsShadow": "是否开启阴影特效"
   },
   "BootstrapBlazor.Shared.Samples.Calendars": {
     "Title": "Calendar 日历框",
