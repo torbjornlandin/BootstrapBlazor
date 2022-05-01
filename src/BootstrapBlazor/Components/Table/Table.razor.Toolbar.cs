@@ -296,7 +296,6 @@ public partial class Table<TItem>
                 // 数据源为 DataTable 新建后重建行与列
                 await DynamicContext.AddAsync(SelectedRows.OfType<IDynamicObject>());
                 ResetDynamicContext();
-                StateHasChanged();
             }
             else
             {
