@@ -90,7 +90,12 @@ public abstract class CardBase : BootstrapComponentBase
     public bool IsShadow { get; set; }
 
     /// <summary>
-    /// 
+    /// 获得 当前状态文字
+    /// </summary>
+    protected string CollapsedString => Collapsed ? "true" : "false";
+
+    /// <summary>
+    /// 获得/设置 元素实例
     /// </summary>
     protected ElementReference CardEelement { get; set; }
 
