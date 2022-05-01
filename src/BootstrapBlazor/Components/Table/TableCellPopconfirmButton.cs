@@ -10,12 +10,13 @@ namespace BootstrapBlazor.Components;
 /// <summary>
 /// 单元格内按钮组件
 /// </summary>
-public class TableCellPopconfirmButton : PopConfirmButtonBase, IDisposable
+public class TableCellPopconfirmButton : PopConfirmButtonBase
 {
     /// <summary>
     /// 获得/设置 Table 扩展按钮集合实例
     /// </summary>
     [CascadingParameter]
+    [NotNull]
     protected TableExtensionButton? Buttons { get; set; }
 
     [Inject]
@@ -48,7 +49,7 @@ public class TableCellPopconfirmButton : PopConfirmButtonBase, IDisposable
     {
         base.OnInitialized();
 
-        Buttons?.AddButton(this);
+        Buttons.AddButton(this);
 
         if (Size == Size.None)
         {
@@ -58,26 +59,5 @@ public class TableCellPopconfirmButton : PopConfirmButtonBase, IDisposable
         ConfirmButtonText ??= Localizer[nameof(ConfirmButtonText)];
         CloseButtonText ??= Localizer[nameof(CloseButtonText)];
         Content ??= Localizer[nameof(Content)];
-    }
-
-    /// <summary>
-    /// Dispose 方法
-    /// </summary>
-    /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            Buttons?.RemoveButton(this);
-        }
-    }
-
-    /// <summary>
-    /// Dispose 方法
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }
