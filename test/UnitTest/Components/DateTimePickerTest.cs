@@ -192,6 +192,15 @@ public class DateTimePickerTest : BootstrapBlazorTestBase
     }
 
     [Fact]
+    public void IsYearOverflow_Ok()
+    {
+        var cut = Context.RenderComponent<DatePickerBody>(builder =>
+        {
+            builder.Add(a => a.Value, DateTime.MinValue.AddDays(1));
+            builder.Add(a => a.ViewMode, DatePickerViewMode.Year);
+        });
+    }
+    [Fact]
     public void ShowSidebar_Ok()
     {
         var cut = Context.RenderComponent<DatePickerBody>(builder =>
