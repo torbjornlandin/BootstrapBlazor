@@ -10,14 +10,9 @@ namespace BootstrapBlazor.Components;
 public enum DatePickerViewMode
 {
     /// <summary>
-    /// 年视图
+    /// 年月日时分秒模式
     /// </summary>
-    Year,
-
-    /// <summary>
-    /// 月视图
-    /// </summary>
-    Month,
+    DateTime,
 
     /// <summary>
     /// 年月日模式
@@ -25,7 +20,12 @@ public enum DatePickerViewMode
     Date,
 
     /// <summary>
-    /// 年月日时分秒模式
+    /// 月视图
     /// </summary>
-    DateTime
+    Month,
+
+    /// <summary>
+    /// 年视图
+    /// </summary>
+    Year
 }
