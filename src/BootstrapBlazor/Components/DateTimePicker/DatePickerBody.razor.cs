@@ -69,7 +69,7 @@ public sealed partial class DatePickerBody
         .AddClass("disabled", IsDisabled(day) || overflow)
         .Build();
 
-    private bool IsDisabled(DateTime day) => (MinValue != null && day < MinValue) || (MaxValue != null && day > MaxValue);
+    private bool IsDisabled(DateTime day) => (MinValue.HasValue && day < MinValue.Value) || (MaxValue.HasValue && day > MaxValue.Value);
 
     /// <summary>
     /// 获得 年月日时分秒视图样式

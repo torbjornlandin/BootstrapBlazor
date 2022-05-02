@@ -302,7 +302,12 @@ public class DateTimePickerTest : BootstrapBlazorTestBase
         {
             builder.Add(a => a.Value, DateTime.Now);
             builder.Add(a => a.MinValue, DateTime.Today.AddDays(-1));
-            builder.Add(a => a.MaxValue, DateTime.Today.AddDays(7));
+        });
+
+        cut.SetParametersAndRender(pb =>
+        {
+            pb.Add(a => a.MinValue, null);
+            pb.Add(a => a.MaxValue, DateTime.Today.AddDays(7));
         });
     }
 
