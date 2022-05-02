@@ -333,6 +333,31 @@ public sealed partial class DatePickerBody
     [NotNull]
     private string? Weekago { get; set; }
 
+    private Dictionary<DatePickerViewMode, List<DatePickerViewMode>> AllowSwitchModes => new Dictionary<DatePickerViewMode, List<DatePickerViewMode>>
+    {
+        [DatePickerViewMode.DateTime] = new List<DatePickerViewMode>()
+        {
+            DatePickerViewMode.DateTime,
+            DatePickerViewMode.Month,
+            DatePickerViewMode.Year
+        },
+        [DatePickerViewMode.Date] = new List<DatePickerViewMode>()
+        {
+            DatePickerViewMode.Date,
+            DatePickerViewMode.Month,
+            DatePickerViewMode.Year
+        },
+        [DatePickerViewMode.Month] = new List<DatePickerViewMode>()
+        {
+            DatePickerViewMode.Month,
+            DatePickerViewMode.Year
+        },
+        [DatePickerViewMode.Year] = new List<DatePickerViewMode>()
+        {
+            DatePickerViewMode.Year
+        }
+    };
+
     /// <summary>
     /// OnInitialized 方法
     /// </summary>
@@ -452,7 +477,10 @@ public sealed partial class DatePickerBody
     private Task SwitchView(DatePickerViewMode view)
     {
         ShowTimePicker = false;
-        CurrentViewMode = view;
+        if (AllowSwitchModes[ViewMode].Contains(view))
+        {
+            CurrentViewMode = view;
+        }
         StateHasChanged();
         return Task.CompletedTask;
     }
