@@ -333,7 +333,7 @@ public sealed partial class DatePickerBody
     [NotNull]
     private string? Weekago { get; set; }
 
-    private Dictionary<DatePickerViewMode, List<DatePickerViewMode>> AllowSwitchModes => new Dictionary<DatePickerViewMode, List<DatePickerViewMode>>
+    private Dictionary<DatePickerViewMode, List<DatePickerViewMode>> AllowSwitchModes { get; } = new Dictionary<DatePickerViewMode, List<DatePickerViewMode>>
     {
         [DatePickerViewMode.DateTime] = new List<DatePickerViewMode>()
         {
