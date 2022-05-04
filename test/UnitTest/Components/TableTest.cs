@@ -476,6 +476,7 @@ public class TableTest : TableTestBase
             {
                 pb.Add(a => a.RenderMode, TableRenderMode.Table);
                 pb.Add(a => a.IsFixedHeader, true);
+                pb.Add(a => a.Height, 200);
                 pb.Add(a => a.Items, Foo.GenerateFoo(localizer));
                 pb.Add(a => a.TableColumns, foo => builder =>
                 {
@@ -487,6 +488,7 @@ public class TableTest : TableTestBase
             });
         });
         cut.Contains("table-fixed-header");
+        cut.Contains("height: 200px;");
     }
 
     [Theory]
