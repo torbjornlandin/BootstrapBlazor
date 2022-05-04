@@ -932,9 +932,9 @@ public class TableTest : TableTestBase
         var btnAdd = cut.FindComponent<TableToolbarButton<Foo>>();
         await cut.InvokeAsync(async () =>
         {
-            if (btnAdd.Instance.OnClick != null)
+            if (btnAdd.Instance.OnClick.HasDelegate)
             {
-                await btnAdd.Instance.OnClick();
+                await btnAdd.Instance.OnClick.InvokeAsync();
             }
         });
     }
@@ -966,9 +966,9 @@ public class TableTest : TableTestBase
         var btnAdd = cut.FindComponent<TableToolbarButton<Foo>>();
         await cut.InvokeAsync(async () =>
         {
-            if (btnAdd.Instance.OnClick != null)
+            if (btnAdd.Instance.OnClick.HasDelegate)
             {
-                await btnAdd.Instance.OnClick();
+                await btnAdd.Instance.OnClick.InvokeAsync();
             }
         });
     }
@@ -2015,10 +2015,6 @@ public class TableTest : TableTestBase
     [Fact]
     public async Task TableCellButton_Ok()
     {
-        var cut = Context.RenderComponent<TableCellButton>();
-        cut.Instance.Dispose();
-        cut.Dispose();
-
         var clicked = false;
         var clicked2 = false;
         var cut1 = Context.RenderComponent<TableExtensionButton>(pb =>
