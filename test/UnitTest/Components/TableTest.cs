@@ -1005,6 +1005,109 @@ public class TableTest : TableTestBase
     }
 
     [Fact]
+    public async Task CustomerToolbarButton_Ok()
+    {
+        var clicked = false;
+        var clickCallback = false;
+        var selected = 0;
+        var localizer = Context.Services.GetRequiredService<IStringLocalizer<Foo>>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
+        {
+            pb.AddChildContent<Table<Foo>>(pb =>
+            {
+                pb.Add(a => a.ShowToolbar, true);
+                pb.Add(a => a.IsMultipleSelect, true);
+                pb.Add(a => a.RenderMode, TableRenderMode.Table);
+                pb.Add(a => a.Items, Foo.GenerateFoo(localizer));
+                pb.Add(a => a.TableColumns, foo => builder =>
+                {
+                    builder.OpenComponent<TableColumn<Foo, string>>(0);
+                    builder.AddAttribute(1, "Field", "Name");
+                    builder.AddAttribute(2, "FieldExpression", Utility.GenerateValueExpression(foo, "Name", typeof(string)));
+                    builder.CloseComponent();
+                });
+                pb.Add(a => a.TableToolbarTemplate, builder =>
+                {
+                    builder.OpenComponent<TableToolbarButton<Foo>>(0);
+                    builder.AddAttribute(1, nameof(TableToolbarButton<Foo>.Text), "test");
+                    builder.AddAttribute(2, nameof(TableToolbarButton<Foo>.OnClickCallback), new Func<IEnumerable<Foo>, Task>(foos =>
+                    {
+                        clickCallback = true;
+                        return Task.CompletedTask;
+                    }));
+                    builder.AddAttribute(3, nameof(TableToolbarButton<Foo>.OnClick), EventCallback.Factory.Create<MouseEventArgs>(this, e =>
+                    {
+                        clicked = true;
+                    }));
+                    builder.AddAttribute(4, nameof(TableToolbarButton<Foo>.IsEnableWhenSelectedOneRow), true);
+                    builder.CloseComponent();
+
+                    builder.OpenComponent<TableToolbarButton<Foo>>(0);
+                    builder.AddAttribute(1, nameof(TableToolbarButton<Foo>.Text), "test-async");
+                    builder.AddAttribute(2, nameof(TableToolbarButton<Foo>.IsAsync), true);
+                    builder.AddAttribute(3, nameof(TableToolbarButton<Foo>.OnClickCallback), new Func<IEnumerable<Foo>, Task>(foos =>
+                    {
+                        selected = foos.Count();
+                        return Task.CompletedTask;
+                    }));
+                    builder.CloseComponent();
+                });
+            });
+        });
+
+        var button = cut.FindComponents<Button>().First(b => b.Instance.Text == "test");
+        await cut.InvokeAsync(() => button.Instance.OnClickWithoutRender!.Invoke());
+        Assert.True(clicked);
+        Assert.True(clickCallback);
+
+        // 选中一行
+        var input = cut.Find("tbody tr input");
+        await cut.InvokeAsync(() => input.Click());
+
+        button = cut.FindComponents<Button>().First(b => b.Instance.Text == "test-async");
+        await cut.InvokeAsync(async () =>
+        {
+            await button.Instance.OnClickWithoutRender!.Invoke();
+        });
+        Assert.Equal(1, selected);
+    }
+
+    [Fact]
+    public void CustomerToolbarButton_Disable()
+    {
+        var localizer = Context.Services.GetRequiredService<IStringLocalizer<Foo>>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
+        {
+            pb.AddChildContent<Table<Foo>>(pb =>
+            {
+                pb.Add(a => a.ShowToolbar, true);
+                pb.Add(a => a.RenderMode, TableRenderMode.Table);
+                pb.Add(a => a.Items, Foo.GenerateFoo(localizer));
+                pb.Add(a => a.TableColumns, foo => builder =>
+                {
+                    builder.OpenComponent<TableColumn<Foo, string>>(0);
+                    builder.AddAttribute(1, "Field", "Name");
+                    builder.AddAttribute(2, "FieldExpression", Utility.GenerateValueExpression(foo, "Name", typeof(string)));
+                    builder.CloseComponent();
+                });
+                pb.Add(a => a.TableToolbarTemplate, builder =>
+                {
+                    builder.OpenComponent<TableToolbarButton<Foo>>(0);
+                    builder.AddAttribute(1, nameof(TableToolbarButton<Foo>.Text), "test-async");
+                    builder.AddAttribute(2, nameof(TableToolbarButton<Foo>.IsAsync), true);
+                    builder.AddAttribute(3, nameof(TableToolbarButton<Foo>.OnClickCallback), new Func<IEnumerable<Foo>, Task>(foos => Task.Delay(2000)));
+                    builder.CloseComponent();
+                });
+            });
+        });
+
+        var button = cut.FindComponents<Button>().First(b => b.Instance.Text == "test-async");
+        cut.InvokeAsync(() => button.Instance.OnClickWithoutRender!.Invoke());
+        var toolbar = cut.FindComponent<TableToolbar<Foo>>();
+        toolbar.SetParametersAndRender();
+    }
+
+    [Fact]
     public async Task IsTracking_Ok()
     {
         var localizer = Context.Services.GetRequiredService<IStringLocalizer<Foo>>();
