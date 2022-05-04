@@ -426,13 +426,44 @@ public class TableTest : TableTestBase
         });
 
         var pager = cut.FindComponent<Pagination>();
-        await cut.InvokeAsync(() => pager.Instance.OnPageItemsChanged!.Invoke(2));
+        await cut.InvokeAsync(() => pager.Instance.OnPageItemsChanged!.Invoke(4));
         var activePage = cut.Find(".page-item.active");
         Assert.Equal("1", activePage.TextContent);
 
-        await cut.InvokeAsync(() => pager.Instance.OnPageClick!.Invoke(2, 2));
+        await cut.InvokeAsync(() => pager.Instance.OnPageClick!.Invoke(2, 4));
         activePage = cut.Find(".page-item.active");
         Assert.Equal("2", activePage.TextContent);
+    }
+
+    [Fact]
+    public void PageItemsSource_null()
+    {
+        var localizer = Context.Services.GetRequiredService<IStringLocalizer<Foo>>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
+        {
+            pb.AddChildContent<Table<Foo>>(pb =>
+            {
+                pb.Add(a => a.RenderMode, TableRenderMode.Table);
+                pb.Add(a => a.IsPagination, true);
+                pb.Add(a => a.OnQueryAsync, OnQueryAsync(localizer));
+                pb.Add(a => a.TableColumns, foo => builder =>
+                {
+                    builder.OpenComponent<TableColumn<Foo, string>>(0);
+                    builder.AddAttribute(1, "Field", "Name");
+                    builder.AddAttribute(2, "FieldExpression", Utility.GenerateValueExpression(foo, "Name", typeof(string)));
+                    builder.CloseComponent();
+                });
+            });
+        });
+
+        var table = cut.FindComponent<Table<Foo>>();
+        Assert.Equal(20, table.Instance.PageItems);
+
+        table.SetParametersAndRender(pb => pb.Add(a => a.PageItemsSource, new int[] { 4, 6, 8 }));
+        Assert.Equal(4, table.Instance.PageItems);
+
+        table.SetParametersAndRender(pb => pb.Add(a => a.PageItemsSource, null));
+        Assert.Equal(20, table.Instance.PageItems);
     }
 
     [Fact]
